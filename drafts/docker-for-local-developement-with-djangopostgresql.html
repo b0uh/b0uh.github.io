@@ -1,0 +1,313 @@
+
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="author" content="Thomas Loiret">
+
+
+  <meta name="description" content="How can docker help you to keep your local environnement clean ?">
+
+
+
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Docker for local developement with Django/PostgreSQL - Thomas Loiret - Random thoughts</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+
+    <link href="http://b0uh.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Thomas Loiret - Random thoughts Atom Feed" />
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="http://b0uh.github.io/theme/css/tinytypo.css">
+    <link rel="stylesheet" href="http://b0uh.github.io/theme/css/pygment.css">
+    <link href="http://b0uh.github.io/theme/css/blog.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="nav blog-nav">
+          <a class="nav-link active" href="http://b0uh.github.io">Home</a>
+            <a class="nav-link " href="http://b0uh.github.io/pages/hire-me.html">Hire me !</a>
+
+
+<a class="nav-link" href="http://b0uh.github.io/feeds/all.atom.xml"><img src="http://b0uh.github.io/theme/images/icons/feed-18px.png"></a>
+
+        </nav>
+      </div>
+    </div>
+
+
+    <div class="container">
+
+      <div class="row">
+
+        <div class="col-sm-8 blog-main">
+
+
+        <div class="blog-post">
+            <h1 class="blog-post-title">Docker for local developement with Django/PostgreSQL</h1>
+            <p class="blog-post-meta">
+                <time datetime="Tue 02 May 2017">Tue 02 May 2017</time> by
+                    <a href="http://b0uh.github.io/author/thomas-loiret.html">Thomas Loiret</a>
+                <br /><br />
+            </p>
+
+                <h2>Introduction</h2>
+<h3>Goal</h3>
+<p>The aim of this short tutorial is to run an existing (or new) Django project with PostgreSQL on your computer without having to install anything but Docker.
+In a first time will see how to run django within Docker, then we will add the postgresql management and finally load a DB dump. According to your need you may not need to follow all steps.</p>
+<h3>Requierements</h3>
+<p>Well, they are quite simples :</p>
+<ul>
+<li>Docker (<a href="https://docs.docker.com/engine/installation/">installation</a>)</li>
+<li>Docker Compose (<a href="https://docs.docker.com/compose/install/">installation</a>)</li>
+<li>A Django project</li>
+<li>A PG dump made with pg_dump</li>
+</ul>
+<h2>Step 1 : Django</h2>
+<p>Here we will see how to run Django with sqlite.</p>
+<p>Inside your Django project add a file <code>docker-compose.yml</code> with :</p>
+<div class="highlight"><pre><span></span>version: &#39;2&#39;
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - &quot;8000:8000&quot;
+</pre></div>
+
+
+<p>And another file <code>Dockerfile</code> with :</p>
+<div class="highlight"><pre><span></span>FROM python:3.6
+ENV PYTHONUNBUFFERED 1
+RUN mkdir /code
+
+WORKDIR /code
+ADD requirements.txt /code/
+RUN pip install -r requirements.txt
+ADD . /code
+</pre></div>
+
+
+<p>Then run in your shell :</p>
+<div class="highlight"><pre><span></span>docker-compose up
+</pre></div>
+
+
+<p>It will build the "web" service the first time so it might take a while. At some point you should see :</p>
+<div class="highlight"><pre><span></span>web_1  | Performing system checks...
+web_1  |
+web_1  | System check identified no issues (0 silenced).
+web_1  |
+web_1  | You have 13 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+web_1  | Run &#39;python manage.py migrate&#39; to apply them.
+web_1  | May 04, 2017 - 14:03:57
+web_1  | Django version 1.11, using settings &#39;mysite.settings&#39;
+web_1  | Starting development server at http://0.0.0.0:8000/
+web_1  | Quit the server with CONTROL-C.
+</pre></div>
+
+
+<p>Django is running ! Go to http://localhost:8000/, you should see it running :) You can stop it with CTRL+C.</p>
+<p>At this point you can change your code, Django will reload automaticaly and we will see your changes.</p>
+<p>If you need to changes <code>requierements.txt</code> you will need to rebuild the service, you can do with :</p>
+<div class="highlight"><pre><span></span>docker-compose up --build
+</pre></div>
+
+
+<p>If you need to run a command, you can do :</p>
+<div class="highlight"><pre><span></span>docker-compose run web python manage.py migrate
+</pre></div>
+
+
+<p>After this step you can run your Django with sqlite and change the code easily.</p>
+<h2>Step 2 : Django + PostgreSQL</h2>
+<p>Update of <code>docker-compose.yml</code></p>
+<div class="highlight"><pre><span></span>version: &#39;2&#39;
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./docker/postgres:/var/lib/postgresql/data
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - &quot;8000:8000&quot;
+    depends_on:
+      - db
+</pre></div>
+
+
+<p>In order to keep the project clean I choose to create a <code>docker</code> folder were we will put the <code>Dockerfile</code> unchanged and postgreSQL datas.</p>
+<p>You can update your settings in order to use the new DB in your <code>settings.py</code>  :</p>
+<div class="highlight"><pre><span></span>DATABASES = {
+    &#39;default&#39;: {
+        &#39;ENGINE&#39;: &#39;django.db.backends.postgresql_psycopg2&#39;,
+        &#39;NAME&#39;: &#39;postgres&#39;,
+        &#39;USER&#39;: &#39;postgres&#39;,
+        &#39;PASSWORD&#39;: &#39;postgres&#39;,
+        &#39;HOST&#39;: &#39;db&#39;,
+    }
+}
+</pre></div>
+
+
+<p>The <code>HOST</code> in the service name from <code>docker-compose.yml</code>. The <code>USER</code> and <code>PASSWORD</code> are the default of the postgres <a href="https://hub.docker.com/_/postgres/"><code>Dockerfile</code></a>.</p>
+<p>And you got a Django/postgres project running with persistent datas on your harddrive ! :)</p>
+<h2>Step 3 : Django + PostgreSQL + SQL dump</h2>
+<p>Update our <code>docker-compose.yml</code>:</p>
+<div class="highlight"><pre><span></span>version: &#39;2&#39;
+services:
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-db
+    volumes:
+      - ./docker/postgres:/var/lib/postgresql/data
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile-web
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - &quot;8000:8000&quot;
+    depends_on:
+      - db
+</pre></div>
+
+
+<p>You can see that I rename <code>Dockerfile</code> to <code>Dockerfile-web</code> because we now have another <code>Dockerfile</code> for the <code>db</code> service called <code>Dockerfile-db</code>.</p>
+<p><code>Dockerfile-db</code></p>
+<div class="highlight"><pre><span></span>FROM postgres:latest
+WORKDIR /docker-entrypoint-initdb.d
+ADD docker/1-init-db.sh /docker-entrypoint-initdb.d/
+ADD docker/2-load-dump.sh /docker-entrypoint-initdb.d/
+ADD docker/my_project.dump /tmp
+</pre></div>
+
+
+<p>The goal of this Dockerfile is to initiate the DB with somes scripts and the dump.</p>
+<p><code>docker/1-init-db.sh</code></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="nb">set</span> -e
+
+psql -v <span class="nv">ON_ERROR_STOP</span><span class="o">=</span><span class="m">1</span> --username <span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span> <span class="s">&lt;&lt;-EOSQL</span>
+<span class="s">    CREATE DATABASE my_project_db;</span>
+<span class="s">EOSQL</span>
+</pre></div>
+</td></tr></table>
+
+<p>You might need to add some instruction here, to create role for example.</p>
+<p><code>docker/2-load-dump.sh</code></p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="nb">set</span> -e
+
+pg_restore --clean --dbname public -U <span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span> /tmp/my_project.dump
+</pre></div>
+</td></tr></table>
+
+<p>You can then up your project with:</p>
+<div class="highlight"><pre><span></span>docker-compose up --build
+</pre></div>
+
+
+<h2>Why</h2>
+<p>Multiple projects
+different python</p>
+<h2>Source</h2>
+<p>https://docs.docker.com/compose/django/</p>
+
+        </div>
+
+    <p>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </p>
+
+
+        </div><!-- /.blog-main -->
+
+        <div class="col-sm-3 offset-sm-1 blog-sidebar">
+          <div class="sidebar-module sidebar-module-inset">
+            <h4>Who am I ?</h4>
+            <p>Python/Django freelance & marketplace specialist, I am always eager to learn more ! ツ</p>
+          </div>
+
+          <div class="sidebar-module">
+            <h4>Categories</h4>
+            <ol class="list-unstyled">
+                <li><a href="http://b0uh.github.io/category/python.html">Python</a></li>
+            </ol>
+          </div>
+
+            <div class="sidebar-module">
+              <h4>Social</h4>
+              <ol class="list-unstyled social">
+                    <li><img src="http://b0uh.github.io/theme/images/icons/twitter-18px.png" /> <a href="https://twitter.com/b0uh">Twitter</a></li>
+                    <li><img src="http://b0uh.github.io/theme/images/icons/linkedin-18px.png" /> <a href="https://www.linkedin.com/in/thomasloiret/">LinkedIn</a></li>
+                    <li><img src="http://b0uh.github.io/theme/images/icons/hopwork-18px.png" /> <a href="https://www.hopwork.fr/profile/thomasloiret">Hopwork</a></li>
+                    <li><img src="http://b0uh.github.io/theme/images/icons/lastfm-18px.png" /> <a href="https://www.last.fm/user/b0uh">Last.fm</a></li>
+            </div>
+
+
+        </div><!-- /.blog-sidebar -->
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+    <footer class="blog-footer">
+      <p>Proudly powered by <a href="https://github.com/getpelican/pelican" rel="nofollow">Pelican</a>.</p>
+      <p>
+        <a href="#">Back to top</a>
+      </p>
+    </footer>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script type="text/javascript" src="http://b0uh.github.io/theme/js/ie10-viewport-bug-workaround.js"></script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-98369697-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="author" content="Thomas Loiret">
+
+
+  <meta name="description" content="Having a good API will speed your merchant onboarding and time-to-market. On the contrary a bad API or no API can demotivate your merchant and make you and them lose money.">
+
+
+
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Marketplaces API, the key to onboard merchants - Thomas Loiret - Random thoughts</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+
+    <link href="http://b0uh.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Thomas Loiret - Random thoughts Atom Feed" />
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="http://b0uh.github.io/theme/css/tinytypo.css">
+    <link rel="stylesheet" href="http://b0uh.github.io/theme/css/pygment.css">
+    <link href="http://b0uh.github.io/theme/css/blog.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="nav blog-nav">
+          <a class="nav-link active" href="http://b0uh.github.io">Home</a>
+            <a class="nav-link " href="http://b0uh.github.io/pages/hire-me.html">Hire me !</a>
+
+
+<a class="nav-link" href="http://b0uh.github.io/feeds/all.atom.xml"><img src="http://b0uh.github.io/theme/images/icons/feed-18px.png"></a>
+
+        </nav>
+      </div>
+    </div>
+
+
+    <div class="container">
+
+      <div class="row">
+
+        <div class="col-sm-8 blog-main">
+
+
+        <div class="blog-post">
+            <h1 class="blog-post-title">Marketplaces API, the key to onboard merchants</h1>
+            <p class="blog-post-meta">
+                <time datetime="Tue 02 May 2017">Tue 02 May 2017</time> by
+                    <a href="http://b0uh.github.io/author/thomas-loiret.html">Thomas Loiret</a>
+                <br /><br />
+            </p>
+
+                <p><strong>TL;DR:</strong> Having a good API will speed your merchant onboarding and time-to-market. On the contrary a bad API or no API can demotivate your merchant and make you and them lose money.</p>
+<p><br>
+<br></p>
+<h2>Why do you need a marketplace? <a name="why-do-you-need-a-marketplace"></a> <a href="#why-do-you-need-a-marketplace">¶</a></h2>
+<p>E-commerce has always been a big component of the internet as we know it. Having a website to sell your product is nowaday a requirement for a merchant and there is now a new trend to do marketplaces.
+Marketplace is simply a website that connect merchants to clients and behave as a trust tier. The most famous examples are <a href="https://www.amazon.com/">Amazon</a>, <a href="http://www.zalando.com/">Zalando</a> or <a href="https://www.alibaba.com/">Alibaba</a>.
+One clue about marketplaces developments is the explosion of marketplace solutions that exists today, just to name a few : <a href="https://www.mirakl.com/">Mirakl</a>, <a href="https://www.izberg-marketplace.com/">Izberg</a>, <a href="http://www.wizaplace.com/">Wizplace</a>.
+Most of the merchant are using marketplace solution or custom solution in order to allow other merchant to sell on their own website and <strong>make it grow in term of products, traffic and turnover.</strong></p>
+<h2>Why an API? <a name="why-an-api"></a> <a href="#why-an-api">¶</a></h2>
+<p>So you manage to sign contracts with some merchants who want to sell on your marketplace, congratulation ! Then, what? They will want to put some products quickly then generate and manage some orders. Most of marketplace solutions allow you to do it with their backoffice, so that’s cool, everything can go quite fast. But it require for the merchant to dedicate some time to handle his products on your website and this potentially quite often. He will need to learn a new tool as he need to manage everything from your backoffice. While in the meantime, all merchants have already a software to manage this on their own, this can be an e-commerce solution (<a href="https://www.prestashop.com/">Prestashop</a>, <a href="https://magento.com/">Magento</a>, <a href="https://www.shopify.com/">Shopify</a>, ...) or an ERP (<a href="https://www.sap.com/product/enterprise-management/erp.html">SAP</a>, <a href="http://www.sage.com/us/erp">Sage</a>, ...).</p>
+<blockquote>
+<p>The API can help your merchant by allowing him to manage your marketplace from its favorite tool !</p>
+</blockquote>
+<p>However, this cost money, consider it when your marketplace reach a minimum of merchants.</p>
+<h2>An API for everything, because automation rules <a name="an-api-for-everything-because-automation-rules"></a> <a href="#an-api-for-everything-because-automation-rules">¶</a></h2>
+<p>You now have an API for merchant, but does it handle everything the merchant need? For example on most of marketplace you have a list of categories on which the merchant can sell. This should not provided in a CSV file but as an API. Why? Because if tomorrow you want to add new categories with your API, you don’t have to communicate about it and merchants can easily retrieve it. <strong>With an API for everything you allow the merchant to automatise everything !</strong> It means less friction points.</p>
+<h2>What’s a good/bad API? <a name="whats-a-good-bad-api"></a> <a href="#whats-a-good-bad-api">¶</a></h2>
+<p>A good API is a when your merchant is fully autonomous to plug your marketplace to its IT system. From my experience there is only a few marketplaces with good API. Here are some good and bad practices on marketplace API, those criteria are just a few among a long list, took a look at Vinay Sahni post <a href="http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#versioning">"Best Practices for Designing a Pragmatic RESTful API"</a> for more informations.</p>
+<p>Good practices:</p>
+<ul>
+<li>Having a nice documentation</li>
+<li><strong>Autonomous merchant</strong> (don’t need to contact you for accessing the API for example)</li>
+<li>Restful API (lien)</li>
+<li>Standard format (JSON, XML, SOAP)</li>
+<li>Clear errors (too often the error after an API call is not clear, this will cause the merchant to contact you and therefore lose time)</li>
+<li>Status page (you will have downtime, communicate about it)</li>
+<li>API backwards compatibility</li>
+<li>Bonus: having an SDK</li>
+</ul>
+<p>Bad practices:</p>
+<ul>
+<li>Complexe API (all the complexity should be handle by you, not the merchant)</li>
+<li>Bad documentation (example, a simple “Javadoc” style documentation)</li>
+<li>Fuzzy error (it will make lose time to everyone)</li>
+<li><strong>Breaking changes</strong> (no backward compatibility, merchants will have to update their development, they may not have the money/resources and therefore <strong>this is a big risk for business</strong>)</li>
+</ul>
+
+        </div>
+
+    <p>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </p>
+
+
+        </div><!-- /.blog-main -->
+
+        <div class="col-sm-3 offset-sm-1 blog-sidebar">
+          <div class="sidebar-module sidebar-module-inset">
+            <h4>Who am I ?</h4>
+            <p>Python/Django freelance & marketplace specialist, I am always eager to learn more ! ツ</p>
+          </div>
+
+          <div class="sidebar-module">
+            <h4>Categories</h4>
+            <ol class="list-unstyled">
+                <li><a href="http://b0uh.github.io/category/python.html">Python</a></li>
+            </ol>
+          </div>
+
+            <div class="sidebar-module">
+              <h4>Social</h4>
+              <ol class="list-unstyled social">
+                    <li><img src="http://b0uh.github.io/theme/images/icons/twitter-18px.png" /> <a href="https://twitter.com/b0uh">Twitter</a></li>
+                    <li><img src="http://b0uh.github.io/theme/images/icons/linkedin-18px.png" /> <a href="https://www.linkedin.com/in/thomasloiret/">LinkedIn</a></li>
+                    <li><img src="http://b0uh.github.io/theme/images/icons/hopwork-18px.png" /> <a href="https://www.hopwork.fr/profile/thomasloiret">Hopwork</a></li>
+                    <li><img src="http://b0uh.github.io/theme/images/icons/lastfm-18px.png" /> <a href="https://www.last.fm/user/b0uh">Last.fm</a></li>
+            </div>
+
+
+        </div><!-- /.blog-sidebar -->
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+    <footer class="blog-footer">
+      <p>Proudly powered by <a href="https://github.com/getpelican/pelican" rel="nofollow">Pelican</a>.</p>
+      <p>
+        <a href="#">Back to top</a>
+      </p>
+    </footer>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script type="text/javascript" src="http://b0uh.github.io/theme/js/ie10-viewport-bug-workaround.js"></script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-98369697-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+  </body>
+</html>

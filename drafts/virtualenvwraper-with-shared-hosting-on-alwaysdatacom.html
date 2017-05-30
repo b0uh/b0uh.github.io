@@ -8,9 +8,13 @@
     <meta name="author" content="Thomas Loiret">
 
 
+  <meta name="description" content="How to install virtualenvwrapper on shared hosting on alwaywasdata ?">
+
+
+
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Thomas Loiret - Random thoughts</title>
+    <title>Virtualenvwraper with shared hosting on alwaysdata.com - Thomas Loiret - Random thoughts</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
@@ -48,22 +52,43 @@
 
 
         <div class="blog-post">
-
-                <h2 class="blog-post-title"><a href="http://b0uh.github.io/protect-django-media-files-per-user-basis-with-nginx.html" rel="bookmark" title="Permalink to Protect Django media files per user basis with nginx">Protect Django media files per user basis with nginx</a></h2>
-
+            <h1 class="blog-post-title">Virtualenvwraper with shared hosting on alwaysdata.com</h1>
             <p class="blog-post-meta">
-                <time datetime="Tue 30 May 2017">Tue 30 May 2017</time> by
+                <time datetime="Fri 28 April 2017">Fri 28 April 2017</time> by
                     <a href="http://b0uh.github.io/author/thomas-loiret.html">Thomas Loiret</a>
-
-                <p>How can you control access to django media files ?</p>
+                <br /><br />
             </p>
+
+                <h2>Installation of virtualenvwrapper</h2>
+<p>In your console type :</p>
+<div class="highlight"><pre><span></span><span class="go">pip install virtualenvwrapper</span>
+</pre></div>
+
+
+<h2>Enable virtualenvwrapper with ZSH + Oh My Zsh</h2>
+<p>In order to use ZSH you should go to the <a href="https://admin.alwaysdata.com/ssh/">adminstration panel</a> (Remote access &gt; SSH). Then with <a href="https://github.com/robbyrussell/oh-my-zsh">Oh My Zsh</a>, you can use the virtualenvwrapper plugin by adding this into your .zshrc file :</p>
+<div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$HOME</span>/.local/bin
+</pre></div>
+
+
+<p>And activate your plugin :</p>
+<div class="highlight"><pre><span></span><span class="nv">plugins</span><span class="o">=(</span>git virtualenvwrapper<span class="o">)</span>
+</pre></div>
+
+
+<h2>Enable virtualenvwrapper with other shells</h2>
+<p>Edit ~/.bashrc (or your startup shell script) and add:</p>
+<div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">WORKON_HOME</span><span class="o">=</span><span class="nv">$HOME</span>/.virtualenvs
+<span class="nb">source</span> <span class="nv">$HOME</span>/.local/bin/virtualenvwrapper.sh
+</pre></div>
 
         </div>
 
+    <p>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </p>
 
-          <nav class="blog-pagination">
-              <a class="btn btn-outline-secondary disabled" href="http://b0uh.github.io/">Older</a>
-          </nav>
 
         </div><!-- /.blog-main -->
 

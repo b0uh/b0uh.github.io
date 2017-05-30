@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="author" content="Thomas Loiret">
+
+
+  <meta name="description" content="How can you control access to django media files ?">
+
+
+
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Protect Django media files per user basis with nginx - Thomas Loiret - Random thoughts</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+
+    <link href="http://b0uh.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Thomas Loiret - Random thoughts Atom Feed" />
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="http://b0uh.github.io/theme/css/tinytypo.css">
+    <link rel="stylesheet" href="http://b0uh.github.io/theme/css/pygment.css">
+    <link href="http://b0uh.github.io/theme/css/blog.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="nav blog-nav">
+          <a class="nav-link active" href="http://b0uh.github.io">Home</a>
+            <a class="nav-link " href="http://b0uh.github.io/pages/hire-me.html">Hire me !</a>
+
+
+<a class="nav-link" href="http://b0uh.github.io/feeds/all.atom.xml"><img src="http://b0uh.github.io/theme/images/icons/feed-18px.png"></a>
+
+        </nav>
+      </div>
+    </div>
+
+
+    <div class="container">
+
+      <div class="row">
+
+        <div class="col-sm-8 blog-main">
+
+
+        <div class="blog-post">
+            <h1 class="blog-post-title">Protect Django media files per user basis with nginx</h1>
+            <p class="blog-post-meta">
+                <time datetime="Tue 30 May 2017">Tue 30 May 2017</time> by
+                    <a href="http://b0uh.github.io/author/thomas-loiret.html">Thomas Loiret</a>
+                <br /><br />
+            </p>
+
+                <h2>Use case</h2>
+<p>A service with Django where user can upload files and you want to be sure that they can only access to their own files and not the files from other users. </p>
+<p>In this example, I am using <a href="http://nginx.org/">nginx</a> but this solution can be adapted to other http servers.</p>
+<h2>Step 1: All requests for media should go throught a specific view</h2>
+<p>Edit file <code>myproject/urls.py</code> and add:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">myproject.views</span> <span class="kn">import</span> <span class="n">media_access</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^media/(?P&lt;path&gt;.*)&#39;</span><span class="p">,</span> <span class="n">media_access</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;media&#39;</span><span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+
+
+<h2>Step 2: Add the view and check access</h2>
+<p>Add the following view in <code>myproject/views.py</code>:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponseForbidden</span>
+
+<span class="k">def</span> <span class="nf">media_access</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    When trying to access :</span>
+<span class="sd">    myproject.com/media/uploads/passport.png</span>
+
+<span class="sd">    If access is authorized, the request will be redirected to</span>
+<span class="sd">    myproject.com/protected/media/uploads/passport.png</span>
+
+<span class="sd">    This special URL will be handle by nginx we the help of X-Accel</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">access_granted</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_staff</span><span class="p">:</span>
+            <span class="c1"># If admin, everything is granted</span>
+            <span class="n">access_granted</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># For simple user, only their documents can be accessed</span>
+            <span class="n">user_documents</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">user</span><span class="o">.</span><span class="n">identity_document</span><span class="p">,</span>
+                <span class="c1"># add here more allowed documents</span>
+            <span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">user_documents</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="n">doc</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="n">access_granted</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="k">if</span> <span class="n">access_granted</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">()</span>
+        <span class="c1"># Content-type will be detected by nginx</span>
+        <span class="k">del</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">]</span>
+        <span class="n">response</span><span class="p">[</span><span class="s1">&#39;X-Accel-Redirect&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/protected/media/&#39;</span> <span class="o">+</span> <span class="n">path</span>
+        <span class="k">return</span> <span class="n">response</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">HttpResponseForbidden</span><span class="p">(</span><span class="s1">&#39;Not authorized to access this media.&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Here the important part is about the variable <code>user_documents</code>. It should contain reference to all files the user has access. In my case I extended the <code>User</code> model to add a field <code>identity_document</code> that why I can access it here.</p>
+<p>In this <code>media_acces</code> view, you can implement any authorization logic.</p>
+<h2>Step 3: Configure nginx</h2>
+<p>Here is a full example of nginx configuration. The important part is about <code>location /protected/</code>. We suppose that Django is available with <a href="http://gunicorn.org/">Gunicorn</a> on port 8080 for example.</p>
+<div class="highlight"><pre><span></span><span class="n">upstream</span> <span class="n">myprojectapp</span> <span class="p">{</span>
+  <span class="n">server</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">8080</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">server</span> <span class="p">{</span>
+    <span class="n">listen</span> <span class="mi">80</span><span class="p">;</span>
+
+    <span class="n">server_name</span> <span class="n">myproject</span><span class="o">.</span><span class="n">com</span><span class="p">;</span>
+
+    <span class="n">server_name_in_redirect</span> <span class="n">on</span><span class="p">;</span>
+    <span class="n">error_log</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">myproject</span><span class="o">-</span><span class="n">error</span><span class="o">.</span><span class="n">log</span> <span class="n">crit</span><span class="p">;</span>
+    <span class="n">access_log</span>  <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">myproject</span><span class="o">-</span><span class="n">access</span><span class="o">.</span><span class="n">log</span> <span class="n">custom_combined</span><span class="p">;</span>
+
+    <span class="n">root</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">static</span><span class="p">;</span>
+
+    <span class="n">location</span> <span class="o">^~</span> <span class="o">/</span><span class="n">static</span><span class="o">/</span> <span class="p">{</span>
+        <span class="n">alias</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">location</span> <span class="o">/</span><span class="n">protected</span><span class="o">/</span> <span class="p">{</span>
+        <span class="n">internal</span><span class="p">;</span>
+        <span class="n">alias</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">django</span><span class="o">/</span><span class="n">project</span><span class="o">/</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">location</span> <span class="o">/</span> <span class="p">{</span>
+        <span class="n">include</span> <span class="n">proxy_params</span><span class="p">;</span>
+        <span class="n">proxy_pass</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">myprojectapp</span><span class="p">;</span>
+        <span class="n">proxy_buffering</span> <span class="n">off</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</pre></div>
+
+
+<p>You can notice there is no <code>location ^~ /media/</code> that's because this URL is handle by django.</p>
+<h2>Conclusion</h2>
+<p>You have seen how quickly you can protect your media files taking advantage of Django to handle the authorization and of nginx to serve files :)</p>
+<p>You can find more informations about X-accel on nginx website: <a href="https://www.nginx.com/resources/wiki/start/topics/examples/x-accel/">https://www.nginx.com/resources/wiki/start/topics/examples/x-accel/</a></p>
+
+        </div>
+
+    <p>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </p>
+
+
+        </div><!-- /.blog-main -->
+
+        <div class="col-sm-3 offset-sm-1 blog-sidebar">
+          <div class="sidebar-module sidebar-module-inset">
+            <h4>Who am I ?</h4>
+            <p>Python/Django freelance & marketplace specialist, I am always eager to learn more ! ツ</p>
+          </div>
+
+          <div class="sidebar-module">
+            <h4>Categories</h4>
+            <ol class="list-unstyled">
+                <li><a href="http://b0uh.github.io/category/python.html">Python</a></li>
+            </ol>
+          </div>
+
+            <div class="sidebar-module">
+              <h4>Social</h4>
+              <ol class="list-unstyled social">
+                    <li><img src="http://b0uh.github.io/theme/images/icons/twitter-18px.png" /> <a href="https://twitter.com/b0uh">Twitter</a></li>
+                    <li><img src="http://b0uh.github.io/theme/images/icons/linkedin-18px.png" /> <a href="https://www.linkedin.com/in/thomasloiret/">LinkedIn</a></li>
+                    <li><img src="http://b0uh.github.io/theme/images/icons/hopwork-18px.png" /> <a href="https://www.hopwork.fr/profile/thomasloiret">Hopwork</a></li>
+                    <li><img src="http://b0uh.github.io/theme/images/icons/lastfm-18px.png" /> <a href="https://www.last.fm/user/b0uh">Last.fm</a></li>
+            </div>
+
+
+        </div><!-- /.blog-sidebar -->
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+    <footer class="blog-footer">
+      <p>Proudly powered by <a href="https://github.com/getpelican/pelican" rel="nofollow">Pelican</a>.</p>
+      <p>
+        <a href="#">Back to top</a>
+      </p>
+    </footer>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script type="text/javascript" src="http://b0uh.github.io/theme/js/ie10-viewport-bug-workaround.js"></script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-98369697-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+  </body>
+</html>
