@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="author" content="Thomas Loiret">
+
+
+  <meta name="description" content="How to have a CSRF token in your function view's template ?">
+
+
+
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Django 1.11, CSRF token, template & function view - Thomas Loiret - Random thoughts</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+
+    <link href="https://b0uh.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Thomas Loiret - Random thoughts Atom Feed" />
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="https://b0uh.github.io/theme/css/tinytypo.css">
+    <link rel="stylesheet" href="https://b0uh.github.io/theme/css/pygment.css">
+    <link href="https://b0uh.github.io/theme/css/blog.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="nav blog-nav">
+          <a class="nav-link active" href="https://b0uh.github.io">Home</a>
+            <a class="nav-link " href="https://b0uh.github.io/pages/hire-me.html">Hire me !</a>
+
+
+<a class="nav-link" href="https://b0uh.github.io/feeds/all.atom.xml"><img src="https://b0uh.github.io/theme/images/icons/feed-18px.png"></a>
+
+        </nav>
+      </div>
+    </div>
+
+
+    <div class="container">
+
+      <div class="row">
+
+        <div class="col-sm-8 blog-main">
+
+
+        <div class="blog-post">
+            <h1 class="blog-post-title">Django 1.11, CSRF token, template & function view</h1>
+            <p class="blog-post-meta">
+                <time datetime="Fri 09 June 2017">Fri 09 June 2017</time> by
+                    <a href="https://b0uh.github.io/author/thomas-loiret.html">Thomas Loiret</a>
+                <br /><br />
+            </p>
+
+                <h2>The goal</h2>
+<p>In one of my project I wanted to handle a view with a function, and this view had to handle a form and render HTML through a template. Pretty classic...</p>
+<h2>Try number 1: @csrf_protect decorator</h2>
+<p>I first thought was to add the famous decorator like this :</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+<span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span>
+<span class="kn">from</span> <span class="nn">django.views.decorators.csrf</span> <span class="kn">import</span> <span class="n">csrf_protect</span>
+
+<span class="nd">@csrf_protect</span>
+<span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">&#39;my_page.html&#39;</span><span class="p">)</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">context</span><span class="p">))</span>
+</pre></div>
+
+
+<p>The <code>{%csrf_token %}</code> in my template didn't render anything, ok, that's a fail.</p>
+<h2>Try number 2: RequestContext to the rescue</h2>
+<p>I started looking at the documentation and I found this: https://docs.djangoproject.com/en/1.11/ref/csrf/#how-to-use-it</p>
+<p>It said:</p>
+<blockquote>
+<p>In the corresponding view functions, ensure that RequestContext is used to render the response so that {% csrf_token %} will work properly. If you’re using the render() function, generic views, or contrib apps, you are covered already since these all use RequestContext.</p>
+</blockquote>
+<p>Ok, so let's try with a RequestContext:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+<span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">RequestContext</span><span class="p">,</span> <span class="n">loader</span>
+<span class="kn">from</span> <span class="nn">django.views.decorators.csrf</span> <span class="kn">import</span> <span class="n">csrf_protect</span>
+
+<span class="nd">@csrf_protect</span>
+<span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">&#39;my_page.html&#39;</span><span class="p">)</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">request_context</span> <span class="o">=</span> <span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">request_context</span><span class="p">))</span>
+</pre></div>
+
+
+<p>This time a got a error 500, damned... The error says:  "context must be a dict rather than RequestContext." Ok, you want a dict but the documentation said I need to have a RequestContext, dafuq ?</p>
+<h2>Try number 3: Template and Template, the subtile difference</h2>
+<p>After looking to a lot of documentation, stackoverflow questions and Django's code itself. I found a solution, I don't know if it is the better, but it works:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+<span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">RequestContext</span><span class="p">,</span> <span class="n">loader</span>
+<span class="kn">from</span> <span class="nn">django.views.decorators.csrf</span> <span class="kn">import</span> <span class="n">csrf_protect</span>
+
+<span class="nd">@csrf_protect</span>
+<span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">&#39;my_page.html&#39;</span><span class="p">)</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">request_context</span> <span class="o">=</span> <span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">request_context</span><span class="p">))</span>
+</pre></div>
+
+
+<p>The important thing here is <code>t.template</code>! The object <code>t</code> is an instance of <code>django.template.backends.django.Template</code> and the object <code>t.template</code> is an instance of <code>django.template.base.Template</code> which accepts <code>RequestContext</code>!</p>
+<p>I hope this will help you save some time!</p>
+
+        </div>
+
+    <p>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    </p>
+
+
+        </div><!-- /.blog-main -->
+
+        <div class="col-sm-3 offset-sm-1 blog-sidebar">
+          <div class="sidebar-module sidebar-module-inset">
+            <h4>Who am I ?</h4>
+            <p>Python/Django freelance & marketplace specialist, I am always eager to learn more ! ツ</p>
+          </div>
+
+          <div class="sidebar-module">
+            <h4>Categories</h4>
+            <ol class="list-unstyled">
+                <li><a href="https://b0uh.github.io/category/python.html">Python</a></li>
+            </ol>
+          </div>
+
+            <div class="sidebar-module">
+              <h4>Social</h4>
+              <ol class="list-unstyled social">
+                    <li><img src="https://b0uh.github.io/theme/images/icons/twitter-18px.png" /> <a href="https://twitter.com/b0uh">Twitter</a></li>
+                    <li><img src="https://b0uh.github.io/theme/images/icons/linkedin-18px.png" /> <a href="https://www.linkedin.com/in/thomasloiret/">LinkedIn</a></li>
+                    <li><img src="https://b0uh.github.io/theme/images/icons/hopwork-18px.png" /> <a href="https://www.hopwork.fr/profile/thomasloiret">Hopwork</a></li>
+                    <li><img src="https://b0uh.github.io/theme/images/icons/lastfm-18px.png" /> <a href="https://www.last.fm/user/b0uh">Last.fm</a></li>
+            </div>
+
+
+        </div><!-- /.blog-sidebar -->
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+    <footer class="blog-footer">
+      <p>Proudly powered by <a href="https://github.com/getpelican/pelican" rel="nofollow">Pelican</a>.</p>
+      <p>
+        <a href="#">Back to top</a>
+      </p>
+    </footer>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script type="text/javascript" src="https://b0uh.github.io/theme/js/ie10-viewport-bug-workaround.js"></script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-98369697-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+  </body>
+</html>

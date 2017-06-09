@@ -1,5 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts - Python</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/python.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2017-06-03T21:00:00+02:00</updated><entry><title>Virtualenvwraper with shared hosting on alwaysdata.com</title><link href="https://b0uh.github.io/virtualenvwraper-with-shared-hosting-on-alwaysdatacom.html" rel="alternate"></link><published>2017-06-03T21:00:00+02:00</published><updated>2017-06-03T21:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-06-03:/virtualenvwraper-with-shared-hosting-on-alwaysdatacom.html</id><summary type="html">&lt;p&gt;How to install virtualenvwrapper on shared hosting on alwaywasdata ?&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Installation of virtualenvwrapper&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts - Python</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/python.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2017-06-09T23:00:00+02:00</updated><entry><title>Django 1.11, CSRF token, template &amp; function view</title><link href="https://b0uh.github.io/django-111-csrf-token-template-function-view.html" rel="alternate"></link><published>2017-06-09T23:00:00+02:00</published><updated>2017-06-09T23:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-06-09:/django-111-csrf-token-template-function-view.html</id><summary type="html">&lt;p&gt;How to have a CSRF token in your function view's template ?&lt;/p&gt;</summary><content type="html">&lt;h2&gt;The goal&lt;/h2&gt;
+&lt;p&gt;In one of my project I wanted to handle a view with a function, and this view had to handle a form and render HTML through a template. Pretty classic...&lt;/p&gt;
+&lt;h2&gt;Try number 1: @csrf_protect decorator&lt;/h2&gt;
+&lt;p&gt;I first thought was to add the famous decorator like this :&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.http&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.template&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;loader&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.views.decorators.csrf&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;csrf_protect&lt;/span&gt;
+
+&lt;span class="nd"&gt;@csrf_protect&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;home&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;loader&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_template&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;my_page.html&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;context&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The &lt;code&gt;{%csrf_token %}&lt;/code&gt; in my template didn't render anything, ok, that's a fail.&lt;/p&gt;
+&lt;h2&gt;Try number 2: RequestContext to the rescue&lt;/h2&gt;
+&lt;p&gt;I started looking at the documentation and I found this: https://docs.djangoproject.com/en/1.11/ref/csrf/#how-to-use-it&lt;/p&gt;
+&lt;p&gt;It said:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In the corresponding view functions, ensure that RequestContext is used to render the response so that {% csrf_token %} will work properly. If you’re using the render() function, generic views, or contrib apps, you are covered already since these all use RequestContext.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Ok, so let's try with a RequestContext:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.http&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.template&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;RequestContext&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;loader&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.views.decorators.csrf&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;csrf_protect&lt;/span&gt;
+
+&lt;span class="nd"&gt;@csrf_protect&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;home&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;loader&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_template&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;my_page.html&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;context&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+    &lt;span class="n"&gt;request_context&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RequestContext&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request_context&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This time a got a error 500, damned... The error says:  "context must be a dict rather than RequestContext." Ok, you want a dict but the documentation said I need to have a RequestContext, dafuq ?&lt;/p&gt;
+&lt;h2&gt;Try number 3: Template and Template, the subtile difference&lt;/h2&gt;
+&lt;p&gt;After looking to a lot of documentation, stackoverflow questions and Django's code itself. I found a solution, I don't know if it is the better, but it works:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.http&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.template&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;RequestContext&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;loader&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.views.decorators.csrf&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;csrf_protect&lt;/span&gt;
+
+&lt;span class="nd"&gt;@csrf_protect&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;home&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;loader&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_template&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;my_page.html&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;context&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
+    &lt;span class="n"&gt;request_context&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RequestContext&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;template&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request_context&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The important thing here is &lt;code&gt;t.template&lt;/code&gt;! The object &lt;code&gt;t&lt;/code&gt; is an instance of &lt;code&gt;django.template.backends.django.Template&lt;/code&gt; and the object &lt;code&gt;t.template&lt;/code&gt; is an instance of &lt;code&gt;django.template.base.Template&lt;/code&gt; which accepts &lt;code&gt;RequestContext&lt;/code&gt;!&lt;/p&gt;
+&lt;p&gt;I hope this will help you save some time!&lt;/p&gt;</content><category term="django"></category><category term="csrf"></category><category term="token"></category><category term="template"></category><category term="function"></category><category term="view"></category><category term="requestcontext"></category></entry><entry><title>Virtualenvwraper with shared hosting on alwaysdata.com</title><link href="https://b0uh.github.io/virtualenvwraper-with-shared-hosting-on-alwaysdatacom.html" rel="alternate"></link><published>2017-06-03T21:00:00+02:00</published><updated>2017-06-03T21:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-06-03:/virtualenvwraper-with-shared-hosting-on-alwaysdatacom.html</id><summary type="html">&lt;p&gt;How to install virtualenvwrapper on shared hosting on alwaywasdata ?&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Installation of virtualenvwrapper&lt;/h2&gt;
 &lt;p&gt;In your console type :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="go"&gt;pip install virtualenvwrapper&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
