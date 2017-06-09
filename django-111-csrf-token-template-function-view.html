@@ -60,9 +60,9 @@
             </p>
 
                 <h2>The goal</h2>
-<p>In one of my project I wanted to handle a view with a function, and this view had to handle a form and render HTML through a template. Pretty classic...</p>
+<p>In one of my project I wanted to handle a view with a function, and this view had to handle a form and render HTML through a template. Pretty classic... but I had trouble to add the CSRF token!</p>
 <h2>Try number 1: @csrf_protect decorator</h2>
-<p>I first thought was to add the famous decorator like this :</p>
+<p>I first thought I had to add the famous decorator like this :</p>
 <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
 <span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span>
 <span class="kn">from</span> <span class="nn">django.views.decorators.csrf</span> <span class="kn">import</span> <span class="n">csrf_protect</span>
@@ -77,7 +77,7 @@
 
 <p>The <code>{%csrf_token %}</code> in my template didn't render anything, ok, that's a fail.</p>
 <h2>Try number 2: RequestContext to the rescue</h2>
-<p>I started looking at the documentation and I found this: https://docs.djangoproject.com/en/1.11/ref/csrf/#how-to-use-it</p>
+<p>I started looking at the documentation and I found this: <a href="https://docs.djangoproject.com/en/1.11/ref/csrf/#how-to-use-it">https://docs.djangoproject.com/en/1.11/ref/csrf/#how-to-use-it</a></p>
 <p>It said:</p>
 <blockquote>
 <p>In the corresponding view functions, ensure that RequestContext is used to render the response so that {% csrf_token %} will work properly. If you’re using the render() function, generic views, or contrib apps, you are covered already since these all use RequestContext.</p>

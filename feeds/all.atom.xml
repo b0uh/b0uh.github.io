@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2017-06-09T23:00:00+02:00</updated><entry><title>Django 1.11, CSRF token, template &amp; function view</title><link href="https://b0uh.github.io/django-111-csrf-token-template-function-view.html" rel="alternate"></link><published>2017-06-09T23:00:00+02:00</published><updated>2017-06-09T23:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-06-09:/django-111-csrf-token-template-function-view.html</id><summary type="html">&lt;p&gt;How to have a CSRF token in your function view's template ?&lt;/p&gt;</summary><content type="html">&lt;h2&gt;The goal&lt;/h2&gt;
-&lt;p&gt;In one of my project I wanted to handle a view with a function, and this view had to handle a form and render HTML through a template. Pretty classic...&lt;/p&gt;
+&lt;p&gt;In one of my project I wanted to handle a view with a function, and this view had to handle a form and render HTML through a template. Pretty classic... but I had trouble to add the CSRF token!&lt;/p&gt;
 &lt;h2&gt;Try number 1: @csrf_protect decorator&lt;/h2&gt;
-&lt;p&gt;I first thought was to add the famous decorator like this :&lt;/p&gt;
+&lt;p&gt;I first thought I had to add the famous decorator like this :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.http&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.template&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;loader&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.views.decorators.csrf&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;csrf_protect&lt;/span&gt;
@@ -17,7 +17,7 @@
 
 &lt;p&gt;The &lt;code&gt;{%csrf_token %}&lt;/code&gt; in my template didn't render anything, ok, that's a fail.&lt;/p&gt;
 &lt;h2&gt;Try number 2: RequestContext to the rescue&lt;/h2&gt;
-&lt;p&gt;I started looking at the documentation and I found this: https://docs.djangoproject.com/en/1.11/ref/csrf/#how-to-use-it&lt;/p&gt;
+&lt;p&gt;I started looking at the documentation and I found this: &lt;a href="https://docs.djangoproject.com/en/1.11/ref/csrf/#how-to-use-it"&gt;https://docs.djangoproject.com/en/1.11/ref/csrf/#how-to-use-it&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;It said:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;In the corresponding view functions, ensure that RequestContext is used to render the response so that {% csrf_token %} will work properly. If you’re using the render() function, generic views, or contrib apps, you are covered already since these all use RequestContext.&lt;/p&gt;
