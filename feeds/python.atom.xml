@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts - Python</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/python.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2017-06-14T11:00:00+02:00</updated><entry><title>Django authentication by email (no username)</title><link href="https://b0uh.github.io/django-authentication-by-email-no-username.html" rel="alternate"></link><published>2017-06-14T11:00:00+02:00</published><updated>2017-06-14T11:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-06-14:/django-authentication-by-email-no-username.html</id><summary type="html">&lt;p&gt;How to use the email as the user identifier and no longer use the username ?&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Goal&lt;/h1&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts - Python</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/python.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2017-07-11T11:00:00+02:00</updated><entry><title>django-registration vs django-registration-redux</title><link href="https://b0uh.github.io/django-registration-vs-django-registration-redux.html" rel="alternate"></link><published>2017-07-11T11:00:00+02:00</published><updated>2017-07-11T11:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-07-11:/django-registration-vs-django-registration-redux.html</id><summary type="html">&lt;p&gt;What is the difference between django-registration and django-registration-redux ?&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; Use &lt;code&gt;django-registration-redux&lt;/code&gt; because the community is behind it.&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;I have been a bit cut off the rest of the Django's world these last years and if you have been too, you may have some difficulties to understand why there is &lt;code&gt;django-registration-redux&lt;/code&gt; and &lt;code&gt;django-registration&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;So I wanted to share some clues I got. I may have missed some!&lt;/p&gt;
+&lt;p&gt;The package &lt;code&gt;django-registration&lt;/code&gt; use to be quite useful some years ago, but it seems like &lt;a href="https://github.com/ubernostrum"&gt;James Bennett&lt;/a&gt; stop maintains the package for more than 2 years (2013/2014), so &lt;a href="https://github.com/macropin/"&gt;Andrew Cutler&lt;/a&gt; forks it in 2014 and rename it &lt;code&gt;django-registration-redux&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;A year latter James Bennett start commiting again on the &lt;code&gt;django-registration&lt;/code&gt; package. So now we have those two packages with differents names but the same application name, it can be quite disturbing when switching projects with those two packages.&lt;/p&gt;
+&lt;p&gt;Both are now actives and seems to provide the same features, but I have chosen &lt;code&gt;django-registration-redux&lt;/code&gt; because the community seems to be behind it. One way to see it is to take a look at the statistics:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;django-registration-redux&lt;/code&gt;&lt;ul&gt;
+&lt;li&gt;63 contributors&lt;/li&gt;
+&lt;li&gt;125 pull requests&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;django-registration&lt;/code&gt;&lt;ul&gt;
+&lt;li&gt;21 contributors&lt;/li&gt;
+&lt;li&gt;40 pull requests&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I don't know why those projects are not merged into one. I think it could be really a good thing for the community and for the maintainers of those packages to join forces to have one package :)&lt;/p&gt;
+&lt;p&gt;Anyway, thanks to James Bennett, Andrew Cutler and all contributors to provide us such good packages!&lt;/p&gt;</content><category term="django"></category><category term="registration"></category><category term="redux"></category><category term="django-registration"></category><category term="django-registration-redux"></category></entry><entry><title>Django authentication by email (no username)</title><link href="https://b0uh.github.io/django-authentication-by-email-no-username.html" rel="alternate"></link><published>2017-06-14T11:00:00+02:00</published><updated>2017-06-14T11:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-06-14:/django-authentication-by-email-no-username.html</id><summary type="html">&lt;p&gt;How to use the email as the user identifier and no longer use the username ?&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Goal&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Allow user to register and log with email/password and not username/password.&lt;/li&gt;
 &lt;li&gt;Keep the behaviour as close as possible from Django defaults.&lt;ul&gt;
@@ -165,7 +186,7 @@
 &lt;p&gt;I started looking at the documentation and I found this: &lt;a href="https://docs.djangoproject.com/en/1.11/ref/csrf/#how-to-use-it"&gt;https://docs.djangoproject.com/en/1.11/ref/csrf/#how-to-use-it&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;It said:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;In the corresponding view functions, ensure that RequestContext is used to render the response so that {% csrf_token %} will work properly. If you’re using the render() function, generic views, or contrib apps, you are covered already since these all use RequestContext.&lt;/p&gt;
+&lt;p&gt;In the corresponding view functions, ensure that RequestContext is used to render the response so that &lt;code&gt;{% csrf_token %}&lt;/code&gt; will work properly. If you're using the &lt;code&gt;render()&lt;/code&gt; function, generic views, or contrib apps, you are covered already since these all use &lt;code&gt;RequestContext&lt;/code&gt;.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Ok, so let's try with a RequestContext:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.http&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;
