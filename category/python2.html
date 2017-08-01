@@ -5,10 +5,10 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Thomas Loiret">
-  <meta name="description" content="How to manage your Django's setting in a more avanced way?">
+    <meta name="description" content="Thomas Loiret's blog">
 
 
-  <title>Django advanced settings - Thomas Loiret - Random thoughts</title>
+  <title>Thomas Loiret - Random thoughts</title>
 
   <!-- Custom styles for this template -->
   <!-- build:css stylesheets/main.css -->
@@ -117,113 +117,62 @@
 
 <div class="container">
 
-      <div class="boxed  push-down-60">
+  <div class="row">
+    <div class="col-xs-8  col-xs-offset-2">
 
-        <!-- Start of the blogpost -->
-        <div class="row">
-          <div class="col-xs-10  col-xs-offset-1  col-md-8  col-md-offset-2  push-down-60">
-
-            <!-- Start of the content -->
-            <div class="post-content">
-              <h1>Django advanced settings</h1>
-
-<div class="meta__container--without-image">
+      <div class="boxed  push-down-45">
+        <!-- Meta without image start (Needed for WP theme)-->
+        <div class="meta">
+          <div class="row">
+            <div class="col-xs-12  col-sm-10  col-sm-offset-1">
+              <div class="meta__container--without-image">
                 <div class="row">
                   <div class="col-xs-12  col-sm-8">
                     <div class="meta__info">
                     </div>
                   </div>
                   <div class="col-xs-12  col-sm-4">
-                    <div class="meta__comments">
-                      <span class="meta__date"><span class="glyphicon glyphicon-calendar"></span>  &nbsp; Tue 02 May 2017</span>
-                    </div>
+                          <span class="meta__comments"><span class="glyphicon glyphicon-calendar"></span> &nbsp; Tue 30 May 2017</span>
                   </div>
                 </div>
               </div>
-
-              <h1>Django advanced settings</h1>
-<h3>TL;DR</h3>
-<p>Use the <code>DJANGO_SETTINGS_MODULE</code> variable to choose your Django settings according to your environnement and use a bit of <a href="http://gist.com">code</a> to load settings from your applications.</p>
-<h2>Cathing up with Django settings</h2>
-<p>Django settings are great because there are quite simple. You put anything in your <code>settings.py</code> file and then you can easily use them in your project.</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-
-<span class="k">print</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">LANGUAGE_CODE</span><span class="p">)</span>
-</pre></div>
-
-
-<p>That's nice, but on large project you may encounter two issues:</p>
-<ul>
-<li>How handle several environnements ? (production/stage/test)</li>
-<li>Your <code>settings.py</code> may be overloaded by settings used only by specific applications. How dispatche those settings ?</li>
-</ul>
-<h2>Handle several environnements</h2>
-<p>With large project often come multiples environnements, for each on them you may want differents settings. For example you may want to active <code>DEBUG</code> in the development environnement and deactivate it in stage and production.
-Currently, if you start a new Django project, it should like this :</p>
-<div class="highlight"><pre><span></span>project
-│   manage.py
-│
-└─── mysite
-    │   __init__.py
-    │   settings.py
-    │   urls.py
-    │   wsgi.py
-</pre></div>
-
-
-<p>The idea is to do :</p>
-<div class="highlight"><pre><span></span>project
-│   manage.py
-│
-└─── mysite
-    │   __init__.py
-    │   urls.py
-    │   wsgi.py
-    └───settings
-        │   base.py
-        │   production.py
-        │   stage.py
-        │   development.py
-</pre></div>
-
-
-<p>With this architecture you can have differents settings for each environnement and keep some settings identical accross them with the file <code>base.py</code>. In settings files other than <code>base.py</code> you should add: <code>from mysite.settings.base import *</code>. Then you can easilly change of settings with environement variable:</p>
-<div class="highlight"><pre><span></span>export DJANGO_SETTINGS_MODULE=&#39;mysite.settings.production&#39;
-</pre></div>
-
-
-<p>Tips, you can edit <code>manage.py</code> and <code>wsgi.py</code> to use one setting file by default.</p>
-<h2>Disptach settings in your applications</h2>
-<h2>Handle settings throught environment variables</h2>
-<p>puppet ?
-lengow's tool ?</p>
-
-              <div class="meta__container--without-image">
-                <div class="row">
-                </div>
-              </div>
-
-              <br>
-
-              <p>
-
-<!-- AddToAny BEGIN -->
-<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
-<a class="a2a_button_twitter"></a>
-<a class="a2a_button_linkedin"></a>
-<a class="a2a_button_facebook"></a>
-<a class="a2a_button_reddit"></a>
-<a class="a2a_button_google_plus"></a>
-</div>
-<script async src="https://static.addtoany.com/menu/page.js"></script>
-<!-- AddToAny END -->
-
-              </p>
-
             </div>
           </div>
         </div>
+        <!-- Meta without image end -->
+        <!-- Start of the blogpost -->
+        <div class="row">
+          <div class="col-xs-10  col-xs-offset-1">
+            <!-- Start of the content -->
+            <div class="post-content--front-page">
+              <h2 class="front-page-title"><a href="https://b0uh.github.io/protect-django-media-files-per-user-basis-with-nginx.html">Protect Django media files per user basis with nginx</a></h2>
+              <p><p>How can you control access to django media files ?</p></p>
+            </div>
+            <!-- End of the content -->
+            <a href="https://b0uh.github.io/protect-django-media-files-per-user-basis-with-nginx.html">
+              <div class="read-more">
+                Continue reading
+                <div class="read-more__arrow">
+                  <span class="glyphicon  glyphicon-chevron-right"></span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
       </div>
+
+
+<nav class="center">
+  <div class="pagination">
+    <div class="row">
+          <span class="page-numbers deactivate" href="#">Older</span>
+          <a class="page-numbers activate" href="https://b0uh.github.io/category/python.html">Newer</a>
+      </nav>
+
+    </div>
+  </div>
+
+
 
 </div>
 
