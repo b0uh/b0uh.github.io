@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2017-08-01T12:30:00+02:00</updated><entry><title>Django: multiple forms in one class based view</title><link href="https://b0uh.github.io/django-multiple-forms-in-one-class-based-view.html" rel="alternate"></link><published>2017-08-01T12:30:00+02:00</published><updated>2017-08-01T12:30:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-08-01:/django-multiple-forms-in-one-class-based-view.html</id><summary type="html">&lt;p&gt;How to fit several forms in one view ?&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Context&lt;/h1&gt;
-&lt;p&gt;Let's say we want to rebuild Stackoverflow and especially the page of a question. On this page you can either post a response or a comment, so here classic class based views are not enough. We will focus on those two forms (response and comment) that for the example bellow.&lt;/p&gt;
+&lt;p&gt;Let's say we want to rebuild Stackoverflow and especially the page of a question. On this page you can either post a response or a comment, so here classic class based views are not enough. We will focus on those two forms (response and comment) for the example bellow.&lt;/p&gt;
 &lt;h2&gt;Constraints&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Staying on the same URL after submitting a form&lt;/li&gt;
