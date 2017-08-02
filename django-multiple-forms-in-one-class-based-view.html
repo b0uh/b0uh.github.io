@@ -230,14 +230,16 @@
 <h1>question_detail.html</h1>
 <div class="highlight"><pre><span></span><span class="nt">&lt;fieldset&gt;</span>
     <span class="nt">&lt;legend&gt;</span>Answer the question<span class="nt">&lt;/legend&gt;</span>
-    <span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span><span class="cp">{%</span> <span class="k">csrf_token</span> <span class="cp">%}</span>
-        <span class="cp">{{</span> <span class="nv">response_form.as_p</span> <span class="cp">}}</span>
+    <span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
+        <span class="cp">{%</span> <span class="k">csrf_token</span> <span class="cp">%}</span>
+        <span class="cp">{{</span> <span class="nv">response_form</span> <span class="cp">}}</span>
         <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">&quot;response&quot;</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span> <span class="na">value=</span><span class="s">&quot;Submit&quot;</span> <span class="nt">/&gt;</span>
     <span class="nt">&lt;/form&gt;</span>
 <span class="nt">&lt;/fieldset&gt;</span>
 <span class="nt">&lt;fieldset&gt;</span>
     <span class="nt">&lt;legend&gt;</span>Add a comment<span class="nt">&lt;/legend&gt;</span>
-    <span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span><span class="cp">{%</span> <span class="k">csrf_token</span> <span class="cp">%}</span>
+    <span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
+        <span class="cp">{%</span> <span class="k">csrf_token</span> <span class="cp">%}</span>
         <span class="cp">{{</span> <span class="nv">comment_form</span> <span class="cp">}}</span>
         <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">&quot;comment&quot;</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span> <span class="na">value=</span><span class="s">&quot;Submit&quot;</span> <span class="nt">/&gt;</span>
     <span class="nt">&lt;/form&gt;</span>
@@ -247,7 +249,7 @@
 
 <p>For each form, in the template the should name the submit button in order to know in the view which form has been submitted.</p>
 <h1>Inspirations</h1>
-<p>While looking for a solution the handle multiple forms on one view I found these posts whose inspired me:</p>
+<p>While looking for a solution to handle multiple forms in one view I found these posts whose inspired me:</p>
 <ul>
 <li><a href="http://anothercomputingblog.blogspot.fr/2010/04/multiple-django-forms-on-same-view.html">Multiple Django forms in the same view</a> (How to know which form has been submitted)</li>
 <li><a href="https://chriskief.com/2012/12/30/django-class-based-views-with-multiple-forms/">Django Class-based Views with Multiple Forms</a> (Tweak <code>UpdateView</code> in order the handle multiple forms)</li>

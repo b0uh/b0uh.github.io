@@ -88,14 +88,16 @@
 &lt;h1&gt;question_detail.html&lt;/h1&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;fieldset&amp;gt;&lt;/span&gt;
     &lt;span class="nt"&gt;&amp;lt;legend&amp;gt;&lt;/span&gt;Answer the question&lt;span class="nt"&gt;&amp;lt;/legend&amp;gt;&lt;/span&gt;
-    &lt;span class="nt"&gt;&amp;lt;form&lt;/span&gt; &lt;span class="na"&gt;method=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;post&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;csrf_token&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-        &lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;response_form.as_p&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;form&lt;/span&gt; &lt;span class="na"&gt;method=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;post&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;csrf_token&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
+        &lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;response_form&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;
         &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;response&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;submit&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;value=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Submit&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
     &lt;span class="nt"&gt;&amp;lt;/form&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/fieldset&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;fieldset&amp;gt;&lt;/span&gt;
     &lt;span class="nt"&gt;&amp;lt;legend&amp;gt;&lt;/span&gt;Add a comment&lt;span class="nt"&gt;&amp;lt;/legend&amp;gt;&lt;/span&gt;
-    &lt;span class="nt"&gt;&amp;lt;form&lt;/span&gt; &lt;span class="na"&gt;method=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;post&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;csrf_token&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;form&lt;/span&gt; &lt;span class="na"&gt;method=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;post&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;csrf_token&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
         &lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;comment_form&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;
         &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;comment&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;submit&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;value=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Submit&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
     &lt;span class="nt"&gt;&amp;lt;/form&amp;gt;&lt;/span&gt;
@@ -105,7 +107,7 @@
 
 &lt;p&gt;For each form, in the template the should name the submit button in order to know in the view which form has been submitted.&lt;/p&gt;
 &lt;h1&gt;Inspirations&lt;/h1&gt;
-&lt;p&gt;While looking for a solution the handle multiple forms on one view I found these posts whose inspired me:&lt;/p&gt;
+&lt;p&gt;While looking for a solution to handle multiple forms in one view I found these posts whose inspired me:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://anothercomputingblog.blogspot.fr/2010/04/multiple-django-forms-on-same-view.html"&gt;Multiple Django forms in the same view&lt;/a&gt; (How to know which form has been submitted)&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://chriskief.com/2012/12/30/django-class-based-views-with-multiple-forms/"&gt;Django Class-based Views with Multiple Forms&lt;/a&gt; (Tweak &lt;code&gt;UpdateView&lt;/code&gt; in order the handle multiple forms)&lt;/li&gt;
