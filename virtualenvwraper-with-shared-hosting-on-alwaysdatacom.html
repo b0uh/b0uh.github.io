@@ -117,7 +117,7 @@
 
 <div class="container">
 
-      <div class="boxed  push-down-60">
+      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-60">
 
 
         <!-- Start of the blogpost -->
@@ -127,24 +127,29 @@
             <!-- Start of the content -->
             <div class="post-content">
 
-              <h1>Virtualenvwraper with shared hosting on alwaysdata.com</h1>
+              <h1 itemprop="name">Virtualenvwraper with shared hosting on alwaysdata.com</h1>
 
               <div class="meta__container--without-image">
                 <div class="row">
                   <div class="col-xs-12  col-sm-8">
-                    <div class="meta__info">
-                      Thomas Loiret
-                    </div>
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                      <div class="meta__info" itemprop="name">
+                        Thomas Loiret
+                      </div>
+                    </span>
                   </div>
                   <div class="col-xs-12  col-sm-4">
                     <div class="meta__comments">
-                      <span class="meta__date"><span class="glyphicon glyphicon-calendar"></span>  &nbsp; Sat 03 June 2017</span>
+                      <span class="meta__date" itemprop="datePublished" content="2017-06-03">
+                        <span class="glyphicon glyphicon-calendar"></span>  &nbsp; Sat 03 June 2017
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <h2>Installation of virtualenvwrapper</h2>
+              <span itemprop="articleBody">
+                <h2>Installation of virtualenvwrapper</h2>
 <p>In your console type :</p>
 <div class="highlight"><pre><span></span><span class="go">pip install virtualenvwrapper</span>
 </pre></div>
@@ -166,6 +171,7 @@
 <div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">WORKON_HOME</span><span class="o">=</span><span class="nv">$HOME</span>/.virtualenvs
 <span class="nb">source</span> <span class="nv">$HOME</span>/.local/bin/virtualenvwrapper.sh
 </pre></div>
+              </span>
 
               <div class="meta__container--without-image">
                 <div class="row">

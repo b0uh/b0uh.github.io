@@ -117,7 +117,7 @@
 
 <div class="container">
 
-      <div class="boxed  push-down-60">
+      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-60">
 
 
         <!-- Start of the blogpost -->
@@ -127,24 +127,29 @@
             <!-- Start of the content -->
             <div class="post-content">
 
-              <h1>Django: multiple forms in one class based view</h1>
+              <h1 itemprop="name">Django: multiple forms in one class based view</h1>
 
               <div class="meta__container--without-image">
                 <div class="row">
                   <div class="col-xs-12  col-sm-8">
-                    <div class="meta__info">
-                      Thomas Loiret
-                    </div>
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                      <div class="meta__info" itemprop="name">
+                        Thomas Loiret
+                      </div>
+                    </span>
                   </div>
                   <div class="col-xs-12  col-sm-4">
                     <div class="meta__comments">
-                      <span class="meta__date"><span class="glyphicon glyphicon-calendar"></span>  &nbsp; Tue 01 August 2017</span>
+                      <span class="meta__date" itemprop="datePublished" content="2017-08-01">
+                        <span class="glyphicon glyphicon-calendar"></span>  &nbsp; Tue 01 August 2017
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <h1>Context</h1>
+              <span itemprop="articleBody">
+                <h1>Context</h1>
 <p>Let's say we want to rebuild Stackoverflow and especially the page of a question. On this page you can either post a response or a comment, so here classic class based views are not enough. We will focus on those two forms (response and comment) for the example bellow.</p>
 <h2>Constraints</h2>
 <ul>
@@ -259,6 +264,7 @@
 <li><a href="http://www.joshuakehn.com/2013/7/18/multiple-django-forms-in-one-form.html">Using Multiple Django Forms On One Page</a> (Talks about saving several forms in one shot)</li>
 <li><a href="https://krzysztofzuraw.com/blog/2016/two-forms-one-view-django.html">Two forms one view in django</a> (Use multiple views to handle multiple forms, interesting approach)</li>
 </ul>
+              </span>
 
               <div class="meta__container--without-image">
                 <div class="row">

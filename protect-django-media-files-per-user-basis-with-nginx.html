@@ -117,7 +117,7 @@
 
 <div class="container">
 
-      <div class="boxed  push-down-60">
+      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-60">
 
 
         <!-- Start of the blogpost -->
@@ -127,24 +127,29 @@
             <!-- Start of the content -->
             <div class="post-content">
 
-              <h1>Protect Django media files per user basis with nginx</h1>
+              <h1 itemprop="name">Protect Django media files per user basis with nginx</h1>
 
               <div class="meta__container--without-image">
                 <div class="row">
                   <div class="col-xs-12  col-sm-8">
-                    <div class="meta__info">
-                      Thomas Loiret
-                    </div>
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                      <div class="meta__info" itemprop="name">
+                        Thomas Loiret
+                      </div>
+                    </span>
                   </div>
                   <div class="col-xs-12  col-sm-4">
                     <div class="meta__comments">
-                      <span class="meta__date"><span class="glyphicon glyphicon-calendar"></span>  &nbsp; Tue 30 May 2017</span>
+                      <span class="meta__date" itemprop="datePublished" content="2017-05-30">
+                        <span class="glyphicon glyphicon-calendar"></span>  &nbsp; Tue 30 May 2017
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <h2>Use case</h2>
+              <span itemprop="articleBody">
+                <h2>Use case</h2>
 <p>A service with Django where user can upload files and you want to be sure that they can only access to their own files and not the files from other users. </p>
 <p>In this example, I am using <a href="http://nginx.org/">nginx</a> but this solution can be adapted to other http servers.</p>
 <h2>Step 1: All requests for media should go throught a specific view</h2>
@@ -245,6 +250,7 @@
 <h2>Conclusion</h2>
 <p>You have seen how quickly you can protect your media files taking advantage of Django to handle the authorization and of nginx to serve files :)</p>
 <p>You can find more informations about X-accel on nginx website: <a href="https://www.nginx.com/resources/wiki/start/topics/examples/x-accel/">https://www.nginx.com/resources/wiki/start/topics/examples/x-accel/</a></p>
+              </span>
 
               <div class="meta__container--without-image">
                 <div class="row">

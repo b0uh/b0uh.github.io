@@ -117,7 +117,7 @@
 
 <div class="container">
 
-      <div class="boxed  push-down-60">
+      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-60">
 
 
         <!-- Start of the blogpost -->
@@ -127,24 +127,29 @@
             <!-- Start of the content -->
             <div class="post-content">
 
-              <h1>Django 1.11, CSRF token, template & function view</h1>
+              <h1 itemprop="name">Django 1.11, CSRF token, template & function view</h1>
 
               <div class="meta__container--without-image">
                 <div class="row">
                   <div class="col-xs-12  col-sm-8">
-                    <div class="meta__info">
-                      Thomas Loiret
-                    </div>
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                      <div class="meta__info" itemprop="name">
+                        Thomas Loiret
+                      </div>
+                    </span>
                   </div>
                   <div class="col-xs-12  col-sm-4">
                     <div class="meta__comments">
-                      <span class="meta__date"><span class="glyphicon glyphicon-calendar"></span>  &nbsp; Fri 09 June 2017</span>
+                      <span class="meta__date" itemprop="datePublished" content="2017-06-09">
+                        <span class="glyphicon glyphicon-calendar"></span>  &nbsp; Fri 09 June 2017
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <h2>The goal</h2>
+              <span itemprop="articleBody">
+                <h2>The goal</h2>
 <p>In one of my project I wanted to handle a view with a function, and this view had to handle a form and render HTML through a template. Pretty classic... but I had trouble to add the CSRF token!</p>
 <h2>Try number 1: @csrf_protect decorator</h2>
 <p>I first thought I had to add the famous decorator like this :</p>
@@ -199,6 +204,7 @@
 
 <p>The important thing here is <code>t.template</code>! The object <code>t</code> is an instance of <code>django.template.backends.django.Template</code> and the object <code>t.template</code> is an instance of <code>django.template.base.Template</code> which accepts <code>RequestContext</code>!</p>
 <p>I hope this will help you save some time!</p>
+              </span>
 
               <div class="meta__container--without-image">
                 <div class="row">

@@ -117,7 +117,7 @@
 
 <div class="container">
 
-      <div class="boxed  push-down-60">
+      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-60">
 
 
         <!-- Start of the blogpost -->
@@ -127,24 +127,29 @@
             <!-- Start of the content -->
             <div class="post-content">
 
-              <h1>Django authentication by email (no username)</h1>
+              <h1 itemprop="name">Django authentication by email (no username)</h1>
 
               <div class="meta__container--without-image">
                 <div class="row">
                   <div class="col-xs-12  col-sm-8">
-                    <div class="meta__info">
-                      Thomas Loiret
-                    </div>
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                      <div class="meta__info" itemprop="name">
+                        Thomas Loiret
+                      </div>
+                    </span>
                   </div>
                   <div class="col-xs-12  col-sm-4">
                     <div class="meta__comments">
-                      <span class="meta__date"><span class="glyphicon glyphicon-calendar"></span>  &nbsp; Wed 14 June 2017</span>
+                      <span class="meta__date" itemprop="datePublished" content="2017-06-14">
+                        <span class="glyphicon glyphicon-calendar"></span>  &nbsp; Wed 14 June 2017
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <h2>Goal</h2>
+              <span itemprop="articleBody">
+                <h2>Goal</h2>
 <ul>
 <li>Allow user to register and log with email/password and not username/password.</li>
 <li>Keep the behaviour as close as possible from Django defaults.<ul>
@@ -290,6 +295,7 @@
 <li><a href="https://medium.com/@ramykhuffash/django-authentication-with-just-an-email-and-password-no-username-required-33e47976b517">https://medium.com/@ramykhuffash/django-authentication-with-just-an-email-and-password-no-username-required-33e47976b517</a></li>
 <li><a href="https://docs.djangoproject.com/en/1.11/topics/auth/customizing/#substituting-a-custom-user-model">https://docs.djangoproject.com/en/1.11/topics/auth/customizing/#substituting-a-custom-user-model</a></li>
 </ul>
+              </span>
 
               <div class="meta__container--without-image">
                 <div class="row">

@@ -119,10 +119,10 @@
 
 <div class="container">
 
-      <div class="boxed  push-down-60">
+      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-60">
 
           <div class="meta">
-            <img class="wp-post-image" src="https://b0uh.github.io/medias/django_love.png" alt="Why I love Django" width="1138" height="493">
+            <img itemprop="image" class="wp-post-image" src="https://b0uh.github.io/medias/django_love.png" alt="Why I love Django" width="1138" height="493">
             <div class="meta__container"></div>
           </div>
 
@@ -133,27 +133,33 @@
             <!-- Start of the content -->
             <div class="post-content">
 
-              <h1>Why I love Django</h1>
+              <h1 itemprop="name">Why I love Django</h1>
 
               <div class="meta__container--without-image">
                 <div class="row">
                   <div class="col-xs-12  col-sm-8">
-                    <div class="meta__info">
-                      Thomas Loiret
-                    </div>
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                      <div class="meta__info" itemprop="name">
+                        Thomas Loiret
+                      </div>
+                    </span>
                   </div>
                   <div class="col-xs-12  col-sm-4">
                     <div class="meta__comments">
-                      <span class="meta__date"><span class="glyphicon glyphicon-calendar"></span>  &nbsp; Thu 07 September 2017</span>
+                      <span class="meta__date" itemprop="datePublished" content="2017-09-07">
+                        <span class="glyphicon glyphicon-calendar"></span>  &nbsp; Thu 07 September 2017
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <h2>Because it prevents you from making bad software design decisions !</h2>
+              <span itemprop="articleBody">
+                <h2>Because it prevents you from making bad software design decisions !</h2>
 <p>Everytime I start having headeach using Django because I try to do something not documented or not discussed on the internet, it often means that my software design is bad. </p>
 <p>Django make you think about how you design your code in order to be clean and keep it simple!</p>
 <p><strong>Headeach in Django = bad software design ! :)</strong></p>
+              </span>
 
               <div class="meta__container--without-image">
                 <div class="row">

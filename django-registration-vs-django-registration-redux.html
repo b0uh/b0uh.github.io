@@ -117,7 +117,7 @@
 
 <div class="container">
 
-      <div class="boxed  push-down-60">
+      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-60">
 
 
         <!-- Start of the blogpost -->
@@ -127,24 +127,29 @@
             <!-- Start of the content -->
             <div class="post-content">
 
-              <h1>django-registration vs django-registration-redux</h1>
+              <h1 itemprop="name">django-registration vs django-registration-redux</h1>
 
               <div class="meta__container--without-image">
                 <div class="row">
                   <div class="col-xs-12  col-sm-8">
-                    <div class="meta__info">
-                      Thomas Loiret
-                    </div>
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                      <div class="meta__info" itemprop="name">
+                        Thomas Loiret
+                      </div>
+                    </span>
                   </div>
                   <div class="col-xs-12  col-sm-4">
                     <div class="meta__comments">
-                      <span class="meta__date"><span class="glyphicon glyphicon-calendar"></span>  &nbsp; Tue 11 July 2017</span>
+                      <span class="meta__date" itemprop="datePublished" content="2017-07-11">
+                        <span class="glyphicon glyphicon-calendar"></span>  &nbsp; Tue 11 July 2017
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <p><br></p>
+              <span itemprop="articleBody">
+                <p><br></p>
 <p><strong>TL;DR:</strong> Use <code>django-registration-redux</code> because the community is behind it.</p>
 <p><br></p>
 <p>I have been a bit cut off the rest of the Django's world these last years and if you have been too, you may have some difficulties to understand why there is <code>django-registration-redux</code> and <code>django-registration</code>.</p>
@@ -166,6 +171,7 @@
 </ul>
 <p>I don't know why those projects are not merged into one. I think it could be really a good thing for the community and for the maintainers of those packages to join forces to have one package :)</p>
 <p>Anyway, thanks to James Bennett, Andrew Cutler and all contributors to provide us such good packages!</p>
+              </span>
 
               <div class="meta__container--without-image">
                 <div class="row">

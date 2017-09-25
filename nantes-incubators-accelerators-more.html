@@ -119,10 +119,10 @@
 
 <div class="container">
 
-      <div class="boxed  push-down-60">
+      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-60">
 
           <div class="meta">
-            <img class="wp-post-image" src="https://b0uh.github.io/medias/nantes_ecosystem.png" alt="Nantes incubators, accelerators & more" width="1138" height="493">
+            <img itemprop="image" class="wp-post-image" src="https://b0uh.github.io/medias/nantes_ecosystem.png" alt="Nantes incubators, accelerators & more" width="1138" height="493">
             <div class="meta__container"></div>
           </div>
 
@@ -133,24 +133,29 @@
             <!-- Start of the content -->
             <div class="post-content">
 
-              <h1>Nantes incubators, accelerators & more</h1>
+              <h1 itemprop="name">Nantes incubators, accelerators & more</h1>
 
               <div class="meta__container--without-image">
                 <div class="row">
                   <div class="col-xs-12  col-sm-8">
-                    <div class="meta__info">
-                      Thomas Loiret
-                    </div>
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                      <div class="meta__info" itemprop="name">
+                        Thomas Loiret
+                      </div>
+                    </span>
                   </div>
                   <div class="col-xs-12  col-sm-4">
                     <div class="meta__comments">
-                      <span class="meta__date"><span class="glyphicon glyphicon-calendar"></span>  &nbsp; Fri 22 September 2017</span>
+                      <span class="meta__date" itemprop="datePublished" content="2017-09-22">
+                        <span class="glyphicon glyphicon-calendar"></span>  &nbsp; Fri 22 September 2017
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <p><strong>Disclaimer</strong>: All information bellow are not ordered, I don't have any preferences about startups, incubators, etc.</p>
+              <span itemprop="articleBody">
+                <p><strong>Disclaimer</strong>: All information bellow are not ordered, I don't have any preferences about startups, incubators, etc.</p>
 <h2>Introduction</h2>
 <p>I follow Nantes startup ecosystem for quite a while and lately I heard about so many new structures to help and support startups, just this year there is at least 4 new incubators! I decided to list them all in order to have a better understanding of Nantes ecosystem.</p>
 <p>If there is any error, don't hesitate to ping me on <a href="https://twitter.com/b0uh">twitter</a>.</p>
@@ -325,6 +330,7 @@
 </ul>
 <h2>Conclusion</h2>
 <p>There is so many structures to help startups that it can be difficult to find the right one. But there is definitely one out there for each startup :)</p>
+              </span>
 
               <div class="meta__container--without-image">
                 <div class="row">
