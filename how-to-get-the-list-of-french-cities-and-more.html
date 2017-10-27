@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Thomas Loiret">
+  <meta name="description" content="Open-data doesn't provide a list of french cities with zip codes and GPS coordinates. How can we retrieve them ?">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@b0uh">
+    <meta name="twitter:creator" content="@b0uh">
+    <meta name="twitter:title" content="How to get the list of French cities and more? - Thomas Loiret - Random thoughts">
+    <meta name="twitter:description" content="Open-data doesn't provide a list of french cities with zip codes and GPS coordinates. How can we retrieve them ?">
+    <meta name="twitter:image" content="https://b0uh.github.io/medias/french_cities_laposte_insee.png">
+
+  <title>How to get the list of French cities and more? - Thomas Loiret - Random thoughts</title>
+
+  <!-- Custom styles for this template -->
+  <!-- build:css stylesheets/main.css -->
+  <link rel="stylesheet" href="https://b0uh.github.io/theme/css/main.css">
+  <link rel="stylesheet" href="https://b0uh.github.io/theme/css/custom.css">
+  <link rel="stylesheet" href="https://b0uh.github.io/theme/css/pygments/autumn.css">
+  <!-- endbuild -->
+
+  <link href="https://b0uh.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Thomas Loiret - Random thoughts Atom Feed" />
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+  <![endif]-->
+
+  <!-- Google Fonts -->
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Open+Sans:300,400,700:latin', 'Lato:700,900:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+  </script>
+</head>
+
+<body>
+<!-- header -->
+<header class="header  push-down-45">
+  <div class="container">
+
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#readable-navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <nav class="navbar  navbar-default" role="navigation">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse  navbar-collapse" id="readable-navbar-collapse">
+        <ul class="navigation">
+
+          <li>
+            <a href="https://b0uh.github.io">Home</a>
+          </li>
+
+            <li>
+              <a href="https://b0uh.github.io/pages/about.html">About</a>
+            </li>
+
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </nav>
+
+    <div class="hidden-xs  hidden-sm">
+      <div class="social">
+        <a href="#" class="search__container">
+          <span class="glyphicon  glyphicon-flash"></span>
+        </a>
+        <ul class="social__dropdown">
+            <li>
+              <a href="https://b0uh.github.io/feeds/all.atom.xml" target="_blank" class="social__container">
+                <span class="zocial-rss"></span>
+              </a>
+            </li>
+          <li>
+            <a href="https://twitter.com/b0uh" target="_blank" class="social__container">
+              <span class="zocial-twitter"></span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.linkedin.com/in/thomasloiret/" target="_blank" class="social__container">
+              <span class="zocial-linkedin"></span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.hopwork.fr/profile/thomasloiret" target="_blank" class="social__container">
+              <img src="https://b0uh.github.io/theme/images/icons/hopwork-25px.png" />
+            </a>
+          </li>
+          <li>
+            <a href="https://www.last.fm/user/b0uh" target="_blank" class="social__container">
+              <span class="zocial-lastfm"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-60">
+
+          <div class="meta">
+            <img itemprop="image" class="wp-post-image" src="https://b0uh.github.io/medias/french_cities_laposte_insee.png" alt="How to get the list of French cities and more?" width="1138" height="493">
+            <div class="meta__container"></div>
+          </div>
+
+        <!-- Start of the blogpost -->
+        <div class="row">
+          <div class="col-xs-10  col-xs-offset-1  col-md-8  col-md-offset-2  push-down-60">
+
+            <!-- Start of the content -->
+            <div class="post-content">
+
+              <h1 itemprop="name">How to get the list of French cities and more?</h1>
+
+              <div class="meta__container--without-image">
+                <div class="row">
+                  <div class="col-xs-12  col-sm-8">
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                      <div class="meta__info" itemprop="name">
+                        Thomas Loiret
+                      </div>
+                    </span>
+                  </div>
+                  <div class="col-xs-12  col-sm-4">
+                    <div class="meta__comments">
+                      <span class="meta__date" itemprop="datePublished" content="2017-10-12">
+                        <span class="glyphicon glyphicon-calendar"></span>  &nbsp; Thu 12 October 2017
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <span itemprop="articleBody">
+                <h1>Introduction</h1>
+<p>All I wanted was a DB of current french cities, their zip codes and their GPS coordinates. It turned out that it was not an easy thing to have !</p>
+<h1>Opendata in France (the source)</h1>
+<p>So in France we got some nice stuff about opendata since a few years, and that were I got my sources.</p>
+<h2>INSEE</h2>
+<p>For the list of current french cities, the only trusted source is INSEE. They provide that here <a href="https://www.insee.fr/fr/information/2028028">https://www.insee.fr/fr/information/2028028</a> (<a href="https://www.insee.fr/fr/statistiques/fichier/2028028/table-appartenance-geo-communes-17.zip">direct link to 2017 data</a>).</p>
+<p>First thing to know:</p>
+<blockquote>
+<p>Les compositions communales des zones d'emploi, aires urbaines et bassins de vie au 1er janvier 2017 proposées en téléchargement comportent quelques anomalies de classement concernant très peu de communes (moins d'une quinzaine). Une nouvelle mise en ligne, corrigeant ces anomalies, sera effectuée au début de l'automne.</p>
+</blockquote>
+<p>Ok so the actual state agency in charge of listing this kind of data told us that there may be some errors in their files. That's a good start!</p>
+<p>Some informations about the file:</p>
+<ul>
+<li>Format: XLS</li>
+<li>Size: ~10.4Mo</li>
+<li>Number of cities: 35416</li>
+<li>Last update: 2017</li>
+<li>License: ?</li>
+</ul>
+<p>This file will be our trusted source for current french cities. From this file we will extract from the tab "COM" only the first three columns (<code>CODEGEO</code>, <code>LIBGEO</code> and <code>DEP</code>) and put that into a CSV file encoding with UTF8 so we can read it easily.</p>
+<h2>La Poste / dataNOVA</h2>
+<p>For the list of zip code, we got to go "La Poste" website, because, yeah, it is another state agency that handle that. More precisely we go to dataNOVA, the subsidiary that manage all open data for La Poste group. The data can be found here <a href="https://datanova.legroupe.laposte.fr/explore/dataset/laposte_hexasmal/export/">https://datanova.legroupe.laposte.fr/explore/dataset/laposte_hexasmal/export/</a> (<a href="https://datanova.legroupe.laposte.fr/explore/dataset/laposte_hexasmal/download/?format=csv&amp;timezone=Europe/Berlin&amp;use_labels_for_header=true">direct link to CSV</a>)</p>
+<p>Some informations about the file:</p>
+<ul>
+<li>Format: CSV, JSON, XLS</li>
+<li>Size: ~2.7Mo</li>
+<li>Number of cities: 39202</li>
+<li>Last update: ?</li>
+<li>License: <a href="https://opendatacommons.org/licenses/odbl/">ODdL</a></li>
+</ul>
+<p>This file will be our trusted source for zip codes. It also contains the GPS coordinates which can be useful!</p>
+<h1>The script</h1>
+<p>The script I made to merge data from INSEE and from La Poste.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">csv</span>
+
+
+<span class="n">INSEE_DATA</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">LAPOSTE_DATA</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">MERGED_DATA</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<span class="c1">#</span>
+<span class="c1"># STEP 1 Reading INSEE file</span>
+<span class="c1">#</span>
+<span class="c1"># It is quite easy, we just parse the file and put the data into a</span>
+<span class="c1"># dictionnary which will be more practical to use after that.</span>
+<span class="c1">#</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;insee.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">insee_file</span><span class="p">:</span>
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">insee_file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+        <span class="n">code_insee</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;CODGEO&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">code_insee</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">INSEE_DATA</span><span class="p">:</span>
+            <span class="n">INSEE_DATA</span><span class="p">[</span><span class="n">code_insee</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;LIBGEO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+                <span class="s1">&#39;DEP&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;DEP&#39;</span><span class="p">],</span>
+            <span class="p">}</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Reading of INSEE file&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">{} cities found.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">INSEE_DATA</span><span class="p">)))</span>
+
+
+<span class="c1">#</span>
+<span class="c1"># STEP 2 Reading LAPOSTE file</span>
+<span class="c1">#</span>
+<span class="c1"># Not so easy here, I discarded former cities and cities with no GPS coordinates.</span>
+<span class="c1"># Also some INSEE codes seem to be outdated and there some other stuff not good.</span>
+<span class="c1"># This data set should not be considered as ready-to-use.</span>
+<span class="c1">#</span>
+
+<span class="n">laposte_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;laposte_hexasmal.csv&#39;</span><span class="p">)</span>
+<span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">laposte_file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+<span class="n">count_city_without_gps</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
+    <span class="n">code_insee</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Code_commune_INSEE&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;coordonnees_gps&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="n">gps_coordinates</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;coordonnees_gps&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">gps_coordinates</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">zip_code</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Code_postal&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Exceptions because LAPOSTE &#39;Code_commune_INSEE&#39; is not up to date...</span>
+    <span class="n">marseille_codes_insee</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;13203&#39;</span><span class="p">,</span> <span class="s1">&#39;13206&#39;</span><span class="p">,</span> <span class="s1">&#39;13208&#39;</span><span class="p">,</span> <span class="s1">&#39;13209&#39;</span><span class="p">,</span> <span class="s1">&#39;13209&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;13211&#39;</span><span class="p">]</span>
+    <span class="n">paris_codes_insee</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;75103&#39;</span><span class="p">,</span> <span class="s1">&#39;75107&#39;</span><span class="p">,</span> <span class="s1">&#39;75119&#39;</span><span class="p">,</span> <span class="s1">&#39;75111&#39;</span><span class="p">,</span> <span class="s1">&#39;75112&#39;</span><span class="p">,</span> <span class="s1">&#39;75115&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;75104&#39;</span><span class="p">,</span> <span class="s1">&#39;75110&#39;</span><span class="p">,</span> <span class="s1">&#39;75117&#39;</span><span class="p">,</span> <span class="s1">&#39;75101&#39;</span><span class="p">,</span> <span class="s1">&#39;75102&#39;</span><span class="p">,</span> <span class="s1">&#39;75105&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;75106&#39;</span><span class="p">,</span> <span class="s1">&#39;75108&#39;</span><span class="p">,</span> <span class="s1">&#39;75109&#39;</span><span class="p">,</span> <span class="s1">&#39;75113&#39;</span><span class="p">,</span> <span class="s1">&#39;75120&#39;</span><span class="p">,</span> <span class="s1">&#39;75114&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;75116&#39;</span><span class="p">,</span> <span class="s1">&#39;75116&#39;</span><span class="p">,</span> <span class="s1">&#39;75118&#39;</span><span class="p">]</span>
+    <span class="n">lyon_codes_insee</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;69389&#39;</span><span class="p">,</span> <span class="s1">&#39;69381&#39;</span><span class="p">,</span> <span class="s1">&#39;69382&#39;</span><span class="p">,</span> <span class="s1">&#39;69384&#39;</span><span class="p">,</span> <span class="s1">&#39;69388&#39;</span><span class="p">,</span> <span class="s1">&#39;69385&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;69387&#39;</span><span class="p">,</span> <span class="s1">&#39;69383&#39;</span><span class="p">,</span> <span class="s1">&#39;69386&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">code_insee</span> <span class="ow">in</span> <span class="n">marseille_codes_insee</span><span class="p">:</span>
+        <span class="n">code_insee</span> <span class="o">=</span> <span class="s1">&#39;13055&#39;</span>    <span class="c1"># Marseille</span>
+    <span class="k">elif</span> <span class="n">code_insee</span> <span class="ow">in</span> <span class="n">paris_codes_insee</span><span class="p">:</span>
+        <span class="n">code_insee</span> <span class="o">=</span> <span class="s1">&#39;75056&#39;</span>    <span class="c1"># Paris</span>
+    <span class="k">elif</span> <span class="n">code_insee</span> <span class="ow">in</span> <span class="n">lyon_codes_insee</span><span class="p">:</span>
+        <span class="n">code_insee</span> <span class="o">=</span> <span class="s1">&#39;69123&#39;</span>    <span class="c1"># Lyon</span>
+    <span class="k">elif</span> <span class="n">code_insee</span> <span class="o">==</span> <span class="s1">&#39;80756&#39;</span><span class="p">:</span>
+        <span class="n">zip_code</span> <span class="o">=</span> <span class="s1">&#39;80560&#39;</span>      <span class="c1"># Error in LAPOSTE file :(</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">gps_coordinates</span><span class="p">:</span>
+        <span class="n">count_city_without_gps</span> <span class="o">=</span> <span class="n">count_city_without_gps</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">code_insee</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">LAPOSTE_DATA</span><span class="p">:</span>
+        <span class="n">LAPOSTE_DATA</span><span class="p">[</span><span class="n">code_insee</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;zipcodes&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">zip_code</span><span class="p">:</span> <span class="n">gps_coordinates</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Code INSEE already found</span>
+
+        <span class="k">if</span> <span class="n">zip_code</span> <span class="ow">in</span> <span class="n">LAPOSTE_DATA</span><span class="p">[</span><span class="n">code_insee</span><span class="p">][</span><span class="s1">&#39;zipcodes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="c1"># Same CODGEO and same zipcode -&gt; same city</span>
+            <span class="k">pass</span>
+        <span class="k">elif</span> <span class="n">zip_code</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="n">z</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">LAPOSTE_DATA</span><span class="p">[</span><span class="n">code_insee</span><span class="p">][</span><span class="s1">&#39;zipcodes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()]:</span>
+            <span class="c1"># Seems like the same city but with different zipcode</span>
+            <span class="n">LAPOSTE_DATA</span><span class="p">[</span><span class="n">code_insee</span><span class="p">][</span><span class="s1">&#39;zipcodes&#39;</span><span class="p">][</span><span class="n">zip_code</span><span class="p">]</span> <span class="o">=</span> <span class="n">gps_coordinates</span>
+        <span class="k">elif</span> <span class="n">code_insee</span> <span class="o">==</span> <span class="s1">&#39;39274&#39;</span><span class="p">:</span>
+            <span class="c1"># WTF, city: Lajoux with 2 zipcodes from different department</span>
+            <span class="n">LAPOSTE_DATA</span><span class="p">[</span><span class="n">code_insee</span><span class="p">][</span><span class="s1">&#39;zipcodes&#39;</span><span class="p">][</span><span class="n">zip_code</span><span class="p">]</span> <span class="o">=</span> <span class="n">gps_coordinates</span>
+        <span class="k">elif</span> <span class="n">code_insee</span> <span class="o">==</span> <span class="s1">&#39;91479&#39;</span><span class="p">:</span>
+            <span class="c1"># WTF, city: Paray-Vieille-Poste with 2 zipcodes from different department</span>
+            <span class="n">LAPOSTE_DATA</span><span class="p">[</span><span class="n">code_insee</span><span class="p">][</span><span class="s1">&#39;zipcodes&#39;</span><span class="p">][</span><span class="n">zip_code</span><span class="p">]</span> <span class="o">=</span> <span class="n">gps_coordinates</span>
+<span class="n">laposte_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Reading of LAPOSTE file&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">{} cities found.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">INSEE_DATA</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">{} cities discarded because of missing GPS coordinates.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count_city_without_gps</span><span class="p">))</span>
+
+<span class="n">cities_insee_not_laposte</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">code_insee</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">INSEE_DATA</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">code_insee</span> <span class="ow">in</span> <span class="n">LAPOSTE_DATA</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cities_insee_not_laposte</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">code_insee</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">{} cities are missing in LAPOSTE file (because only present on the INSEE file, probably new cities)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cities_insee_not_laposte</span><span class="p">)))</span>
+
+
+<span class="c1">#</span>
+<span class="c1"># STEP 3 Merging INSEE and LAPOSTE file</span>
+<span class="c1">#</span>
+
+<span class="n">deleted_cities</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">code_insee</span><span class="p">,</span> <span class="n">city</span> <span class="ow">in</span> <span class="n">LAPOSTE_DATA</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">code_insee</span> <span class="ow">in</span> <span class="n">INSEE_DATA</span><span class="p">:</span>
+        <span class="n">MERGED_DATA</span><span class="p">[</span><span class="n">code_insee</span><span class="p">]</span> <span class="o">=</span> <span class="n">LAPOSTE_DATA</span><span class="p">[</span><span class="n">code_insee</span><span class="p">]</span>
+        <span class="n">MERGED_DATA</span><span class="p">[</span><span class="n">code_insee</span><span class="p">][</span><span class="s1">&#39;verbose_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">INSEE_DATA</span><span class="p">[</span><span class="n">code_insee</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+        <span class="n">MERGED_DATA</span><span class="p">[</span><span class="n">code_insee</span><span class="p">][</span><span class="s1">&#39;department&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">INSEE_DATA</span><span class="p">[</span><span class="n">code_insee</span><span class="p">][</span><span class="s1">&#39;DEP&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">deleted_cities</span> <span class="o">=</span> <span class="n">deleted_cities</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Merging of INSEE and LAPOSTE files&quot;</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">{} cities merged.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">MERGED_DATA</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">{} cities discarded because not in the INSEE file (probably former cities)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">deleted_cities</span><span class="p">))</span>
+
+
+<span class="c1">#</span>
+<span class="c1"># 4 Do whatever you want with the data (MERGED_DATA)</span>
+<span class="c1">#</span>
+
+<span class="n">fieldnames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;code_insee&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;department&#39;</span><span class="p">,</span> <span class="s1">&#39;zip_code&#39;</span><span class="p">,</span> <span class="s1">&#39;gps&#39;</span><span class="p">]</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;french_cities_2017.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+    <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="n">fieldnames</span><span class="o">=</span><span class="n">fieldnames</span><span class="p">)</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">code_insee</span><span class="p">,</span> <span class="n">city</span> <span class="ow">in</span> <span class="n">MERGED_DATA</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">zipcode</span><span class="p">,</span> <span class="n">gps</span> <span class="ow">in</span> <span class="n">city</span><span class="p">[</span><span class="s1">&#39;zipcodes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;code_insee&#39;</span><span class="p">:</span> <span class="n">code_insee</span><span class="p">,</span>
+                <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">city</span><span class="p">[</span><span class="s1">&#39;verbose_name&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;department&#39;</span><span class="p">:</span> <span class="n">city</span><span class="p">[</span><span class="s1">&#39;department&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;zip_code&#39;</span><span class="p">:</span> <span class="n">zipcode</span><span class="p">,</span>
+                <span class="s1">&#39;gps&#39;</span><span class="p">:</span> <span class="n">gps</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Output of the script:</p>
+<div class="highlight"><pre><span></span>Reading of INSEE file
+    35416 cities found.
+
+Reading of LAPOSTE file
+    35416 cities found.
+    267 cities discarded because of missing GPS coordinates.
+    2 cities are missing in LAPOSTE file (because only present on the INSEE file, probably new cities)
+
+Merging of INSEE and LAPOSTE files
+    35414 cities merged.
+    478 cities discarded because not in the INSEE file (probably former cities)
+</pre></div>
+
+
+<h1>Result</h1>
+<p>You can download the <a href="https://b0uh.github.io/medias/french_cities_2017.csv">result</a>. It contains INSEE code, name, department, zip code and GPS coordinates for all french cities.</p>
+<h1>Stuffs to remember when dealing with french cities data</h1>
+<ul>
+<li>Keep the INSEE code (<code>CODEGEO</code>) as the key to identify a city in your system.</li>
+<li>Some cities can have multiple zip codes</li>
+<li>Some cities can have multiple zip codes from different departement (ex: <a href="https://fr.wikipedia.org/wiki/Lajoux_(France)">Lajoux</a>, <a href="https://fr.wikipedia.org/wiki/Paray-Vieille-Poste">Paray-Vieille-Poste</a>)</li>
+<li>Some cities no longer exist (ex: <a href="https://en.wikipedia.org/wiki/L%27H%C3%B4tellerie-de-Fl%C3%A9e">L'Hôtellerie-de-Flée</a>, <a href="https://en.wikipedia.org/wiki/Montgellafrey">Montgellafrey</a>)</li>
+<li>Department ID can have letter (ex: <a href="https://en.wikipedia.org/wiki/Corse-du-Sud">2A</a>, <a href="https://en.wikipedia.org/wiki/Haute-Corse">2B</a>)</li>
+<li>Some zipcode has a leading zero, therefor zipcode should be saved as string not integer.</li>
+</ul>
+              </span>
+
+              <div class="meta__container--without-image">
+                <div class="row">
+                </div>
+              </div>
+
+              <br>
+
+              <p>
+                <!-- AddToAny BEGIN -->
+                <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+                <a class="a2a_button_twitter"></a>
+                <a class="a2a_button_linkedin"></a>
+                <a class="a2a_button_facebook"></a>
+                <a class="a2a_button_reddit"></a>
+                <a class="a2a_button_google_plus"></a>
+                </div>
+                <script async src="https://static.addtoany.com/menu/page.js"></script>
+                <!-- AddToAny END -->
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+</div>
+
+<footer class="copyrights">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12  col-sm-6">
+        Proudly powered by <a href="https://github.com/getpelican/pelican">Pelican</a>.
+      </div>
+      <div class="col-xs-12  col-sm-6">
+        <div class="copyrights--right">
+          Made with <span class="glyphicon  glyphicon-heart"></span> in Nantes.
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  <script src="https://b0uh.github.io/theme/scripts/jquery.min.js"></script>
+  <script src="https://b0uh.github.io/theme/scripts/underscore.js"></script>
+  <script src="https://b0uh.github.io/theme/scripts/bootstrap.min.js"></script>
+  <script src="https://b0uh.github.io/theme/scripts/main.js"></script>
+
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-98369697-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+</body>
+</html>
