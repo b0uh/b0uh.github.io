@@ -1,5 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2017-10-12T13:00:00+02:00</updated><entry><title>How to get the list of French cities and more?</title><link href="https://b0uh.github.io/how-to-get-the-list-of-french-cities-and-more.html" rel="alternate"></link><published>2017-10-12T13:00:00+02:00</published><updated>2017-10-12T13:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-10-12:/how-to-get-the-list-of-french-cities-and-more.html</id><summary type="html">&lt;p&gt;Open-data doesn't provide a list of french cities with zip codes and GPS coordinates. How can we retrieve them ?&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2017-11-17T14:00:00+01:00</updated><entry><title>Marketplaces API, the key to onboard merchants</title><link href="https://b0uh.github.io/marketplaces-api-the-key-to-onboard-merchants.html" rel="alternate"></link><published>2017-11-17T14:00:00+01:00</published><updated>2017-11-17T14:00:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-11-17:/marketplaces-api-the-key-to-onboard-merchants.html</id><summary type="html">&lt;p&gt;Having a good API will speed your merchants onboarding and time-to-market. On the contrary a bad API or no API can demotivate your merchants and make you and them lose money.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; Having a good API will speed your merchants onboarding and time-to-market. On the contrary a bad API or no API can demotivate your merchants and make you and them lose money.&lt;/p&gt;
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+&lt;h2&gt;Why do you need a marketplace?&lt;/h2&gt;
+&lt;p&gt;E-commerce has always been a big component of the internet as we know it. Having a website to sell your products is nowaday a requirement for a merchant and there is now a new trend to do marketplaces.
+Marketplace is simply a website that connect merchants to clients and behave as a trust tier. The most famous examples are &lt;a href="https://www.amazon.com/"&gt;Amazon&lt;/a&gt;, &lt;a href="http://www.zalando.com/"&gt;Zalando&lt;/a&gt; or &lt;a href="https://www.alibaba.com/"&gt;Alibaba&lt;/a&gt;.
+One clue about marketplaces developments is the explosion of marketplace solutions that exists today, just to name a few : &lt;a href="https://www.mirakl.com/"&gt;Mirakl&lt;/a&gt;, &lt;a href="https://www.izberg-marketplace.com/"&gt;Izberg&lt;/a&gt;, &lt;a href="http://www.wizaplace.com/"&gt;Wizplace&lt;/a&gt;.
+Most of the merchants are using marketplace solution or custom solution in order to allow other merchant to sell on their own website and &lt;strong&gt;make it grow in term of products, traffic and turnover.&lt;/strong&gt;&lt;/p&gt;
+&lt;h2&gt;Why an API?&lt;/h2&gt;
+&lt;p&gt;So you manage to sign contracts with some merchants who want to sell on your marketplace, congratulation ! Then, what? They will want to put some products quickly then generate and manage some orders. Most of marketplace solutions allow you to do it with their backoffice, so that’s cool, everything can go quite fast. But it requires for the merchant to dedicate some time to handle his products on your website and this potentially quite often. He will need to learn a new tools as he need to manage everything from your backoffice. While in the meantime, all merchants have already a software to manage this on their own, this can be an e-commerce solution (&lt;a href="https://www.prestashop.com/"&gt;Prestashop&lt;/a&gt;, &lt;a href="https://magento.com/"&gt;Magento&lt;/a&gt;, &lt;a href="https://www.shopify.com/"&gt;Shopify&lt;/a&gt;, ...) or an ERP (&lt;a href="https://www.sap.com/product/enterprise-management/erp.html"&gt;SAP&lt;/a&gt;, &lt;a href="http://www.sage.com/us/erp"&gt;Sage&lt;/a&gt;, ...).&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The API helps your merchant by allowing him to manage your marketplace from its favorite tool !&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;However, this cost money, consider it when your marketplace reach a minimum of merchants.&lt;/p&gt;
+&lt;h2&gt;An API for everything, because automation rules&lt;/h2&gt;
+&lt;p&gt;You now have an API for merchant, but does it handle everything the merchant need? For example on most of marketplace there is a list of categories on which the merchant can sell. This should not provided in a PDF or CSV file but as an API. Why? Because if tomorrow you want to add new categories with your API, you don’t have to communicate about it and merchants can easily retrieve them. &lt;strong&gt;With an API for everything you allow the merchant to automatise everything ! It means less friction points.&lt;/strong&gt;&lt;/p&gt;
+&lt;h2&gt;What’s a good/bad API?&lt;/h2&gt;
+&lt;p&gt;A good API is a when your merchant is fully autonomous to plug your marketplace to its IT system. From my experience there is only a few marketplaces with good API. Here are some good and bad practices on marketplace API, those criterias are just a few among a long list, took a look at Vinay Sahni post &lt;a href="http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#versioning"&gt;"Best Practices for Designing a Pragmatic RESTful API"&lt;/a&gt; for more informations.&lt;/p&gt;
+&lt;p&gt;Good practices:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Having a nice documentation (mandatory!)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Autonomous merchant&lt;/strong&gt; (don’t need to contact you for accessing the API for example)&lt;/li&gt;
+&lt;li&gt;Restful API&lt;/li&gt;
+&lt;li&gt;Standard format (JSON, XML, SOAP)&lt;/li&gt;
+&lt;li&gt;Clear errors (too often the error after an API call is not clear, this will cause the merchant to contact you and therefore lose time)&lt;/li&gt;
+&lt;li&gt;Status page (you will have downtime, communicate about it)&lt;/li&gt;
+&lt;li&gt;API backwards compatibility&lt;/li&gt;
+&lt;li&gt;Bonus: having SDK for main languages&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Bad practices:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Complexe API (all the complexity should be handle by the marketplace, not the merchant)&lt;/li&gt;
+&lt;li&gt;Bad documentation (example, a simple “Javadoc” style documentation)&lt;/li&gt;
+&lt;li&gt;Fuzzy error (it will make lose time to everyone)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Breaking changes&lt;/strong&gt; (no backward compatibility, merchants will have to update their development, they may not have the money/resources and therefore &lt;strong&gt;this is a big risk for business&lt;/strong&gt;)&lt;/li&gt;
+&lt;/ul&gt;</content><category term="marketplace"></category><category term="api"></category></entry><entry><title>How to get the list of French cities and more?</title><link href="https://b0uh.github.io/how-to-get-the-list-of-french-cities-and-more.html" rel="alternate"></link><published>2017-10-12T13:00:00+02:00</published><updated>2017-10-12T13:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-10-12:/how-to-get-the-list-of-french-cities-and-more.html</id><summary type="html">&lt;p&gt;Open-data doesn't provide a list of french cities with zip codes and GPS coordinates. How can we retrieve them ?&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;All I wanted was a DB of current french cities, their zip codes and their GPS coordinates. It turned out that it was not an easy thing to have !&lt;/p&gt;
 &lt;h1&gt;Opendata in France (the source)&lt;/h1&gt;
 &lt;p&gt;So in France we got some nice stuff about opendata since a few years, and that were I got my sources.&lt;/p&gt;
