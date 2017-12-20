@@ -1,5 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2017-11-17T14:00:00+01:00</updated><entry><title>Marketplaces API, the key to onboard merchants</title><link href="https://b0uh.github.io/marketplaces-api-the-key-to-onboard-merchants.html" rel="alternate"></link><published>2017-11-17T14:00:00+01:00</published><updated>2017-11-17T14:00:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-11-17:/marketplaces-api-the-key-to-onboard-merchants.html</id><summary type="html">&lt;p&gt;Having a good API will speed your merchants onboarding and time-to-market. On the contrary a bad API or no API can demotivate your merchants and make you and them lose money.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; Having a good API will speed your merchants onboarding and time-to-market. On the contrary a bad API or no API can demotivate your merchants and make you and them lose money.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2017-12-18T18:00:00+01:00</updated><entry><title>Create and deploy a Django project on Clever Cloud</title><link href="https://b0uh.github.io/create-and-deploy-a-django-project-on-clever-cloud.html" rel="alternate"></link><published>2017-12-18T18:00:00+01:00</published><updated>2017-12-18T18:00:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-12-18:/create-and-deploy-a-django-project-on-clever-cloud.html</id><summary type="html">&lt;p&gt;How to deploy a Django project on Clever Cloud ?&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;In this blog post, we will see how to host a new Django project on Clever Cloud (&lt;a href="https://www.clever-cloud.com/"&gt;www.clever-cloud.com&lt;/a&gt;). If you don't have a Clever Cloud account, you can signup and you will get a 20€ credit to test the platform ;)&lt;/p&gt;
+&lt;h1&gt;1/ Create a Django project&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ django-admin startproject fooproject
+$ git init
+$ git add .
+$ git commit -m &lt;span class="s2"&gt;&amp;quot;initial commit&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;For more information, please take a look at the wonderful &lt;a href="https://docs.djangoproject.com/en/2.0/"&gt;Django's documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;h1&gt;2/ Create the application on Clever Cloud&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;Create a new application (Personal Space &amp;gt; Add an application)&lt;/li&gt;
+&lt;li&gt;Create a brand new app&lt;/li&gt;
+&lt;li&gt;Choose Python&lt;/li&gt;
+&lt;li&gt;At the scaling step, choose what you want, if you don't know, just use the default settings&lt;/li&gt;
+&lt;li&gt;Name your application, mine will by "Foo project"&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;And that's it !&lt;/p&gt;
+&lt;h1&gt;3/ Deploy your application&lt;/h1&gt;
+&lt;p&gt;Go to the &lt;em&gt;Information&lt;/em&gt; section for your application and at the top you should see a line starting by
+&lt;code&gt;git remote add ...&lt;/code&gt;, copy it. It may be one two lines actually if you have a small screen, eg. 13".&lt;/p&gt;
+&lt;p&gt;On your project then do:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git remote add clever git+ssh://git@push-par-clevercloud-customers.services.clever-cloud.com/app_00000000-0000-0000-0000-000000000000.git
+$ git push clever master
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Come back to your Clever cloud dashboard and go to the &lt;em&gt;Logs&lt;/em&gt; section and see your application deploying :) (You may want to scroll down to see the latest logs)&lt;/p&gt;
+&lt;p&gt;And you have done your first deploy !&lt;/p&gt;
+&lt;h1&gt;4/ But the deploy failed :(&lt;/h1&gt;
+&lt;p&gt;We missed some steps to ensure that the deploy run smoothly, mainly configuration steps. Let's go back to our Clever Cloud dashboard. Go the &lt;em&gt;Environment variables&lt;/em&gt; section of your application and add the following variables:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;PYTHON_VERSION=3
+CC_PYTHON_MODULE=fooproject.wsgi:application
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Then redeploy your application. At this point you should have a running application! Go see your application by using the link at the top corner right of the dashboard or go to http://&amp;lt;your_application_id&gt;.cleverapps.io/&lt;/p&gt;
+&lt;p&gt;You will have a &lt;code&gt;DisallowedHost&lt;/code&gt; error but at leat your application is running. We need to configure a bit Django by adding the following to the &lt;code&gt;fooproject/settings.py&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ALLOWED_HOSTS = [&amp;#39;app-&amp;lt;your_application_id&amp;gt;.cleverapps.io&amp;#39;, &amp;#39;localhost&amp;#39;, ]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Not sure here why, but you also have to add &lt;code&gt;localhost&lt;/code&gt; as an allowed host.&lt;/p&gt;
+&lt;p&gt;Commit and push your new settings file, a new deploy should be triggered and you should be able to see your application :)&lt;/p&gt;
+&lt;p&gt;You should now have a deployed and running application.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Django deploy screen" src="https://b0uh.github.io/medias/clever-cloud-django-deploy.gif"&gt;&lt;/p&gt;
+&lt;h1&gt;5/ Use a database&lt;/h1&gt;
+&lt;p&gt;A few more steps to have a database for our project.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;On Clever cloud dashboard, click on &lt;em&gt;Add an add-on&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;Select &lt;em&gt;PostgreSQL&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;Select &lt;em&gt;DEV&lt;/em&gt; plan, you will be able to change of plan later if needed&lt;/li&gt;
+&lt;li&gt;Link your add-on to your application&lt;/li&gt;
+&lt;li&gt;Give a name to your database&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;In your &lt;code&gt;settings.py&lt;/code&gt; you can update your database credentials by using the following environment variables.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;DATABASES = {
+    &amp;#39;default&amp;#39;: {
+        &amp;#39;ENGINE&amp;#39;: &amp;#39;django.db.backends.postgresql&amp;#39;,
+        &amp;#39;NAME&amp;#39;: os.environ.get(&amp;#39;POSTGRESQL_ADDON_DB&amp;#39;, &amp;#39;&amp;#39;),
+        &amp;#39;USER&amp;#39;: os.environ.get(&amp;#39;POSTGRESQL_ADDON_USER&amp;#39;, &amp;#39;&amp;#39;),
+        &amp;#39;PASSWORD&amp;#39;: os.environ.get(&amp;#39;POSTGRESQL_ADDON_PASSWORD&amp;#39;, &amp;#39;&amp;#39;),
+        &amp;#39;HOST&amp;#39;: os.environ.get(&amp;#39;POSTGRESQL_ADDON_HOST&amp;#39;, &amp;#39;&amp;#39;),
+        &amp;#39;PORT&amp;#39;: os.environ.get(&amp;#39;POSTGRESQL_ADDON_PORT&amp;#39;, &amp;#39;&amp;#39;),
+    }
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Commit those changes and push them in order to deploy again your application.&lt;/p&gt;
+&lt;h1&gt;6/ Create a super user&lt;/h1&gt;
+&lt;p&gt;Go to &lt;em&gt;Profile&lt;/em&gt; then &lt;em&gt;SSH Key&lt;/em&gt; and add your SSH key. After that you can ssh the server make the first migrations and create the super user.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ssh -t ssh@sshgateway-clevercloud-customers.services.clever-cloud.com &amp;lt;APP_ID&amp;gt;
+cd &amp;lt;APP_ID&amp;gt;/
+./manage.py migrate
+./manage.py createsuperuser
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h1&gt;7/ Manage your static files&lt;/h1&gt;
+&lt;p&gt;In Django's settings add:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;MEDIA_ROOT = os.path.join(BASE_DIR, &amp;#39;public/media&amp;#39;)
+STATIC_ROOT = os.path.join(BASE_DIR, &amp;#39;public/static&amp;#39;)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;By SSH:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;mkdir -p &amp;lt;APP_ID&amp;gt;/public/static
+mkdir -p &amp;lt;APP_ID&amp;gt;/public/media
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;In Clever Cloud dashboard add the following environment variables:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;CC_POST_BUILD_HOOK=./manage.py collectstatic --no-input
+STATIC_FILES_PATH=public/static/
+STATIC_URL_PREFIX=/static
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Redeploy and you now have a Django project with your static files handled. You can go to the admin to check that for example.&lt;/p&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;I hope you have managed to deploy your own Django project on Clever Cloud. The service is really smooth and easy to use, congratz to the team!&lt;/p&gt;
+&lt;p&gt;If you want to go further, take a look at the &lt;a href="https://www.clever-cloud.com/doc/clever-cloud-overview/hooks/"&gt;hooks&lt;/a&gt; in order to handle the migration automatically and all operations you may need for each deployment. Ideally you should reduce your SSH access to zero! :)&lt;/p&gt;</content><category term="django"></category><category term="clever"></category><category term="cloud"></category><category term="python"></category><category term="hook"></category><category term="clever-cloud"></category><category term="git"></category></entry><entry><title>Marketplaces API, the key to onboard merchants</title><link href="https://b0uh.github.io/marketplaces-api-the-key-to-onboard-merchants.html" rel="alternate"></link><published>2017-11-17T14:00:00+01:00</published><updated>2017-11-17T14:00:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-11-17:/marketplaces-api-the-key-to-onboard-merchants.html</id><summary type="html">&lt;p&gt;Having a good API will speed your merchants onboarding and time-to-market. On the contrary a bad API or no API can demotivate your merchants and make you and them lose money.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; Having a good API will speed your merchants onboarding and time-to-market. On the contrary a bad API or no API can demotivate your merchants and make you and them lose money.&lt;/p&gt;
 &lt;p&gt;&lt;br&gt;&lt;/p&gt;
 &lt;h2&gt;Why do you need a marketplace?&lt;/h2&gt;
 &lt;p&gt;E-commerce has always been a big component of the internet as we know it. Having a website to sell your products is nowaday a requirement for a merchant and there is now a new trend to do marketplaces.
