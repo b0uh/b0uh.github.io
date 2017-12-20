@@ -45,7 +45,7 @@ CC_PYTHON_MODULE=fooproject.wsgi:application
 &lt;p&gt;Not sure here why, but you also have to add &lt;code&gt;localhost&lt;/code&gt; as an allowed host.&lt;/p&gt;
 &lt;p&gt;Commit and push your new settings file, a new deploy should be triggered and you should be able to see your application :)&lt;/p&gt;
 &lt;p&gt;You should now have a deployed and running application.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="Django deploy screen" src="https://b0uh.github.io/medias/clever-cloud-django-deploy.gif"&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img class="wp-post-image" alt="Django deploy screen" src="https://b0uh.github.io/medias/clever-cloud-django-deploy.gif"&gt;&lt;/p&gt;
 &lt;h1&gt;5/ Use a database&lt;/h1&gt;
 &lt;p&gt;A few more steps to have a database for our project.&lt;/p&gt;
 &lt;ol&gt;
