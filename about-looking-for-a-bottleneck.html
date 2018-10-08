@@ -153,10 +153,10 @@
               <span itemprop="articleBody">
                 <p><strong>TL;DR:</strong> Be sure to use trustworthy tools to determine your metrics and be methodical about how you are looking for a bottleneck.</p>
 <h1>Introduction</h1>
-<p>Looking for a bottleneck often came after realizing that a system does not scale/behave as expected. This article try to describes some best practices to help find bottleneck and its cause!</p>
+<p>Looking for a bottleneck often came after realizing that a system does not scale/behave as expected. This article tries to describe some best practices to help find bottleneck and its cause!</p>
 <h1>System</h1>
-<p>The system is what your are trying to test and that may have a bottleneck. It can be a website, an application, a platform... anything.</p>
-<p>You should be able to <strong>describe the state of the system at any moment</strong>. For example when we talk about a website as a system it's state description should includes:</p>
+<p>The system is what you are trying to test and that may have a bottleneck. It can be a website, an application, a platform... anything.</p>
+<p>You should be able to <strong>describe the state of the system at any moment</strong>. For example when we talk about a website as a system its state description should include:</p>
 <ul>
 <li>source code (it can be a git commit)</li>
 <li>configuration</li>
@@ -165,7 +165,7 @@
 <li>...</li>
 </ul>
 <h1>Monitoring</h1>
-<p>When your system is set up <strong>you will need to be able to observe it and measure things in it</strong>. If your system is in production you probably have some monitoring tool already setup for that, but that's not the only option. Some example of monitoring tools:</p>
+<p>When your system is set up <strong>you will need to be able to observe it and measure things in it</strong>. If your system is in production you probably have some monitoring tools already set up for that, but that's not the only option. Some examples of monitoring tools:</p>
 <ul>
 <li>general monitoring tools: Nagios/Zabbix/Datadog/...</li>
 <li>application logs : Logmatic/Loggly/... (could be even read directly from the log files)</li>
@@ -173,8 +173,8 @@
 <li>cloud service monitoring tools. For example if you are using Atlas (mongodb provider) you can access a dashboard with some metrics.</li>
 <li>...</li>
 </ul>
-<p>Obviously you should choose a tool according to what you are trying to observe. During to research for the bottleneck <strong>you may need to change of tools</strong> as you go further.</p>
-<p>Keep in mind that <strong>you should look at the big picture</strong>. Do not focus on small variation, you want to be sure that if you observe a variation it worth it.</p>
+<p>Obviously you should choose a tool according to what you are trying to observe. During the search of the bottleneck <strong>you may need to change tools</strong> as you go further.</p>
+<p>Keep in mind that <strong>you should look at the big picture</strong>. Do not focus on small variations, you want to be sure that if you observe a variation it is worth it.</p>
 <h1>Stress operation</h1>
 <p>Now that you have your system and its monitoring up and running the next step it to stress it in order to find the flaw. This "stress operation" can be different things according to what you are testing:</p>
 <ul>
@@ -187,16 +187,16 @@
 <p>Not much to say here except that <strong>you should trust your system setup and monitoring tool</strong>. If not, no need to go further, you will not be able to work properly and find the bottleneck!</p>
 <p>Some questions you should ask yourself:</p>
 <ul>
-<li>Does the system is set up properly?</li>
-<li>In what condition/configuration my system is?</li>
-<li>What stress operation am I doing excatly?</li>
-<li>Does the monitoring tool can be trustworthy? (Compare data with another tool to cross check)</li>
+<li>Is the system set up properly?</li>
+<li>In which condition/configuration my system is in?</li>
+<li>Which stress operation am I doing exactly?</li>
+<li>Is the monitoring tool trustworthy? (Compare data with another tool to cross check)</li>
 <li>Does it have all the data? an average? or just some data from time to time?</li>
 </ul>
 <h1>Methodology</h1>
 <p>Finding the bottleneck is about tweaking your system parameters one by one.
-The bottleneck is probably something not intuitive/obvious. You need to keep a trace of all the tests your are doing.
-Basically you have to be methodological about what your are doing.</p>
+The bottleneck is probably something not intuitive/obvious. You need to keep a trace of all the tests you are doing.
+Basically you have to be methodological about what you are doing.</p>
 <p>Here is a template of a document that can help to be methodological when looking for a bottleneck.</p>
 <h2>Template</h2>
 <div class="highlight"><pre><span></span># Initial conditions
@@ -244,8 +244,8 @@ Basically you have to be methodological about what your are doing.</p>
 </pre></div>
 
 
-<p>Repeat the "Hypothesis" section until the conclusion reaches your expectation describe in the "Problem" section.</p>
-<p>Good luck for your research!</p>
+<p>Repeat the "Hypothesis" section until the conclusion reaches the expectation described in the "Problem" section.</p>
+<p>Good luck for your search!</p>
               </span>
 
               <div class="meta__container--without-image">
