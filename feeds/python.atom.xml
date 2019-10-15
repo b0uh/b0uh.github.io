@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts - python</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/python.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2018-01-25T12:00:00-04:00</updated><entry><title>Create and deploy a Django project on Clever Cloud</title><link href="https://b0uh.github.io/create-and-deploy-a-django-project-on-clever-cloud.html" rel="alternate"></link><published>2018-01-25T12:00:00-04:00</published><updated>2018-01-25T12:00:00-04:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2018-01-25:/create-and-deploy-a-django-project-on-clever-cloud.html</id><summary type="html">&lt;p&gt;How to deploy a Django project on Clever Cloud ?&lt;/p&gt;</summary><content type="html">&lt;p&gt;In this blog post, we will see how to host a new Django project on Clever Cloud (&lt;a href="https://www.clever-cloud.com/"&gt;www.clever-cloud.com&lt;/a&gt;). If you don't have a Clever Cloud account, you can signup and you will get a 20€ credit to test the platform ;)&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts - python</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/python.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2018-01-25T12:00:00-04:00</updated><entry><title>Create and deploy a Django project on Clever Cloud</title><link href="https://b0uh.github.io/create-and-deploy-a-django-project-on-clever-cloud.html" rel="alternate"></link><published>2018-01-25T12:00:00-04:00</published><updated>2018-01-25T12:00:00-04:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2018-01-25:/create-and-deploy-a-django-project-on-clever-cloud.html</id><summary type="html">&lt;p&gt;How to deploy a Django project on Clever Cloud ?&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Last update:&lt;/strong&gt; 15/10/2019
+&lt;br&gt;
+&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;In this blog post, we will see how to host a new Django project on Clever Cloud (&lt;a href="https://www.clever-cloud.com/"&gt;www.clever-cloud.com&lt;/a&gt;). If you don't have a Clever Cloud account, you can signup and you will get a 20€ credit to test the platform ;)&lt;/p&gt;
 &lt;h1&gt;1/ Create a Django project&lt;/h1&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ django-admin startproject fooproject
+$ &lt;span class="nb"&gt;cd&lt;/span&gt; fooproject
+$ &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Django&amp;quot;&lt;/span&gt; &amp;gt; requirements.txt
 $ git init
 $ git add .
 $ git commit -m &lt;span class="s2"&gt;&amp;quot;initial commit&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;For more information, please take a look at the wonderful &lt;a href="https://docs.djangoproject.com/en/2.0/"&gt;Django's documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For more information, please take a look at the wonderful &lt;a href="https://docs.djangoproject.com/"&gt;Django's documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: currently Clever Cloud does not support &lt;code&gt;pipenv&lt;/code&gt; wonderful &lt;code&gt;Pipfile&lt;/code&gt; &amp;amp; &lt;code&gt;Pipfle.lock&lt;/code&gt; files. The traditional &lt;code&gt;requirements.txt&lt;/code&gt; is required.&lt;/p&gt;
 &lt;h1&gt;2/ Create the application on Clever Cloud&lt;/h1&gt;
 &lt;ol&gt;
 &lt;li&gt;Create a new application (Personal Space &amp;gt; Add an application)&lt;/li&gt;
@@ -16,66 +22,44 @@ $ git commit -m &lt;span class="s2"&gt;&amp;quot;initial commit&amp;quot;&lt;/sp
 &lt;li&gt;Choose Python&lt;/li&gt;
 &lt;li&gt;At the scaling step, choose what you want, if you don't know, just use the default settings&lt;/li&gt;
 &lt;li&gt;Name your application, mine will by "Foo project"&lt;/li&gt;
+&lt;li&gt;No need for an add-on for now.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;And that's it !&lt;/p&gt;
 &lt;h1&gt;3/ Deploy your application&lt;/h1&gt;
 &lt;p&gt;Go to the &lt;em&gt;Information&lt;/em&gt; section for your application and at the top you should see a line starting by
 &lt;code&gt;git remote add ...&lt;/code&gt;, copy it. It may be one two lines actually if you have a small screen, eg. 13".&lt;/p&gt;
-&lt;p&gt;On your project then do:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git remote add clever git+ssh://git@push-par-clevercloud-customers.services.clever-cloud.com/app_00000000-0000-0000-0000-000000000000.git
+&lt;p&gt;On your project you should do something like this (it's an example):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git remote add clever git+ssh://git@push-par-clevercloud-customers.services.clever-cloud.com/app_b8faacf4-7a4a-4b95-8221-7cb85e46cd82.git
 $ git push clever master
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Come back to your Clever cloud dashboard and go to the &lt;em&gt;Logs&lt;/em&gt; section and see your application deploying :) (You may want to scroll down to see the latest logs)&lt;/p&gt;
 &lt;p&gt;And you have done your first deploy !&lt;/p&gt;
-&lt;h1&gt;4/ But the deploy failed :(&lt;/h1&gt;
-&lt;p&gt;We missed some steps to ensure that the deploy run smoothly, mainly configuration steps. Let's go back to our Clever Cloud dashboard. Go the &lt;em&gt;Environment variables&lt;/em&gt; section of your application and add the following variables:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;PYTHON_VERSION=3
-CC_PYTHON_MODULE=fooproject.wsgi:application
+&lt;h1&gt;4/ But the deployment failed :(&lt;/h1&gt;
+&lt;p&gt;We missed some steps to ensure that the deploy run smoothly, mainly configuration steps. We need to specify the module to load, by adding the following file &lt;code&gt;clevercloud/python.json&lt;/code&gt; in our project (replace &lt;code&gt;fooproject&lt;/code&gt; by your project):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;quot;deploy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;quot;module&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;fooproject.wsgi:application&amp;quot;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Also, because you should not use &lt;a href="https://www.python.org/doc/sunset-python-2/"&gt;python 2&lt;/a&gt;, go to the &lt;em&gt;Environment variables&lt;/em&gt; section of your application and add the following variable:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;PYTHON_VERSION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;3&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Then redeploy your application. At this point you should have a running application! Go see your application by using the link at the top corner right of the dashboard or go to http://&amp;lt;your_application_id&gt;.cleverapps.io/&lt;/p&gt;
-&lt;p&gt;You will have a &lt;code&gt;DisallowedHost&lt;/code&gt; error but at leat your application is running. We need to configure a bit Django by adding the following to the &lt;code&gt;fooproject/settings.py&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ALLOWED_HOSTS = [&amp;#39;app-&amp;lt;your_application_id&amp;gt;.cleverapps.io&amp;#39;, &amp;#39;localhost&amp;#39;, ]
+&lt;p&gt;You will have a &lt;code&gt;DisallowedHost&lt;/code&gt; error but at least your application is running! We need to configure a bit Django by adding the following to the &lt;code&gt;fooproject/settings.py&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;ALLOWED_HOSTS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;lt;APP_ID&amp;gt;.cleverapps.io&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Not sure here why, but you also have to add &lt;code&gt;localhost&lt;/code&gt; as an allowed host.&lt;/p&gt;
-&lt;p&gt;Commit and push your new settings file, a new deploy should be triggered and you should be able to see your application :)&lt;/p&gt;
-&lt;p&gt;You should now have a deployed and running application.&lt;/p&gt;
+&lt;p&gt;Commit and push your new settings file, a new deploy should be triggered. You should now have a deployed and running application!&lt;/p&gt;
 &lt;p&gt;&lt;img class="wp-post-image" alt="Django deploy screen" src="https://b0uh.github.io/medias/clever-cloud-django-deploy.gif"&gt;&lt;/p&gt;
-&lt;h1&gt;5/ Use hooks for continuous integration&lt;/h1&gt;
-&lt;p&gt;The deploy was quite easy so far, we just needed to deploy the new code on Clever cloud. But in reality, there is severals steps when you want to deploy Django.&lt;/p&gt;
-&lt;p&gt;In order to manage those differents steps we will use a bash script that will be executed after each build and before deploy.&lt;/p&gt;
-&lt;p&gt;First, add a new environment variable:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;CC_POST_BUILD_HOOK=./post_build_hook.sh
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;The file &lt;code&gt;post_build_hook.sh&lt;/code&gt; is at the root of our project, but you can put it where you want and/or use a different scripting language.&lt;/p&gt;
-&lt;p&gt;Put inside your file the following:&lt;/p&gt;
-&lt;table class="highlighttable"&gt;&lt;tr&gt;&lt;td class="linenos"&gt;&lt;div class="linenodiv"&gt;&lt;pre&gt;1
-2
-3
-4
-5
-6
-7&lt;/pre&gt;&lt;/div&gt;&lt;/td&gt;&lt;td class="code"&gt;&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="ch"&gt;#!/bin/bash&lt;/span&gt;
-
-&lt;span class="c1"&gt;# Script will exit if there is an error&lt;/span&gt;
-&lt;span class="nb"&gt;set&lt;/span&gt; -e
-
-./manage.py collectstatic --no-input
-./manage.py migrate --no-input
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-
-&lt;p&gt;In our case we take care to run the migration and collect the static before each deploy. You can imagine adding here &lt;code&gt;./manage.py test --no-input&lt;/code&gt; to be sure all your tests are green before going live.&lt;/p&gt;
-&lt;p&gt;Take a look at the &lt;a href="https://www.clever-cloud.com/doc/clever-cloud-overview/hooks/"&gt;hooks documentation&lt;/a&gt; if you want to tailor it to your project.&lt;/p&gt;
 &lt;h1&gt;5/ Use a database&lt;/h1&gt;
-&lt;p&gt;A few more steps to have a database for our project.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;On Clever cloud dashboard, click on &lt;em&gt;Add an add-on&lt;/em&gt;&lt;/li&gt;
 &lt;li&gt;Select &lt;em&gt;PostgreSQL&lt;/em&gt;&lt;/li&gt;
@@ -84,51 +68,75 @@ CC_PYTHON_MODULE=fooproject.wsgi:application
 &lt;li&gt;Give a name to your database&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;In your &lt;code&gt;settings.py&lt;/code&gt; you can update your database credentials by using the following environment variables.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;DATABASES = {
-    &amp;#39;default&amp;#39;: {
-        &amp;#39;ENGINE&amp;#39;: &amp;#39;django.db.backends.postgresql&amp;#39;,
-        &amp;#39;NAME&amp;#39;: os.environ.get(&amp;#39;POSTGRESQL_ADDON_DB&amp;#39;, &amp;#39;&amp;#39;),
-        &amp;#39;USER&amp;#39;: os.environ.get(&amp;#39;POSTGRESQL_ADDON_USER&amp;#39;, &amp;#39;&amp;#39;),
-        &amp;#39;PASSWORD&amp;#39;: os.environ.get(&amp;#39;POSTGRESQL_ADDON_PASSWORD&amp;#39;, &amp;#39;&amp;#39;),
-        &amp;#39;HOST&amp;#39;: os.environ.get(&amp;#39;POSTGRESQL_ADDON_HOST&amp;#39;, &amp;#39;&amp;#39;),
-        &amp;#39;PORT&amp;#39;: os.environ.get(&amp;#39;POSTGRESQL_ADDON_PORT&amp;#39;, &amp;#39;&amp;#39;),
-    }
-}
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;DATABASES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;ENGINE&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;django.db.backends.postgresql&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;NAME&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;POSTGRESQL_ADDON_DB&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;USER&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;POSTGRESQL_ADDON_USER&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;PASSWORD&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;POSTGRESQL_ADDON_PASSWORD&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;HOST&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;POSTGRESQL_ADDON_HOST&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+        &lt;span class="s1"&gt;&amp;#39;PORT&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;POSTGRESQL_ADDON_PORT&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Commit those changes and push them in order to deploy again your application. At this point, thanks to the hook installed before, the deploy will create the schema inside your database with all its tables!&lt;/p&gt;
-&lt;h1&gt;6/ Create a super user&lt;/h1&gt;
-&lt;p&gt;Go to &lt;em&gt;Profile&lt;/em&gt; then &lt;em&gt;SSH Key&lt;/em&gt; and add your SSH key. After that you can ssh the server make the first migrations and create the super user.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;ssh -t ssh@sshgateway-clevercloud-customers.services.clever-cloud.com &amp;lt;APP_ID&amp;gt;
-cd &amp;lt;APP_ID&amp;gt;/
-./manage.py createsuperuser
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;This should be the only time to need to connect with SSH to Clever Cloud. Please keep in mind that you should avoid SSH access as much as possible.&lt;/p&gt;
-&lt;h1&gt;7/ Manage your static and medias files&lt;/h1&gt;
+&lt;p&gt;Don't forget to add the &lt;code&gt;psycopg2&lt;/code&gt; package to your &lt;code&gt;requirements.txt&lt;/code&gt; file.&lt;/p&gt;
+&lt;p&gt;Commit those changes and push them in order to deploy again your application.&lt;/p&gt;
+&lt;h1&gt;6/ Manage your static and medias files&lt;/h1&gt;
 &lt;blockquote&gt;
 &lt;p&gt;It is important to understand that the notion of "static" files is different between Clever cloud and Django!&lt;/p&gt;
 &lt;p&gt;In Django there is a difference between the file uploaded with the project (static files) and the file uploaded by the users (media files) but for Clever cloud static files are all the files you want to serve statically.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;In Django's settings add:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;STATIC_URL = &amp;#39;/public/static/&amp;#39;
-MEDIA_URL = &amp;#39;/public/media/&amp;#39;
-MEDIA_ROOT = os.path.join(BASE_DIR, &amp;#39;public/media&amp;#39;)
-STATIC_ROOT = os.path.join(BASE_DIR, &amp;#39;public/static&amp;#39;)
+&lt;p&gt;In Django' settings add:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;STATIC_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/public/static/&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;MEDIA_URL&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/public/media/&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;MEDIA_ROOT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;BASE_DIR&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;public/media&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;STATIC_ROOT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;BASE_DIR&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;public/static&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Locally create the directory &lt;code&gt;public&lt;/code&gt; and add a dummy hidden file &lt;code&gt;.keep_this_dir&lt;/code&gt; for example in order the create this directory during the build on clever cloud.&lt;/p&gt;
-&lt;p&gt;For medias file create a new add-on "FS Bucket" on which your media files will be saved. And then, in Clever Cloud dashboard add the following environment variables:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;STATIC_FILES_PATH=public/
-STATIC_URL_PREFIX=/public
-CC_FS_BUCKET=/public/media:...fsbucket.services.clever-cloud.com
+&lt;p&gt;Locally create the directory &lt;code&gt;public&lt;/code&gt; at the root of the project. Add a dummy hidden file (&lt;code&gt;.keep_this_dir&lt;/code&gt; for example) in order the create this directory during the build on clever cloud.&lt;/p&gt;
+&lt;p&gt;For media files create a new add-on "FS Bucket" on which your media files will be saved:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;On the dashboard, click on &lt;em&gt;Add an add-on&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;Select &lt;em&gt;FS Buckets&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;Select &lt;em&gt;basic&lt;/em&gt; plan&lt;/li&gt;
+&lt;li&gt;Link your add-on to your application&lt;/li&gt;
+&lt;li&gt;Give a name to your add-on&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;And then, in the app dashboard add the following environment variables:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;STATIC_FILES_PATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;public/&amp;quot;&lt;/span&gt;
+&lt;span class="nv"&gt;STATIC_URL_PREFIX&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/public&amp;quot;&lt;/span&gt;
+&lt;span class="nv"&gt;CC_FS_BUCKET&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/public/media:&amp;lt;BUCKET_ID&amp;gt;-fsbucket.services.clever-cloud.com&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Redeploy and you now have a Django project with your static files handled. You can go to the admin to check that for example.&lt;/p&gt;
+&lt;p&gt;Redeploy and you now have a Django project with your media files handled.&lt;/p&gt;
+&lt;h1&gt;7/ Continuous integration&lt;/h1&gt;
+&lt;p&gt;We are still missing something to fully use our two addons. We need to do migrations to create the DB schema and we need to collect the static. To automatize those tasks after each new deployments we will use the &lt;code&gt;clevercloud/python.json&lt;/code&gt; file and add a &lt;code&gt;managetasks&lt;/code&gt; entry.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;quot;deploy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;quot;module&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;fooproject.wsgi:application&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;quot;managetasks&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;migrate --no-input&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="s2"&gt;&amp;quot;collectstatic --noinput&amp;quot;&lt;/span&gt;
+        &lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Note: Another way to handle that is to use &lt;a href="https://www.clever-cloud.com/doc/clever-cloud-overview/hooks/"&gt;hooks&lt;/a&gt; that are more documented and seems more flexible.&lt;/p&gt;
+&lt;h1&gt;8/ Create a super user&lt;/h1&gt;
+&lt;p&gt;Go to &lt;em&gt;Profile&lt;/em&gt; then &lt;em&gt;SSH Key&lt;/em&gt; and add your SSH key. After that you can ssh the server and create the super user.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ssh -t ssh@sshgateway-clevercloud-customers.services.clever-cloud.com &amp;lt;APP_ID&amp;gt;
+$ &lt;span class="nb"&gt;cd&lt;/span&gt; &amp;lt;APP_ID&amp;gt;/
+$ ./manage.py createsuperuser
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This should be the only time you need to connect through SSH to Clever Cloud. Please keep in mind that you should avoid SSH access as much as possible for security reasons.&lt;/p&gt;
 &lt;h1&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;I hope you have managed to deploy your own Django project on Clever Cloud. The service is really smooth and easy to use, congratz to the team!&lt;/p&gt;</content><category term="django"></category><category term="clever"></category><category term="cloud"></category><category term="python"></category><category term="hook"></category><category term="clever-cloud"></category><category term="git"></category></entry><entry><title>Why I love Django</title><link href="https://b0uh.github.io/why-i-love-django.html" rel="alternate"></link><published>2017-09-07T07:00:00-03:00</published><updated>2017-09-07T07:00:00-03:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-09-07:/why-i-love-django.html</id><summary type="html">&lt;p&gt;What's the best thing in Django ?&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Because it prevents you from making bad software design decisions !&lt;/h2&gt;
 &lt;p&gt;Everytime I start having headeach using Django because I try to do something not documented or not discussed on the internet, it often means that my software design is bad. &lt;/p&gt;
