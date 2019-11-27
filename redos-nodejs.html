@@ -152,7 +152,7 @@
 
               <span itemprop="articleBody">
                 <p><strong>TL;DR:</strong> When developing with NodeJS, you should be aware of regular expression denial of service (ReDoS).</p>
-<h1>ReDos + Node.js</h1>
+<h1>Introduction</h1>
 <p>A ReDoS (Regular expression Denial of Service) is a type of attack used to put down a web server. This is possible when the code run by the server contains a regular expression that triggers too many backtracking.</p>
 <p>Let's step back quickly to understand what it really means when developing with Node.js. It is important to understand how the event loop works. It <a href="https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/">"allows Node.js to perform non-blocking I/O operations — despite the fact that JavaScript is single-threaded — by offloading operations to the system kernel whenever possible"</a>. Therefore we should avoid to <a href="https://nodejs.org/en/docs/guides/dont-block-the-event-loop/">block the event loop</a>.</p>
 <p>When the event loop is blocked Node.js cannot process anything else and the server is paralyzed. When the code contains unsafe regular expressions it can become an attack vector. Instead of having to send a lot of requests to put down a server with a classic DoS, you can send only a few requests that will trigger the unsafe regular expression and put down the server.</p>
