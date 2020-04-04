@@ -156,18 +156,18 @@
 <p>In this example, I am using <a href="http://nginx.org/">nginx</a> but this solution can be adapted to other http servers.</p>
 <h2>Step 1: All requests for media should go throught a specific view</h2>
 <p>Edit file <code>myproject/urls.py</code> and add:</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">myproject.views</span> <span class="kn">import</span> <span class="n">media_access</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">myproject.views</span> <span class="kn">import</span> <span class="n">media_access</span>
 
 <span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
     <span class="o">...</span><span class="p">,</span>
     <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^media/(?P&lt;path&gt;.*)&#39;</span><span class="p">,</span> <span class="n">media_access</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;media&#39;</span><span class="p">),</span>
 <span class="p">]</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2>Step 2: Add the view and check access</h2>
 <p>Add the following view in <code>myproject/views.py</code>:</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
 <span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponseForbidden</span>
 
 <span class="k">def</span> <span class="nf">media_access</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
@@ -181,13 +181,13 @@
 <span class="sd">    This special URL will be handle by nginx we the help of X-Accel</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">access_granted</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">access_granted</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
     <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_staff</span><span class="p">:</span>
             <span class="c1"># If admin, everything is granted</span>
-            <span class="n">access_granted</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">access_granted</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># For simple user, only their documents can be accessed</span>
             <span class="n">user_documents</span> <span class="o">=</span> <span class="p">[</span>
@@ -197,7 +197,7 @@
 
             <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">user_documents</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">path</span> <span class="o">==</span> <span class="n">doc</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-                    <span class="n">access_granted</span> <span class="o">=</span> <span class="bp">True</span>
+                    <span class="n">access_granted</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">if</span> <span class="n">access_granted</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">()</span>
@@ -207,14 +207,14 @@
         <span class="k">return</span> <span class="n">response</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">HttpResponseForbidden</span><span class="p">(</span><span class="s1">&#39;Not authorized to access this media.&#39;</span><span class="p">)</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>Here the important part is about the variable <code>user_documents</code>. It should contain reference to all files the user has access. In my case I extended the <code>User</code> model to add a field <code>identity_document</code> that why I can access it here.</p>
 <p>In this <code>media_acces</code> view, you can implement any authorization logic.</p>
 <h2>Step 3: Configure nginx</h2>
 <p>Here is a full example of nginx configuration. The important part is about <code>location /protected/</code>. We suppose that Django is available with <a href="http://gunicorn.org/">Gunicorn</a> on port 8080 for example.</p>
-<div class="highlight"><pre><span></span><span class="n">upstream</span> <span class="n">myprojectapp</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="n">upstream</span> <span class="n">myprojectapp</span> <span class="p">{</span>
   <span class="n">server</span> <span class="n">localhost</span><span class="p">:</span><span class="mi">8080</span><span class="p">;</span>
 <span class="p">}</span>
 
@@ -245,7 +245,7 @@
     <span class="p">}</span>
 
 <span class="p">}</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>You can notice there is no <code>location ^~ /media/</code> that's because this URL is handle by django.</p>

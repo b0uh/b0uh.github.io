@@ -33,4 +33,4 @@ Most of the merchants are using marketplace solution or custom solution in order
 &lt;li&gt;Bad documentation (example, a simple “Javadoc” style documentation)&lt;/li&gt;
 &lt;li&gt;Fuzzy error (it will make lose time to everyone)&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Breaking changes&lt;/strong&gt; (no backward compatibility, merchants will have to update their development, they may not have the money/resources and therefore &lt;strong&gt;this is a big risk for business&lt;/strong&gt;)&lt;/li&gt;
-&lt;/ul&gt;</content><category term="marketplace"></category><category term="api"></category></entry></feed>
+&lt;/ul&gt;</content><category term="Marketplace"></category><category term="marketplace"></category><category term="api"></category></entry></feed>

@@ -47,50 +47,50 @@ The bottleneck is probably something not intuitive/obvious. You need to keep a t
 Basically you have to be methodological about what you are doing.&lt;/p&gt;
 &lt;p&gt;Here is a template of a document that can help to be methodological when looking for a bottleneck.&lt;/p&gt;
 &lt;h2&gt;Template&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;# Initial conditions
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Initial&lt;/span&gt; &lt;span class="n"&gt;conditions&lt;/span&gt;
 
-## System condition
-- ...
+&lt;span class="o"&gt;##&lt;/span&gt; &lt;span class="k"&gt;System&lt;/span&gt; &lt;span class="n"&gt;condition&lt;/span&gt;
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
 
-## Stress operation condition
-- ...
-
-
-# Initial stress operation
-
-## Stress operation 1
-
-### Conditions
-- ...
-
-### Observations
-- ...
-
-## Stress operation 2
-
-### Conditions
-- ...
-
-### Observations
-- ...
+&lt;span class="o"&gt;##&lt;/span&gt; &lt;span class="n"&gt;Stress&lt;/span&gt; &lt;span class="k"&gt;operation&lt;/span&gt; &lt;span class="n"&gt;condition&lt;/span&gt;
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
 
 
-# Problem
-- Describe the problem found in the initial stress operation. Explain what are you expecting
+&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Initial&lt;/span&gt; &lt;span class="n"&gt;stress&lt;/span&gt; &lt;span class="k"&gt;operation&lt;/span&gt;
+
+&lt;span class="o"&gt;##&lt;/span&gt; &lt;span class="n"&gt;Stress&lt;/span&gt; &lt;span class="k"&gt;operation&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+
+&lt;span class="o"&gt;###&lt;/span&gt; &lt;span class="n"&gt;Conditions&lt;/span&gt;
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
+
+&lt;span class="o"&gt;###&lt;/span&gt; &lt;span class="n"&gt;Observations&lt;/span&gt;
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
+
+&lt;span class="o"&gt;##&lt;/span&gt; &lt;span class="n"&gt;Stress&lt;/span&gt; &lt;span class="k"&gt;operation&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
+
+&lt;span class="o"&gt;###&lt;/span&gt; &lt;span class="n"&gt;Conditions&lt;/span&gt;
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
+
+&lt;span class="o"&gt;###&lt;/span&gt; &lt;span class="n"&gt;Observations&lt;/span&gt;
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
 
 
-# Hypothesis: ....
+&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Problem&lt;/span&gt;
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="k"&gt;Describe&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;problem&lt;/span&gt; &lt;span class="k"&gt;found&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;initial&lt;/span&gt; &lt;span class="n"&gt;stress&lt;/span&gt; &lt;span class="k"&gt;operation&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="k"&gt;Explain&lt;/span&gt; &lt;span class="n"&gt;what&lt;/span&gt; &lt;span class="k"&gt;are&lt;/span&gt; &lt;span class="n"&gt;you&lt;/span&gt; &lt;span class="n"&gt;expecting&lt;/span&gt;
 
-## Stress operation conditions
-- ...
 
-## Observations
-- ...
+&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Hypothesis&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;....&lt;/span&gt;
 
-## Conclusions
-- ...
-&lt;/pre&gt;&lt;/div&gt;
+&lt;span class="o"&gt;##&lt;/span&gt; &lt;span class="n"&gt;Stress&lt;/span&gt; &lt;span class="k"&gt;operation&lt;/span&gt; &lt;span class="n"&gt;conditions&lt;/span&gt;
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
+
+&lt;span class="o"&gt;##&lt;/span&gt; &lt;span class="n"&gt;Observations&lt;/span&gt;
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
+
+&lt;span class="o"&gt;##&lt;/span&gt; &lt;span class="n"&gt;Conclusions&lt;/span&gt;
+&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Repeat the "Hypothesis" section until the conclusion reaches the expectation described in the "Problem" section.&lt;/p&gt;
-&lt;p&gt;Good luck for your search!&lt;/p&gt;</content><category term="bottleneck"></category><category term="load test"></category><category term="loadtest"></category><category term="monitoring"></category><category term="find"></category><category term="bottlenecks"></category><category term="trust"></category></entry></feed>
+&lt;p&gt;Good luck for your search!&lt;/p&gt;</content><category term="performances"></category><category term="bottleneck"></category><category term="load test"></category><category term="loadtest"></category><category term="monitoring"></category><category term="find"></category><category term="bottlenecks"></category><category term="trust"></category></entry></feed>

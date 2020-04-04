@@ -163,7 +163,7 @@
 </ul>
 <h2>Step 1: User model</h2>
 <p>The first thing to do is to redefine the <code>User</code> model. Unlike Django documentation, our model will not inherit <a href="https://docs.djangoproject.com/en/1.11/topics/auth/customizing/#django.contrib.auth.models.AbstractUser"><code>AbstractUser</code></a>, but <a href="https://docs.djangoproject.com/en/1.11/topics/auth/customizing/#django.contrib.auth.models.AbstractBaseUser"><code>AbstractBaseUser</code></a> because we don't want the username field anymore. Except from that, all the code below is pretty much the same as <code>AbstractUser</code> as we can see it from Django's code. We also inherit from <code>PermissionsMixin</code> so we still get the permission and group feature available.</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">AbstractBaseUser</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">PermissionsMixin</span>
 <span class="kn">from</span> <span class="nn">django.core.mail</span> <span class="kn">import</span> <span class="n">send_mail</span>
@@ -211,17 +211,17 @@
     <span class="k">def</span> <span class="nf">email_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">from_email</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Send an email to this user.&quot;&quot;&quot;</span>
         <span class="n">send_mail</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">from_email</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">email</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>Once it is done, add to your setting <code>AUTH_USER_MODEL</code>:</p>
-<div class="highlight"><pre><span></span>AUTH_USER_MODEL = &#39;my_app_user.User&#39;
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">AUTH_USER_MODEL = &#39;my_app_user.User&#39;</span>
+</code></pre></div>
 
 
 <h2>Step 2: User manager</h2>
 <p>With just the model things won't work, you also need to redefine the Manager so it doesn't take into account the username anymore. Again this looks a lot like the default <a href="https://docs.djangoproject.com/en/1.11/ref/contrib/auth/#manager-methods"><code>UserManager</code></a>'s code.</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">BaseUserManager</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">BaseUserManager</span>
 
 <span class="k">class</span> <span class="nc">UserManager</span><span class="p">(</span><span class="n">BaseUserManager</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Redefine user manager with email as identifier.&quot;&quot;&quot;</span>
@@ -247,17 +247,17 @@
         <span class="n">extra_fields</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;is_staff&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
         <span class="n">extra_fields</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;is_superuser&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_user</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_fields</span><span class="p">)</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>So now we can create superuser with :</p>
-<div class="highlight"><pre><span></span>python manage.py createsuperuser
-</pre></div>
+<div class="highlight"><pre><span></span><code><span class="err">python manage.py createsuperuser</span>
+</code></pre></div>
 
 
 <h2>Step 3: Admininistration</h2>
 <p>Like for the previous step, here I was inspired by default <a href="https://github.com/django/django/blob/master/django/contrib/auth/admin.py"><code>UserAdmin</code></a>. I just removed all trace of <code>username</code>.</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.admin</span> <span class="kn">import</span> <span class="n">UserAdmin</span> <span class="k">as</span> <span class="n">DjangoUserAdmin</span>
 <span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">gettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
 
@@ -284,7 +284,7 @@
     <span class="n">filter_horizontal</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;groups&#39;</span><span class="p">,</span> <span class="s1">&#39;user_permissions&#39;</span><span class="p">,)</span>
 
 <span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">UserAdmin</span><span class="p">)</span>
-</pre></div>
+</code></pre></div>
 
 
 <h2>Conclusion</h2>

@@ -32,7 +32,7 @@
 &lt;p&gt;This file will be our trusted source for zip codes. It also contains the GPS coordinates which can be useful!&lt;/p&gt;
 &lt;h1&gt;The script&lt;/h1&gt;
 &lt;p&gt;The script I made to merge data from INSEE and from La Poste.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;csv&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;csv&lt;/span&gt;
 
 
 &lt;span class="n"&gt;INSEE_DATA&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{}&lt;/span&gt;
@@ -174,22 +174,22 @@
                 &lt;span class="s1"&gt;&amp;#39;gps&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;gps&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
             &lt;span class="p"&gt;}&lt;/span&gt;
             &lt;span class="n"&gt;writer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;writerow&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;Output of the script:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Reading of INSEE file
-    35416 cities found.
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;Reading&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="n"&gt;INSEE&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;
+    &lt;span class="mi"&gt;35416&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="k"&gt;found&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
 
-Reading of LAPOSTE file
-    35416 cities found.
-    267 cities discarded because of missing GPS coordinates.
-    2 cities are missing in LAPOSTE file (because only present on the INSEE file, probably new cities)
+&lt;span class="n"&gt;Reading&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="n"&gt;LAPOSTE&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;
+    &lt;span class="mi"&gt;35416&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="k"&gt;found&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
+    &lt;span class="mi"&gt;267&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="n"&gt;discarded&lt;/span&gt; &lt;span class="n"&gt;because&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="n"&gt;missing&lt;/span&gt; &lt;span class="n"&gt;GPS&lt;/span&gt; &lt;span class="n"&gt;coordinates&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
+    &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="k"&gt;are&lt;/span&gt; &lt;span class="n"&gt;missing&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;LAPOSTE&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;because&lt;/span&gt; &lt;span class="k"&gt;only&lt;/span&gt; &lt;span class="n"&gt;present&lt;/span&gt; &lt;span class="k"&gt;on&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;INSEE&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;probably&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-Merging of INSEE and LAPOSTE files
-    35414 cities merged.
-    478 cities discarded because not in the INSEE file (probably former cities)
-&lt;/pre&gt;&lt;/div&gt;
+&lt;span class="n"&gt;Merging&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="n"&gt;INSEE&lt;/span&gt; &lt;span class="k"&gt;and&lt;/span&gt; &lt;span class="n"&gt;LAPOSTE&lt;/span&gt; &lt;span class="n"&gt;files&lt;/span&gt;
+    &lt;span class="mi"&gt;35414&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="n"&gt;merged&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
+    &lt;span class="mi"&gt;478&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="n"&gt;discarded&lt;/span&gt; &lt;span class="n"&gt;because&lt;/span&gt; &lt;span class="k"&gt;not&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;INSEE&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;probably&lt;/span&gt; &lt;span class="n"&gt;former&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;h1&gt;Result&lt;/h1&gt;
@@ -202,4 +202,4 @@ Merging of INSEE and LAPOSTE files
 &lt;li&gt;Some cities no longer exist (ex: &lt;a href="https://en.wikipedia.org/wiki/L%27H%C3%B4tellerie-de-Fl%C3%A9e"&gt;L'Hôtellerie-de-Flée&lt;/a&gt;, &lt;a href="https://en.wikipedia.org/wiki/Montgellafrey"&gt;Montgellafrey&lt;/a&gt;)&lt;/li&gt;
 &lt;li&gt;Department ID can have letter (ex: &lt;a href="https://en.wikipedia.org/wiki/Corse-du-Sud"&gt;2A&lt;/a&gt;, &lt;a href="https://en.wikipedia.org/wiki/Haute-Corse"&gt;2B&lt;/a&gt;)&lt;/li&gt;
 &lt;li&gt;Some zipcode has a leading zero, therefor zipcode should be saved as string not integer.&lt;/li&gt;
-&lt;/ul&gt;</content><category term="france"></category><category term="cities"></category><category term="french"></category><category term="zipcode"></category><category term="postal code"></category><category term="opendata"></category><category term="open-data"></category><category term="gps"></category></entry></feed>
+&lt;/ul&gt;</content><category term="Data"></category><category term="france"></category><category term="cities"></category><category term="french"></category><category term="zipcode"></category><category term="postal code"></category><category term="opendata"></category><category term="open-data"></category><category term="gps"></category></entry></feed>

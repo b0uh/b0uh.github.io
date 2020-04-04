@@ -190,7 +190,7 @@
 <p>This file will be our trusted source for zip codes. It also contains the GPS coordinates which can be useful!</p>
 <h1>The script</h1>
 <p>The script I made to merge data from INSEE and from La Poste.</p>
-<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">csv</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">csv</span>
 
 
 <span class="n">INSEE_DATA</span> <span class="o">=</span> <span class="p">{}</span>
@@ -332,22 +332,22 @@
                 <span class="s1">&#39;gps&#39;</span><span class="p">:</span> <span class="n">gps</span><span class="p">,</span>
             <span class="p">}</span>
             <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</pre></div>
+</code></pre></div>
 
 
 <p>Output of the script:</p>
-<div class="highlight"><pre><span></span>Reading of INSEE file
-    35416 cities found.
+<div class="highlight"><pre><span></span><code><span class="n">Reading</span> <span class="k">of</span> <span class="n">INSEE</span> <span class="n">file</span>
+    <span class="mi">35416</span> <span class="n">cities</span> <span class="k">found</span><span class="p">.</span>
 
-Reading of LAPOSTE file
-    35416 cities found.
-    267 cities discarded because of missing GPS coordinates.
-    2 cities are missing in LAPOSTE file (because only present on the INSEE file, probably new cities)
+<span class="n">Reading</span> <span class="k">of</span> <span class="n">LAPOSTE</span> <span class="n">file</span>
+    <span class="mi">35416</span> <span class="n">cities</span> <span class="k">found</span><span class="p">.</span>
+    <span class="mi">267</span> <span class="n">cities</span> <span class="n">discarded</span> <span class="n">because</span> <span class="k">of</span> <span class="n">missing</span> <span class="n">GPS</span> <span class="n">coordinates</span><span class="p">.</span>
+    <span class="mi">2</span> <span class="n">cities</span> <span class="k">are</span> <span class="n">missing</span> <span class="k">in</span> <span class="n">LAPOSTE</span> <span class="n">file</span> <span class="p">(</span><span class="n">because</span> <span class="k">only</span> <span class="n">present</span> <span class="k">on</span> <span class="n">the</span> <span class="n">INSEE</span> <span class="n">file</span><span class="p">,</span> <span class="n">probably</span> <span class="k">new</span> <span class="n">cities</span><span class="p">)</span>
 
-Merging of INSEE and LAPOSTE files
-    35414 cities merged.
-    478 cities discarded because not in the INSEE file (probably former cities)
-</pre></div>
+<span class="n">Merging</span> <span class="k">of</span> <span class="n">INSEE</span> <span class="k">and</span> <span class="n">LAPOSTE</span> <span class="n">files</span>
+    <span class="mi">35414</span> <span class="n">cities</span> <span class="n">merged</span><span class="p">.</span>
+    <span class="mi">478</span> <span class="n">cities</span> <span class="n">discarded</span> <span class="n">because</span> <span class="k">not</span> <span class="k">in</span> <span class="n">the</span> <span class="n">INSEE</span> <span class="n">file</span> <span class="p">(</span><span class="n">probably</span> <span class="n">former</span> <span class="n">cities</span><span class="p">)</span>
+</code></pre></div>
 
 
 <h1>Result</h1>

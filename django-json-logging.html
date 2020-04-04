@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Thomas Loiret">
+  <meta name="description" content="Use python-json-logger package to output JSON log with Django">
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@b0uh" />
+    <meta name="twitter:title" content="Django JSON logging - Thomas Loiret - Random thoughts" />
+    <meta name="twitter:description" content="Use python-json-logger package to output JSON log with Django" />
+
+  <meta name="google-site-verification" content="jZBc2U9MHiBnSlgpoFEed-V3PZ16pMNv0GSX4hOh4mg" />
+
+  <title>Django JSON logging - Thomas Loiret - Random thoughts</title>
+
+  <!-- Custom styles for this template -->
+  <!-- build:css stylesheets/main.css -->
+  <link rel="stylesheet" href="https://b0uh.github.io/theme/css/main.css">
+  <link rel="stylesheet" href="https://b0uh.github.io/theme/css/custom.css">
+  <link rel="stylesheet" href="https://b0uh.github.io/theme/css/pygments/autumn.css">
+  <!-- endbuild -->
+
+  <link href="https://b0uh.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Thomas Loiret - Random thoughts Atom Feed" />
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+  <![endif]-->
+
+  <!-- Google Fonts -->
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Open+Sans:300,400,700:latin', 'Lato:700,900:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+  </script>
+</head>
+
+<body>
+<!-- header -->
+<header class="header  push-down-45">
+  <div class="container">
+
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#readable-navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <nav class="navbar  navbar-default" role="navigation">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse  navbar-collapse" id="readable-navbar-collapse">
+        <ul class="navigation">
+
+          <li>
+            <a href="https://b0uh.github.io">Home</a>
+          </li>
+
+            <li>
+              <a href="https://b0uh.github.io/pages/about.html">About</a>
+            </li>
+
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </nav>
+
+    <div class="hidden-xs  hidden-sm">
+      <div class="social">
+        <a href="#" class="search__container">
+          <span class="glyphicon  glyphicon-flash"></span>
+        </a>
+        <ul class="social__dropdown">
+            <li>
+              <a href="https://b0uh.github.io/feeds/all.atom.xml" target="_blank" class="social__container">
+                <span class="zocial-rss"></span>
+              </a>
+            </li>
+          <li>
+            <a href="https://twitter.com/b0uh" target="_blank" class="social__container">
+              <span class="zocial-twitter"></span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.linkedin.com/in/thomasloiret/" target="_blank" class="social__container">
+              <span class="zocial-linkedin"></span>
+            </a>
+          </li>
+          <!-- <li>
+            <a href="https://www.malt.fr/profile/thomasloiret" target="_blank" class="social__container">
+              <img src="https://b0uh.github.io/theme/images/icons/malt-25px.png" />
+            </a>
+          </li> -->
+          <li>
+            <a href="https://www.last.fm/user/b0uh" target="_blank" class="social__container">
+              <span class="zocial-lastfm"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-60">
+
+
+        <!-- Start of the blogpost -->
+        <div class="row">
+          <div class="col-xs-10  col-xs-offset-1  col-md-8  col-md-offset-2  push-down-60">
+
+            <!-- Start of the content -->
+            <div class="post-content">
+
+              <h1 itemprop="name">Django JSON logging</h1>
+
+              <div class="meta__container--without-image">
+                <div class="row">
+                  <div class="col-xs-12  col-sm-8">
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                      <div class="meta__info" itemprop="name">
+                        Thomas Loiret
+                      </div>
+                    </span>
+                  </div>
+                  <div class="col-xs-12  col-sm-4">
+                    <div class="meta__comments">
+                      <span class="meta__date" itemprop="datePublished" content="2020-04-04">
+                        <span class="glyphicon glyphicon-calendar"></span>  &nbsp; Sat 04 April 2020
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <span itemprop="articleBody">
+                <p>First install the dependency. No need to add it in Django's <code>INSTALLED_APPS</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">json</span><span class="o">-</span><span class="n">logger</span>
+</code></pre></div>
+
+
+<p>Then, add the logging configuration. In my case, I configured the logger for the <code>polls</code> app. You will need to change that value according to your setup.</p>
+<div class="highlight"><pre><span></span><code><span class="n">LOGGING</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;disable_existing_loggers&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;formatters&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;json&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;()&quot;</span><span class="p">:</span> <span class="s2">&quot;pythonjsonlogger.jsonlogger.JsonFormatter&quot;</span><span class="p">}},</span>
+    <span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;console&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;logging.StreamHandler&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;formatter&quot;</span><span class="p">:</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;loggers&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;polls&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console&quot;</span><span class="p">],</span> <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;INFO&quot;</span><span class="p">}},</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>That's all! You can now log with JSON output. One of the most useful thing is to pass <code>extra</code> parameter to have more meaningful logs. Here is a simple example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Something is happening&quot;</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">pk</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s2">&quot;Hello, world.&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>With our example, the output will look like this:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Something is happening&quot;</span><span class="p">,</span> <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+</code></pre></div>
+
+
+<h2>Bonus: set a log level</h2>
+<p>With the previous settings, you can now log in JSON, but you lost the level information. According to your log tool, you will need to provide level according to their documentation. You will find bellow the configuration to add the log level/severity for Google App Engine (GAE).</p>
+<div class="highlight"><pre><span></span><code><span class="n">LOGGING</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;disable_existing_loggers&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;filters&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;add_gae_log_level&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;()&quot;</span><span class="p">:</span> <span class="s2">&quot;polls.logging.AddGaeSeverityLevel&quot;</span><span class="p">}},</span>
+    <span class="s2">&quot;formatters&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;json&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;()&quot;</span><span class="p">:</span> <span class="s2">&quot;pythonjsonlogger.jsonlogger.JsonFormatter&quot;</span><span class="p">}},</span>
+    <span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;console&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;logging.StreamHandler&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;formatter&quot;</span><span class="p">:</span> <span class="s2">&quot;json&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;add_gae_log_level&quot;</span><span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;loggers&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;polls&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;handlers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;console&quot;</span><span class="p">],</span> <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;INFO&quot;</span><span class="p">}},</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>And in <code>polls/logging.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c1"># https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#logseverity</span>
+<span class="n">SEVERITY_LEVELS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;DEBUG&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s2">&quot;INFO&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+    <span class="s2">&quot;WARNING&quot;</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span>
+    <span class="s2">&quot;ERROR&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+    <span class="s2">&quot;CRITICAL&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">AddGaeSeverityLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Filter</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="n">record</span><span class="o">.</span><span class="n">severity</span> <span class="o">=</span> <span class="n">SEVERITY_LEVELS</span><span class="p">[</span><span class="n">record</span><span class="o">.</span><span class="n">levelname</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">True</span>
+</code></pre></div>
+
+
+<p>Our example for before will now have the following outout:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Something is happening&quot;</span><span class="p">,</span> <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nt">&quot;severity&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">}</span>
+</code></pre></div>
+              </span>
+
+              <div class="meta__container--without-image">
+                <div class="row">
+                </div>
+              </div>
+
+              <br>
+
+              <p>
+                <!-- AddToAny BEGIN -->
+                <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+                <a class="a2a_button_twitter"></a>
+                <a class="a2a_button_linkedin"></a>
+                <a class="a2a_button_facebook"></a>
+                <a class="a2a_button_reddit"></a>
+                </div>
+                <script async src="https://static.addtoany.com/menu/page.js"></script>
+                <!-- AddToAny END -->
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+</div>
+
+<footer class="copyrights">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12  col-sm-6">
+        Powered by <a href="https://github.com/getpelican/pelican">Pelican</a>.
+      </div>
+      <div class="col-xs-12  col-sm-6">
+        <div class="copyrights--right">
+          Made with <span class="glyphicon  glyphicon-heart"></span> in Nantes.
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  <script src="https://b0uh.github.io/theme/scripts/jquery.min.js"></script>
+  <script src="https://b0uh.github.io/theme/scripts/underscore.js"></script>
+  <script src="https://b0uh.github.io/theme/scripts/bootstrap.min.js"></script>
+  <script src="https://b0uh.github.io/theme/scripts/main.js"></script>
+
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-98369697-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+</body>
+</html>
