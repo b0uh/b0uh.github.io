@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts - python</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/python.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2018-01-25T12:00:00+01:00</updated><entry><title>Create and deploy a Django project on Clever Cloud</title><link href="https://b0uh.github.io/create-and-deploy-a-django-project-on-clever-cloud.html" rel="alternate"></link><published>2018-01-25T12:00:00+01:00</published><updated>2018-01-25T12:00:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2018-01-25:/create-and-deploy-a-django-project-on-clever-cloud.html</id><summary type="html">&lt;p&gt;How to deploy a Django project on Clever Cloud ?&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Last update:&lt;/strong&gt; 15/10/2019
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts - python</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/python.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2020-04-20T10:00:00+02:00</updated><entry><title>Delete all your Google Calendar passed events</title><link href="https://b0uh.github.io/delete-all-your-google-calendar-passed-events.html" rel="alternate"></link><published>2020-04-20T10:00:00+02:00</published><updated>2020-04-20T10:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2020-04-20:/delete-all-your-google-calendar-passed-events.html</id><summary type="html">&lt;p&gt;Script that helps you to delete your Google Calendar passed events.&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Why&lt;/h1&gt;
+&lt;p&gt;I like to put a lot of stuff in my calendar. Lately I've decided to stop using Google products. Calendar is definitively a good one, but you know the saying &lt;em&gt;"if it is free, then you are the product"&lt;/em&gt;. While I'm still struggling to close my Google account, I've started to clean things up, including my calendar. So I wrote a little script to delete all passed events (and future if you want). I don't need them anymore after all :)&lt;/p&gt;
+&lt;p&gt;I choose to keep the script quite basic so it can be easily readable. Giving access to your Calendar is not something you should do lightly. Don't hesitate to check how it works before using it ;)&lt;/p&gt;
+&lt;h1&gt;Deletion in 4 steps&lt;/h1&gt;
+&lt;h3&gt;1/ Installation&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;git clone git@github.com:b0uh/google-calendar-events-deletion.git
+python -m pip install -r requirements.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;2/ Get your Google Calendar API credentials&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Go to &lt;a href="https://developers.google.com/calendar/quickstart/python"&gt;https://developers.google.com/calendar/quickstart/python&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Click on "Enable the Google Calendar API" and choose "Desktop app"&lt;/li&gt;
+&lt;li&gt;Click on "Download client configuration" and save the file &lt;code&gt;credentials.json&lt;/code&gt; within the same folder as the python script&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;3/ Test it&lt;/h3&gt;
+&lt;p&gt;You can run the script without arguments first. By default it will simulate its behaviour and you will see what events should be delete.&lt;/p&gt;
+&lt;p&gt;You will be asked to authenticate yourself, that's normal.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;python events_deletion.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;4/ Just do it (Danger zone!)&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;python events_deletion.py --confirm-delete
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Once the script is done, the events are now in the trash. They will be definitively deleted after 30 days, but if you don't want to wait you can empty the trash at &lt;a href="https://calendar.google.com/calendar/r/trash"&gt;https://calendar.google.com/calendar/r/trash&lt;/a&gt;&lt;/p&gt;</content><category term="python"></category><category term="python"></category><category term="google"></category><category term="privacy"></category></entry><entry><title>Create and deploy a Django project on Clever Cloud</title><link href="https://b0uh.github.io/create-and-deploy-a-django-project-on-clever-cloud.html" rel="alternate"></link><published>2018-01-25T12:00:00+01:00</published><updated>2018-01-25T12:00:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2018-01-25:/create-and-deploy-a-django-project-on-clever-cloud.html</id><summary type="html">&lt;p&gt;How to deploy a Django project on Clever Cloud ?&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Last update:&lt;/strong&gt; 15/10/2019
 &lt;br&gt;
 &lt;br&gt;&lt;/p&gt;
 &lt;p&gt;In this blog post, we will see how to host a new Django project on Clever Cloud (&lt;a href="https://www.clever-cloud.com/"&gt;www.clever-cloud.com&lt;/a&gt;). If you don't have a Clever Cloud account, you can signup and you will get a 20€ credit to test the platform ;)&lt;/p&gt;

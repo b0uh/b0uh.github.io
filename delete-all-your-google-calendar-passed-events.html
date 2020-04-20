@@ -5,16 +5,16 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Thomas Loiret">
-    <meta name="description" content="Thomas Loiret's blog">
+  <meta name="description" content="Script that helps you to delete your Google Calendar passed events.">
 
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@b0uh" />
-    <meta name="twitter:title" content="Thomas Loiret - Random thoughts" />
-    <meta name="twitter:description" content="Thomas Loiret's blog" />
+    <meta name="twitter:title" content="Delete all your Google Calendar passed events - Thomas Loiret - Random thoughts" />
+    <meta name="twitter:description" content="Script that helps you to delete your Google Calendar passed events." />
 
   <meta name="google-site-verification" content="jZBc2U9MHiBnSlgpoFEed-V3PZ16pMNv0GSX4hOh4mg" />
 
-  <title>Thomas Loiret - Random thoughts - privacy tag</title>
+  <title>Delete all your Google Calendar passed events - Thomas Loiret - Random thoughts</title>
 
   <!-- Custom styles for this template -->
   <!-- build:css stylesheets/main.css -->
@@ -119,115 +119,79 @@
 
 <div class="container">
 
-  <div class="row">
-    <div class="col-xs-8  col-xs-offset-2">
+      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-60">
 
-      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-45">
-        <!-- Meta without image start (Needed for WP theme)-->
-        <div class="meta">
-          <div class="row">
-            <div class="col-xs-12  col-sm-10  col-sm-offset-1">
+
+        <!-- Start of the blogpost -->
+        <div class="row">
+          <div class="col-xs-10  col-xs-offset-1  col-md-8  col-md-offset-2  push-down-60">
+
+            <!-- Start of the content -->
+            <div class="post-content">
+
+              <h1 itemprop="name">Delete all your Google Calendar passed events</h1>
+
               <div class="meta__container--without-image">
                 <div class="row">
                   <div class="col-xs-12  col-sm-8">
-                    <div class="meta__info">
-                    </div>
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                      <div class="meta__info" itemprop="name">
+                        Thomas Loiret
+                      </div>
+                    </span>
                   </div>
                   <div class="col-xs-12  col-sm-4">
-                    <span class="meta__comments" itemprop="datePublished" content="2020-04-20">
-                      <span class="glyphicon glyphicon-calendar"></span> &nbsp; Mon 20 April 2020</span>
+                    <div class="meta__comments">
+                      <span class="meta__date" itemprop="datePublished" content="2020-04-20">
+                        <span class="glyphicon glyphicon-calendar"></span>  &nbsp; Mon 20 April 2020
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <!-- Meta without image end -->
-        <!-- Start of the blogpost -->
-        <div class="row">
-          <div class="col-xs-10  col-xs-offset-1">
-            <!-- Start of the content -->
-            <div class="post-content--front-page">
-              <h2 class="front-page-title">
-                <a href="https://b0uh.github.io/delete-all-your-google-calendar-passed-events.html">
-                  <span itemprop="name">
-                    Delete all your Google Calendar passed events
-                  </span>
-                </a>
-              </h2>
-              <p itemprop="articleSection"><p>Script that helps you to delete your Google Calendar passed events.</p></p>
-            </div>
-            <!-- End of the content -->
-            <a href="https://b0uh.github.io/delete-all-your-google-calendar-passed-events.html" itemprop="url">
-              <div class="read-more">
-                Continue reading
-                <div class="read-more__arrow">
-                  <span class="glyphicon  glyphicon-chevron-right"></span>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-45">
-        <!-- Meta without image start (Needed for WP theme)-->
-        <div class="meta">
-          <div class="row">
-            <div class="col-xs-12  col-sm-10  col-sm-offset-1">
+
+              <span itemprop="articleBody">
+                <h1>Why</h1>
+<p>I like to put a lot of stuff in my calendar. Lately I've decided to stop using Google products. Calendar is definitively a good one, but you know the saying <em>"if it is free, then you are the product"</em>. While I'm still struggling to close my Google account, I've started to clean things up, including my calendar. So I wrote a little script to delete all passed events (and future if you want). I don't need them anymore after all :)</p>
+<p>I choose to keep the script quite basic so it can be easily readable. Giving access to your Calendar is not something you should do lightly. Don't hesitate to check how it works before using it ;)</p>
+<h1>Deletion in 4 steps</h1>
+<h3>1/ Installation</h3>
+<div class="highlight"><pre><span></span><code>git clone git@github.com:b0uh/google-calendar-events-deletion.git
+python -m pip install -r requirements.txt
+</code></pre></div>
+
+
+<h3>2/ Get your Google Calendar API credentials</h3>
+<ul>
+<li>Go to <a href="https://developers.google.com/calendar/quickstart/python">https://developers.google.com/calendar/quickstart/python</a></li>
+<li>Click on "Enable the Google Calendar API" and choose "Desktop app"</li>
+<li>Click on "Download client configuration" and save the file <code>credentials.json</code> within the same folder as the python script</li>
+</ul>
+<h3>3/ Test it</h3>
+<p>You can run the script without arguments first. By default it will simulate its behaviour and you will see what events should be delete.</p>
+<p>You will be asked to authenticate yourself, that's normal.</p>
+<div class="highlight"><pre><span></span><code>python events_deletion.py
+</code></pre></div>
+
+
+<h3>4/ Just do it (Danger zone!)</h3>
+<div class="highlight"><pre><span></span><code>python events_deletion.py --confirm-delete
+</code></pre></div>
+
+
+<p>Once the script is done, the events are now in the trash. They will be definitively deleted after 30 days, but if you don't want to wait you can empty the trash at <a href="https://calendar.google.com/calendar/r/trash">https://calendar.google.com/calendar/r/trash</a></p>
+              </span>
+
               <div class="meta__container--without-image">
                 <div class="row">
-                  <div class="col-xs-12  col-sm-8">
-                    <div class="meta__info">
-                    </div>
-                  </div>
-                  <div class="col-xs-12  col-sm-4">
-                    <span class="meta__comments" itemprop="datePublished" content="2018-09-11">
-                      <span class="glyphicon glyphicon-calendar"></span> &nbsp; Tue 11 September 2018</span>
-                  </div>
                 </div>
               </div>
+
+              <br>
             </div>
-          </div>
-        </div>
-        <!-- Meta without image end -->
-        <!-- Start of the blogpost -->
-        <div class="row">
-          <div class="col-xs-10  col-xs-offset-1">
-            <!-- Start of the content -->
-            <div class="post-content--front-page">
-              <h2 class="front-page-title">
-                <a href="https://b0uh.github.io/do-you-know-that-your-email-address-is-shared-by-default-with-your-network-on-linkedin.html">
-                  <span itemprop="name">
-                    Do you know that your email address is shared by default with your network on LinkedIn?
-                  </span>
-                </a>
-              </h2>
-              <p itemprop="articleSection"><p>Your email address is visible by default to your network, you may not want that.</p></p>
-            </div>
-            <!-- End of the content -->
-            <a href="https://b0uh.github.io/do-you-know-that-your-email-address-is-shared-by-default-with-your-network-on-linkedin.html" itemprop="url">
-              <div class="read-more">
-                Continue reading
-                <div class="read-more__arrow">
-                  <span class="glyphicon  glyphicon-chevron-right"></span>
-                </div>
-              </div>
-            </a>
           </div>
         </div>
       </div>
-
-
-<nav class="center">
-  <div class="pagination">
-    <div class="row">
-          <span class="page-numbers deactivate" href="#">Older</span>
-      </nav>
-
-    </div>
-  </div>
-
-
 
 </div>
 
