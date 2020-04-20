@@ -67,3 +67,11 @@
 .a2a_kit a {
     border-bottom: none;
 }
+
+dl {
+    font-size: 18px;
+}
+
+dd {
+    margin-bottom: 1em;
+}
