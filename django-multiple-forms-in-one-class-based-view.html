@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="en">
 <head>
   <meta charset="utf-8">
 
@@ -155,15 +155,15 @@
               </div>
 
               <span itemprop="articleBody">
-                <h1>Context</h1>
+                <h2>Context</h2>
 <p>Let's say we want to rebuild Stackoverflow and especially the page of a question. On this page you can either post a response or a comment, so here classic class based views are not enough. We will focus on those two forms (response and comment) for the example bellow.</p>
-<h2>Constraints</h2>
+<h3>Constraints</h3>
 <ul>
 <li>Staying on the same URL after submitting a form</li>
 <li>Forms cannot be submitted at the same time</li>
 <li>Using a class based view style because it seems more readable in my opinion</li>
 </ul>
-<h1>forms.py</h1>
+<h2>forms.py</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
 
 <span class="k">class</span> <span class="nc">ResponseForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
@@ -174,7 +174,7 @@
 </code></pre></div>
 
 
-<h1>urls.py</h1>
+<h2>urls.py</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="kn">import</span> <span class="n">url</span>
 
 <span class="kn">from</span> <span class="nn">my_app.views</span> <span class="kn">import</span> <span class="n">QuestionDetail</span>
@@ -185,7 +185,7 @@
 </code></pre></div>
 
 
-<h1>views.py</h1>
+<h2>views.py</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.contrib.auth.mixins</span> <span class="kn">import</span> <span class="n">LoginRequiredMixin</span>
 <span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">Http404</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
@@ -241,7 +241,7 @@
 
 
 <p>Here the view inherit from <a href="https://docs.djangoproject.com/en/1.11/ref/class-based-views/base/#django.views.generic.base.View"><code>View</code></a> in order to keep a class based view style. All methods here has been inspired by other CBV like <a href="https://docs.djangoproject.com/en/1.11/ref/class-based-views/generic-editing/#django.views.generic.edit.UpdateView"><code>UpdateView</code></a>.</p>
-<h1>question_detail.html</h1>
+<h2>question_detail.html</h2>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;fieldset&gt;</span>
     <span class="nt">&lt;legend&gt;</span>Answer the question<span class="nt">&lt;/legend&gt;</span>
     <span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
@@ -262,7 +262,7 @@
 
 
 <p>For each form, in the template the should name the submit button in order to know in the view which form has been submitted.</p>
-<h1>Inspirations</h1>
+<h2>Inspirations</h2>
 <p>While looking for a solution to handle multiple forms in one view I found these posts whose inspired me:</p>
 <ul>
 <li><a href="http://anothercomputingblog.blogspot.fr/2010/04/multiple-django-forms-on-same-view.html">Multiple Django forms in the same view</a> (How to know which form has been submitted)</li>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2020-04-20T10:00:00+02:00</updated><entry><title>Delete all your Google Calendar passed events</title><link href="https://b0uh.github.io/delete-all-your-google-calendar-passed-events.html" rel="alternate"></link><published>2020-04-20T10:00:00+02:00</published><updated>2020-04-20T10:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2020-04-20:/delete-all-your-google-calendar-passed-events.html</id><summary type="html">&lt;p&gt;Script that helps you to delete your Google Calendar passed events.&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Why&lt;/h1&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2020-04-20T10:00:00+02:00</updated><entry><title>Delete all your Google Calendar passed events</title><link href="https://b0uh.github.io/delete-all-your-google-calendar-passed-events.html" rel="alternate"></link><published>2020-04-20T10:00:00+02:00</published><updated>2020-04-20T10:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2020-04-20:/delete-all-your-google-calendar-passed-events.html</id><summary type="html">&lt;p&gt;Script that helps you to delete your Google Calendar passed events.&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Why&lt;/h2&gt;
 &lt;p&gt;I like to put a lot of stuff in my calendar. Lately I've decided to stop using Google products. Calendar is definitively a good one, but you know the saying &lt;em&gt;"if it is free, then you are the product"&lt;/em&gt;. While I'm still struggling to close my Google account, I've started to clean things up, including my calendar. So I wrote a little script to delete all passed events (and future if you want). I don't need them anymore after all :)&lt;/p&gt;
 &lt;p&gt;I choose to keep the script quite basic so it can be easily readable. Giving access to your Calendar is not something you should do lightly. Don't hesitate to check how it works before using it ;)&lt;/p&gt;
-&lt;h1&gt;Deletion in 4 steps&lt;/h1&gt;
+&lt;h2&gt;Deletion in 4 steps&lt;/h2&gt;
 &lt;h3&gt;1/ Installation&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;git clone git@github.com:b0uh/google-calendar-events-deletion.git
 python -m pip install -r requirements.txt
@@ -108,11 +108,11 @@ python -m pip install -r requirements.txt
 &lt;p&gt;Our example for before will now have the following outout:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;message&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Something is happening&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nt"&gt;&amp;quot;user&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nt"&gt;&amp;quot;severity&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;200&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="django"></category><category term="django"></category><category term="python"></category><category term="json"></category><category term="logging"></category><category term="logs"></category><category term="python-json-logger"></category></entry><entry><title>ReDos + Node.js</title><link href="https://b0uh.github.io/redos-nodejs.html" rel="alternate"></link><published>2019-11-27T12:00:00+01:00</published><updated>2019-11-27T12:00:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2019-11-27:/redos-nodejs.html</id><summary type="html">&lt;p&gt;When developing with NodeJS, you should be aware of regular expression denial of service (ReDoS).&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; When developing with NodeJS, you should be aware of regular expression denial of service (ReDoS).&lt;/p&gt;
-&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;h2&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;A ReDoS (Regular expression Denial of Service) is a type of attack used to put down a web server. This is possible when the code run by the server contains a regular expression that triggers too many backtracking.&lt;/p&gt;
 &lt;p&gt;Let's step back quickly to understand what it really means when developing with Node.js. It is important to understand how the event loop works. It &lt;a href="https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/"&gt;"allows Node.js to perform non-blocking I/O operations — despite the fact that JavaScript is single-threaded — by offloading operations to the system kernel whenever possible"&lt;/a&gt;. Therefore we should avoid to &lt;a href="https://nodejs.org/en/docs/guides/dont-block-the-event-loop/"&gt;block the event loop&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;When the event loop is blocked Node.js cannot process anything else and the server is paralyzed. When the code contains unsafe regular expressions it can become an attack vector. Instead of having to send a lot of requests to put down a server with a classic DoS, you can send only a few requests that will trigger the unsafe regular expression and put down the server.&lt;/p&gt;
-&lt;h1&gt;Examples&lt;/h1&gt;
+&lt;h2&gt;Examples&lt;/h2&gt;
 &lt;p&gt;Try to execute the following regular expression with the suggested input. You will notice that Node.js take a long time (several seconds) to respond.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="sr"&gt;/^(A+)*B/&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;A&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;repeat&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;E&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -126,13 +126,13 @@ python -m pip install -r requirements.txt
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h1&gt;What can I do about it?&lt;/h1&gt;
+&lt;h2&gt;What can I do about it?&lt;/h2&gt;
 &lt;p&gt;There are some tools out there like &lt;a href="https://github.com/substack/safe-regex"&gt;&lt;code&gt;safe-regex&lt;/code&gt;&lt;/a&gt; and &lt;a href="https://www.cs.bham.ac.uk/~hxt/research/rxxr2/"&gt;&lt;code&gt;rxxr2&lt;/code&gt;&lt;/a&gt; to try to detect unsafe regular expressions. Unfortunately none of them work 100% of the time.&lt;/p&gt;
 &lt;p&gt;Since this security issue is directly linked to how Node.js interprets regular expression, the safest solution is to use a different engine: &lt;a href="https://github.com/google/re2/"&gt;&lt;code&gt;re2&lt;/code&gt;&lt;/a&gt;. However, switching engine also means that some of your regular expressions may &lt;a href="https://www.npmjs.com/package/re2#limitations-things-re2-does-not-support"&gt;not work anymore&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In conclusion, you can continue to use Node.js regular expression engine as long as you as aware of ReDoS and avoid catastrophic backtracking. If you are not sure about your code, don't hesitate to use &lt;code&gt;re2&lt;/code&gt;, this is the simplest solution to be safe :)&lt;/p&gt;</content><category term="security, javascript"></category><category term="regex"></category><category term="dos"></category><category term="redos"></category><category term="javascript"></category><category term="catastrophic"></category><category term="exponential-time"></category><category term="regular expressions"></category></entry><entry><title>About looking for a bottleneck</title><link href="https://b0uh.github.io/about-looking-for-a-bottleneck.html" rel="alternate"></link><published>2018-10-08T12:00:00+02:00</published><updated>2018-10-08T12:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2018-10-08:/about-looking-for-a-bottleneck.html</id><summary type="html">&lt;p&gt;Be sure to use trustworthy tools to determine your metrics and be methodical about how you are looking for a bottleneck.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; Be sure to use trustworthy tools to determine your metrics and be methodical about how you are looking for a bottleneck.&lt;/p&gt;
-&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;h2&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Looking for a bottleneck often came after realizing that a system does not scale/behave as expected. This article tries to describe some best practices to help find bottleneck and its cause!&lt;/p&gt;
-&lt;h1&gt;System&lt;/h1&gt;
+&lt;h2&gt;System&lt;/h2&gt;
 &lt;p&gt;The system is what you are trying to test and that may have a bottleneck. It can be a website, an application, a platform... anything.&lt;/p&gt;
 &lt;p&gt;You should be able to &lt;strong&gt;describe the state of the system at any moment&lt;/strong&gt;. For example when we talk about a website as a system its state description should include:&lt;/p&gt;
 &lt;ul&gt;
@@ -142,7 +142,7 @@ python -m pip install -r requirements.txt
 &lt;li&gt;dependencies (e.g.: database, cache, ...)&lt;/li&gt;
 &lt;li&gt;...&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h1&gt;Monitoring&lt;/h1&gt;
+&lt;h2&gt;Monitoring&lt;/h2&gt;
 &lt;p&gt;When your system is set up &lt;strong&gt;you will need to be able to observe it and measure things in it&lt;/strong&gt;. If your system is in production you probably have some monitoring tools already set up for that, but that's not the only option. Some examples of monitoring tools:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;general monitoring tools: Nagios/Zabbix/Datadog/...&lt;/li&gt;
@@ -153,7 +153,7 @@ python -m pip install -r requirements.txt
 &lt;/ul&gt;
 &lt;p&gt;Obviously you should choose a tool according to what you are trying to observe. During the search of the bottleneck &lt;strong&gt;you may need to change tools&lt;/strong&gt; as you go further.&lt;/p&gt;
 &lt;p&gt;Keep in mind that &lt;strong&gt;you should look at the big picture&lt;/strong&gt;. Do not focus on small variations, you want to be sure that if you observe a variation it is worth it.&lt;/p&gt;
-&lt;h1&gt;Stress operation&lt;/h1&gt;
+&lt;h2&gt;Stress operation&lt;/h2&gt;
 &lt;p&gt;Now that you have your system and its monitoring up and running the next step it to stress it in order to find the flaw. This "stress operation" can be different things according to what you are testing:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;a load test (sending a lot of requests to your website)&lt;/li&gt;
@@ -161,7 +161,7 @@ python -m pip install -r requirements.txt
 &lt;li&gt;a new dependency (if you want to change of DB for example)&lt;/li&gt;
 &lt;li&gt;...&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h1&gt;Trust&lt;/h1&gt;
+&lt;h2&gt;Trust&lt;/h2&gt;
 &lt;p&gt;Not much to say here except that &lt;strong&gt;you should trust your system setup and monitoring tool&lt;/strong&gt;. If not, no need to go further, you will not be able to work properly and find the bottleneck!&lt;/p&gt;
 &lt;p&gt;Some questions you should ask yourself:&lt;/p&gt;
 &lt;ul&gt;
@@ -171,12 +171,12 @@ python -m pip install -r requirements.txt
 &lt;li&gt;Is the monitoring tool trustworthy? (Compare data with another tool to cross check)&lt;/li&gt;
 &lt;li&gt;Does it have all the data? an average? or just some data from time to time?&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h1&gt;Methodology&lt;/h1&gt;
+&lt;h2&gt;Methodology&lt;/h2&gt;
 &lt;p&gt;Finding the bottleneck is about tweaking your system parameters one by one.
 The bottleneck is probably something not intuitive/obvious. You need to keep a trace of all the tests you are doing.
 Basically you have to be methodological about what you are doing.&lt;/p&gt;
 &lt;p&gt;Here is a template of a document that can help to be methodological when looking for a bottleneck.&lt;/p&gt;
-&lt;h2&gt;Template&lt;/h2&gt;
+&lt;h3&gt;Template&lt;/h3&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Initial&lt;/span&gt; &lt;span class="n"&gt;conditions&lt;/span&gt;
 
 &lt;span class="o"&gt;##&lt;/span&gt; &lt;span class="k"&gt;System&lt;/span&gt; &lt;span class="n"&gt;condition&lt;/span&gt;
@@ -226,10 +226,10 @@ Basically you have to be methodological about what you are doing.&lt;/p&gt;
 &lt;p&gt;Good luck for your search!&lt;/p&gt;</content><category term="performances"></category><category term="bottleneck"></category><category term="load test"></category><category term="loadtest"></category><category term="monitoring"></category><category term="find"></category><category term="bottlenecks"></category><category term="trust"></category></entry><entry><title>Do you know that your email address is shared by default with your network on LinkedIn?</title><link href="https://b0uh.github.io/do-you-know-that-your-email-address-is-shared-by-default-with-your-network-on-linkedin.html" rel="alternate"></link><published>2018-09-11T19:00:00+02:00</published><updated>2018-09-11T19:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2018-09-11:/do-you-know-that-your-email-address-is-shared-by-default-with-your-network-on-linkedin.html</id><summary type="html">&lt;p&gt;Your email address is visible by default to your network, you may not want that.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; You should hide your email to your network on LinkedIn.&lt;/p&gt;
 &lt;p&gt;You can easily find your connections' email addresses. Go on their profiles and click on "See contact info".&lt;/p&gt;
 &lt;p&gt;&lt;img class="wp-post-image" alt="LinkedIn profile" src="https://b0uh.github.io/medias/linkedin-profile.png"&gt;&lt;/p&gt;
-&lt;h1&gt;How to hide your email?&lt;/h1&gt;
+&lt;h2&gt;How to hide your email?&lt;/h2&gt;
 &lt;p&gt;Your email is, by default, visible to your network. You can change this setting in "Me" &amp;gt; "Settings &amp;amp; Privacy" &amp;gt; "&lt;a href="https://www.linkedin.com/psettings/privacy"&gt;Privacy&lt;/a&gt;". Change "Who can see your email address" to "Only you".&lt;/p&gt;
 &lt;p&gt;&lt;img class="wp-post-image" alt="Make the email visible only to you" src="https://b0uh.github.io/medias/linkedin-privacy.png"&gt;&lt;/p&gt;
-&lt;h1&gt;Why does it matter?&lt;/h1&gt;
+&lt;h2&gt;Why does it matter?&lt;/h2&gt;
 &lt;p&gt;I believe that with a little of social engineering you can add anyone on LinkedIn, even if you don't know them. Any strangers can be one of your connections so it is important to protect your email address!&lt;/p&gt;
 &lt;p&gt;With your email address in the wild, here are some of the risks:&lt;/p&gt;
 &lt;ul&gt;
@@ -237,7 +237,7 @@ Basically you have to be methodological about what you are doing.&lt;/p&gt;
 &lt;li&gt;It may be used for social engineering&lt;/li&gt;
 &lt;li&gt;You may be the target of some ransomware&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h1&gt;Some statistics from my network&lt;/h1&gt;
+&lt;h2&gt;Some statistics from my network&lt;/h2&gt;
 &lt;p&gt;Since GDPR you can download your data which is a good thing. In LinkedIn, you can do it &lt;a href="https://www.linkedin.com/psettings/member-data"&gt;here&lt;/a&gt;. In the archive generated, you will find a &lt;code&gt;Connections.csv&lt;/code&gt; file with all your connections included their email adsresses... Yep, so here is some statistics from my own network (about 600 connections):&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;71%&lt;/strong&gt; share their personal email (gmail, yahoo, hotmail...)&lt;/li&gt;
@@ -245,11 +245,11 @@ Basically you have to be methodological about what you are doing.&lt;/p&gt;
 &lt;li&gt;&lt;strong&gt;2%&lt;/strong&gt; don't share their email.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Bonus: 50% of my contacts have a gmail address!&lt;/p&gt;
-&lt;p&gt;I know that some recruiters on LinkedIn have thousands of connections, I wonder if some of them extract email from LinkedIn that way.&lt;/p&gt;</content><category term="privacy"></category><category term="linkedin"></category><category term="email"></category><category term="privacy"></category></entry><entry><title>Create and deploy a Django project on Clever Cloud</title><link href="https://b0uh.github.io/create-and-deploy-a-django-project-on-clever-cloud.html" rel="alternate"></link><published>2018-01-25T12:00:00+01:00</published><updated>2018-01-25T12:00:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2018-01-25:/create-and-deploy-a-django-project-on-clever-cloud.html</id><summary type="html">&lt;p&gt;How to deploy a Django project on Clever Cloud ?&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Last update:&lt;/strong&gt; 15/10/2019
+&lt;p&gt;I know that some recruiters on LinkedIn have thousands of connections, I wonder if some of them extract email from LinkedIn that way.&lt;/p&gt;</content><category term="privacy"></category><category term="linkedin"></category><category term="email"></category><category term="privacy"></category></entry><entry><title>Create and deploy a Django project on Clever Cloud</title><link href="https://b0uh.github.io/create-and-deploy-a-django-project-on-clever-cloud.html" rel="alternate"></link><published>2018-01-25T12:00:00+01:00</published><updated>2019-10-15T12:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2018-01-25:/create-and-deploy-a-django-project-on-clever-cloud.html</id><summary type="html">&lt;p&gt;How to deploy a Django project on Clever Cloud ?&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;Last update:&lt;/strong&gt; 15/10/2019
 &lt;br&gt;
 &lt;br&gt;&lt;/p&gt;
 &lt;p&gt;In this blog post, we will see how to host a new Django project on Clever Cloud (&lt;a href="https://www.clever-cloud.com/"&gt;www.clever-cloud.com&lt;/a&gt;). If you don't have a Clever Cloud account, you can signup and you will get a 20€ credit to test the platform ;)&lt;/p&gt;
-&lt;h1&gt;1/ Create a Django project&lt;/h1&gt;
+&lt;h2&gt;1/ Create a Django project&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ django-admin startproject fooproject
 $ &lt;span class="nb"&gt;cd&lt;/span&gt; fooproject
 $ &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Django&amp;quot;&lt;/span&gt; &amp;gt; requirements.txt
@@ -261,7 +261,7 @@ $ git commit -m &lt;span class="s2"&gt;&amp;quot;initial commit&amp;quot;&lt;/sp
 
 &lt;p&gt;For more information, please take a look at the wonderful &lt;a href="https://docs.djangoproject.com/"&gt;Django's documentation&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: currently Clever Cloud does not support &lt;code&gt;pipenv&lt;/code&gt; wonderful &lt;code&gt;Pipfile&lt;/code&gt; &amp;amp; &lt;code&gt;Pipfle.lock&lt;/code&gt; files. The traditional &lt;code&gt;requirements.txt&lt;/code&gt; is required.&lt;/p&gt;
-&lt;h1&gt;2/ Create the application on Clever Cloud&lt;/h1&gt;
+&lt;h2&gt;2/ Create the application on Clever Cloud&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;Create a new application (Personal Space &amp;gt; Add an application)&lt;/li&gt;
 &lt;li&gt;Create a brand new app&lt;/li&gt;
@@ -271,7 +271,7 @@ $ git commit -m &lt;span class="s2"&gt;&amp;quot;initial commit&amp;quot;&lt;/sp
 &lt;li&gt;No need for an add-on for now.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;And that's it !&lt;/p&gt;
-&lt;h1&gt;3/ Deploy your application&lt;/h1&gt;
+&lt;h2&gt;3/ Deploy your application&lt;/h2&gt;
 &lt;p&gt;Go to the &lt;em&gt;Information&lt;/em&gt; section for your application and at the top you should see a line starting by
 &lt;code&gt;git remote add ...&lt;/code&gt;, copy it. It may be one two lines actually if you have a small screen, eg. 13".&lt;/p&gt;
 &lt;p&gt;On your project you should do something like this (it's an example):&lt;/p&gt;
@@ -282,7 +282,7 @@ $ git push clever master
 
 &lt;p&gt;Come back to your Clever cloud dashboard and go to the &lt;em&gt;Logs&lt;/em&gt; section and see your application deploying :) (You may want to scroll down to see the latest logs)&lt;/p&gt;
 &lt;p&gt;And you have done your first deploy !&lt;/p&gt;
-&lt;h1&gt;4/ But the deployment failed :(&lt;/h1&gt;
+&lt;h2&gt;4/ But the deployment failed :(&lt;/h2&gt;
 &lt;p&gt;We missed some steps to ensure that the deploy run smoothly, mainly configuration steps. We need to specify the module to load, by adding the following file &lt;code&gt;clevercloud/python.json&lt;/code&gt; in our project (replace &lt;code&gt;fooproject&lt;/code&gt; by your project):&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="nt"&gt;&amp;quot;deploy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -305,7 +305,7 @@ $ git push clever master
 
 &lt;p&gt;Commit and push your new settings file, a new deploy should be triggered. You should now have a deployed and running application!&lt;/p&gt;
 &lt;p&gt;&lt;img class="wp-post-image" alt="Django deploy screen" src="https://b0uh.github.io/medias/clever-cloud-django-deploy.gif"&gt;&lt;/p&gt;
-&lt;h1&gt;5/ Use a database&lt;/h1&gt;
+&lt;h2&gt;5/ Use a database&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;On Clever cloud dashboard, click on &lt;em&gt;Add an add-on&lt;/em&gt;&lt;/li&gt;
 &lt;li&gt;Select &lt;em&gt;PostgreSQL&lt;/em&gt;&lt;/li&gt;
@@ -329,7 +329,7 @@ $ git push clever master
 
 &lt;p&gt;Don't forget to add the &lt;code&gt;psycopg2&lt;/code&gt; package to your &lt;code&gt;requirements.txt&lt;/code&gt; file.&lt;/p&gt;
 &lt;p&gt;Commit those changes and push them in order to deploy again your application.&lt;/p&gt;
-&lt;h1&gt;6/ Manage your static and medias files&lt;/h1&gt;
+&lt;h2&gt;6/ Manage your static and medias files&lt;/h2&gt;
 &lt;blockquote&gt;
 &lt;p&gt;It is important to understand that the notion of "static" files is different between Clever cloud and Django!&lt;/p&gt;
 &lt;p&gt;In Django there is a difference between the file uploaded with the project (static files) and the file uploaded by the users (media files) but for Clever cloud static files are all the files you want to serve statically.&lt;/p&gt;
@@ -359,7 +359,7 @@ $ git push clever master
 
 
 &lt;p&gt;Redeploy and you now have a Django project with your media files handled.&lt;/p&gt;
-&lt;h1&gt;7/ Continuous integration&lt;/h1&gt;
+&lt;h2&gt;7/ Continuous integration&lt;/h2&gt;
 &lt;p&gt;We are still missing something to fully use our two addons. We need to do migrations to create the DB schema and we need to collect the static. To automatize those tasks after each new deployments we will use the &lt;code&gt;clevercloud/python.json&lt;/code&gt; file and add a &lt;code&gt;managetasks&lt;/code&gt; entry.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="nt"&gt;&amp;quot;deploy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -374,7 +374,7 @@ $ git push clever master
 
 
 &lt;p&gt;Note: Another way to handle that is to use &lt;a href="https://www.clever-cloud.com/doc/clever-cloud-overview/hooks/"&gt;hooks&lt;/a&gt; that are more documented and seems more flexible.&lt;/p&gt;
-&lt;h1&gt;8/ Create a super user&lt;/h1&gt;
+&lt;h2&gt;8/ Create a super user&lt;/h2&gt;
 &lt;p&gt;Go to &lt;em&gt;Profile&lt;/em&gt; then &lt;em&gt;SSH Key&lt;/em&gt; and add your SSH key. After that you can ssh the server and create the super user.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ ssh -t ssh@sshgateway-clevercloud-customers.services.clever-cloud.com &amp;lt;APP_ID&amp;gt;
 $ &lt;span class="nb"&gt;cd&lt;/span&gt; &amp;lt;APP_ID&amp;gt;/
@@ -383,7 +383,7 @@ $ ./manage.py createsuperuser
 
 
 &lt;p&gt;This should be the only time you need to connect through SSH to Clever Cloud. Please keep in mind that you should avoid SSH access as much as possible for security reasons.&lt;/p&gt;
-&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;I hope you have managed to deploy your own Django project on Clever Cloud. The service is really smooth and easy to use, congratz to the team!&lt;/p&gt;</content><category term="python"></category><category term="django"></category><category term="clever"></category><category term="cloud"></category><category term="python"></category><category term="hook"></category><category term="clever-cloud"></category><category term="git"></category></entry><entry><title>Marketplaces API, the key to onboard merchants</title><link href="https://b0uh.github.io/marketplaces-api-the-key-to-onboard-merchants.html" rel="alternate"></link><published>2017-11-17T14:00:00+01:00</published><updated>2017-11-17T14:00:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-11-17:/marketplaces-api-the-key-to-onboard-merchants.html</id><summary type="html">&lt;p&gt;Having a good API will speed your merchants onboarding and time-to-market. On the contrary a bad API or no API can demotivate your merchants and make you and them lose money.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; Having a good API will speed your merchants onboarding and time-to-market. On the contrary a bad API or no API can demotivate your merchants and make you and them lose money.&lt;/p&gt;
 &lt;p&gt;&lt;br&gt;&lt;/p&gt;
 &lt;h2&gt;Why do you need a marketplace?&lt;/h2&gt;
@@ -418,11 +418,11 @@ Most of the merchants are using marketplace solution or custom solution in order
 &lt;li&gt;Bad documentation (example, a simple “Javadoc” style documentation)&lt;/li&gt;
 &lt;li&gt;Fuzzy error (it will make lose time to everyone)&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Breaking changes&lt;/strong&gt; (no backward compatibility, merchants will have to update their development, they may not have the money/resources and therefore &lt;strong&gt;this is a big risk for business&lt;/strong&gt;)&lt;/li&gt;
-&lt;/ul&gt;</content><category term="Marketplace"></category><category term="marketplace"></category><category term="api"></category></entry><entry><title>How to get the list of French cities and more?</title><link href="https://b0uh.github.io/how-to-get-the-list-of-french-cities-and-more.html" rel="alternate"></link><published>2017-10-12T13:00:00+02:00</published><updated>2017-10-12T13:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-10-12:/how-to-get-the-list-of-french-cities-and-more.html</id><summary type="html">&lt;p&gt;Open-data doesn't provide a list of french cities with zip codes and GPS coordinates. How can we retrieve them ?&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;/ul&gt;</content><category term="Marketplace"></category><category term="marketplace"></category><category term="api"></category></entry><entry><title>How to get the list of French cities and more?</title><link href="https://b0uh.github.io/how-to-get-the-list-of-french-cities-and-more.html" rel="alternate"></link><published>2017-10-12T13:00:00+02:00</published><updated>2017-10-12T13:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-10-12:/how-to-get-the-list-of-french-cities-and-more.html</id><summary type="html">&lt;p&gt;Open-data doesn't provide a list of french cities with zip codes and GPS coordinates. How can we retrieve them ?&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;All I wanted was a DB of current french cities, their zip codes and their GPS coordinates. It turned out that it was not an easy thing to have !&lt;/p&gt;
-&lt;h1&gt;Opendata in France (the source)&lt;/h1&gt;
+&lt;h2&gt;Opendata in France (the source)&lt;/h2&gt;
 &lt;p&gt;So in France we got some nice stuff about opendata since a few years, and that were I got my sources.&lt;/p&gt;
-&lt;h2&gt;INSEE&lt;/h2&gt;
+&lt;h3&gt;INSEE&lt;/h3&gt;
 &lt;p&gt;For the list of current french cities, the only trusted source is INSEE. They provide that here &lt;a href="https://www.insee.fr/fr/information/2028028"&gt;https://www.insee.fr/fr/information/2028028&lt;/a&gt; (&lt;a href="https://www.insee.fr/fr/statistiques/fichier/2028028/table-appartenance-geo-communes-17.zip"&gt;direct link to 2017 data&lt;/a&gt;).&lt;/p&gt;
 &lt;p&gt;First thing to know:&lt;/p&gt;
 &lt;blockquote&gt;
@@ -438,7 +438,7 @@ Most of the merchants are using marketplace solution or custom solution in order
 &lt;li&gt;License: ?&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;This file will be our trusted source for current french cities. From this file we will extract from the tab "COM" only the first three columns (&lt;code&gt;CODEGEO&lt;/code&gt;, &lt;code&gt;LIBGEO&lt;/code&gt; and &lt;code&gt;DEP&lt;/code&gt;) and put that into a CSV file encoding with UTF8 so we can read it easily.&lt;/p&gt;
-&lt;h2&gt;La Poste / dataNOVA&lt;/h2&gt;
+&lt;h3&gt;La Poste / dataNOVA&lt;/h3&gt;
 &lt;p&gt;For the list of zip code, we got to go "La Poste" website, because, yeah, it is another state agency that handle that. More precisely we go to dataNOVA, the subsidiary that manage all open data for La Poste group. The data can be found here &lt;a href="https://datanova.legroupe.laposte.fr/explore/dataset/laposte_hexasmal/export/"&gt;https://datanova.legroupe.laposte.fr/explore/dataset/laposte_hexasmal/export/&lt;/a&gt; (&lt;a href="https://datanova.legroupe.laposte.fr/explore/dataset/laposte_hexasmal/download/?format=csv&amp;amp;timezone=Europe/Berlin&amp;amp;use_labels_for_header=true"&gt;direct link to CSV&lt;/a&gt;)&lt;/p&gt;
 &lt;p&gt;Some informations about the file:&lt;/p&gt;
 &lt;ul&gt;
@@ -449,7 +449,7 @@ Most of the merchants are using marketplace solution or custom solution in order
 &lt;li&gt;License: &lt;a href="https://opendatacommons.org/licenses/odbl/"&gt;ODdL&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;This file will be our trusted source for zip codes. It also contains the GPS coordinates which can be useful!&lt;/p&gt;
-&lt;h1&gt;The script&lt;/h1&gt;
+&lt;h2&gt;The script&lt;/h2&gt;
 &lt;p&gt;The script I made to merge data from INSEE and from La Poste.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;csv&lt;/span&gt;
 
@@ -611,9 +611,9 @@ Most of the merchants are using marketplace solution or custom solution in order
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h1&gt;Result&lt;/h1&gt;
+&lt;h2&gt;Result&lt;/h2&gt;
 &lt;p&gt;You can download the &lt;a href="https://b0uh.github.io/medias/french_cities_2017.csv"&gt;result&lt;/a&gt;. It contains INSEE code, name, department, zip code and GPS coordinates for all french cities.&lt;/p&gt;
-&lt;h1&gt;Stuffs to remember when dealing with french cities data&lt;/h1&gt;
+&lt;h2&gt;Stuffs to remember when dealing with french cities data&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;Keep the INSEE code (&lt;code&gt;CODEGEO&lt;/code&gt;) as the key to identify a city in your system.&lt;/li&gt;
 &lt;li&gt;Some cities can have multiple zip codes&lt;/li&gt;
@@ -798,15 +798,15 @@ Most of the merchants are using marketplace solution or custom solution in order
 &lt;p&gt;There is so many structures to help startups that it can be difficult to find the right one. But there is definitely one out there for each startup :)&lt;/p&gt;</content><category term="Startup"></category><category term="Nantes"></category><category term="incubator"></category><category term="accelerator"></category><category term="startup"></category><category term="start-up"></category><category term="fund"></category><category term="association"></category><category term="ecosystem"></category><category term="french tech"></category><category term="nantes tech"></category></entry><entry><title>Why I love Django</title><link href="https://b0uh.github.io/why-i-love-django.html" rel="alternate"></link><published>2017-09-07T07:00:00+02:00</published><updated>2017-09-07T07:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-09-07:/why-i-love-django.html</id><summary type="html">&lt;p&gt;What's the best thing in Django ?&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Because it prevents you from making bad software design decisions !&lt;/h2&gt;
 &lt;p&gt;Everytime I start having headeach using Django because I try to do something not documented or not discussed on the internet, it often means that my software design is bad. &lt;/p&gt;
 &lt;p&gt;Django make you think about how you design your code in order to be clean and keep it simple!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Headeach in Django = bad software design ! :)&lt;/strong&gt;&lt;/p&gt;</content><category term="Python"></category><category term="django"></category><category term="framework"></category><category term="love"></category><category term="why"></category></entry><entry><title>Django: multiple forms in one class based view</title><link href="https://b0uh.github.io/django-multiple-forms-in-one-class-based-view.html" rel="alternate"></link><published>2017-08-01T12:30:00+02:00</published><updated>2017-08-01T12:30:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-08-01:/django-multiple-forms-in-one-class-based-view.html</id><summary type="html">&lt;p&gt;How to fit several forms in one view ?&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Context&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;Headeach in Django = bad software design ! :)&lt;/strong&gt;&lt;/p&gt;</content><category term="Python"></category><category term="django"></category><category term="framework"></category><category term="love"></category><category term="why"></category></entry><entry><title>Django: multiple forms in one class based view</title><link href="https://b0uh.github.io/django-multiple-forms-in-one-class-based-view.html" rel="alternate"></link><published>2017-08-01T12:30:00+02:00</published><updated>2017-08-01T12:30:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-08-01:/django-multiple-forms-in-one-class-based-view.html</id><summary type="html">&lt;p&gt;How to fit several forms in one view ?&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Context&lt;/h2&gt;
 &lt;p&gt;Let's say we want to rebuild Stackoverflow and especially the page of a question. On this page you can either post a response or a comment, so here classic class based views are not enough. We will focus on those two forms (response and comment) for the example bellow.&lt;/p&gt;
-&lt;h2&gt;Constraints&lt;/h2&gt;
+&lt;h3&gt;Constraints&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;Staying on the same URL after submitting a form&lt;/li&gt;
 &lt;li&gt;Forms cannot be submitted at the same time&lt;/li&gt;
 &lt;li&gt;Using a class based view style because it seems more readable in my opinion&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h1&gt;forms.py&lt;/h1&gt;
+&lt;h2&gt;forms.py&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;
 
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;ResponseForm&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Form&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -817,7 +817,7 @@ Most of the merchants are using marketplace solution or custom solution in order
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h1&gt;urls.py&lt;/h1&gt;
+&lt;h2&gt;urls.py&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.conf.urls&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt;
 
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;my_app.views&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;QuestionDetail&lt;/span&gt;
@@ -828,7 +828,7 @@ Most of the merchants are using marketplace solution or custom solution in order
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;h1&gt;views.py&lt;/h1&gt;
+&lt;h2&gt;views.py&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.contrib.auth.mixins&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;LoginRequiredMixin&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.http&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Http404&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.shortcuts&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;render&lt;/span&gt;
@@ -884,7 +884,7 @@ Most of the merchants are using marketplace solution or custom solution in order
 
 
 &lt;p&gt;Here the view inherit from &lt;a href="https://docs.djangoproject.com/en/1.11/ref/class-based-views/base/#django.views.generic.base.View"&gt;&lt;code&gt;View&lt;/code&gt;&lt;/a&gt; in order to keep a class based view style. All methods here has been inspired by other CBV like &lt;a href="https://docs.djangoproject.com/en/1.11/ref/class-based-views/generic-editing/#django.views.generic.edit.UpdateView"&gt;&lt;code&gt;UpdateView&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;h1&gt;question_detail.html&lt;/h1&gt;
+&lt;h2&gt;question_detail.html&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;&amp;lt;fieldset&amp;gt;&lt;/span&gt;
     &lt;span class="nt"&gt;&amp;lt;legend&amp;gt;&lt;/span&gt;Answer the question&lt;span class="nt"&gt;&amp;lt;/legend&amp;gt;&lt;/span&gt;
     &lt;span class="nt"&gt;&amp;lt;form&lt;/span&gt; &lt;span class="na"&gt;method=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;post&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
@@ -905,7 +905,7 @@ Most of the merchants are using marketplace solution or custom solution in order
 
 
 &lt;p&gt;For each form, in the template the should name the submit button in order to know in the view which form has been submitted.&lt;/p&gt;
-&lt;h1&gt;Inspirations&lt;/h1&gt;
+&lt;h2&gt;Inspirations&lt;/h2&gt;
 &lt;p&gt;While looking for a solution to handle multiple forms in one view I found these posts whose inspired me:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="http://anothercomputingblog.blogspot.fr/2010/04/multiple-django-forms-on-same-view.html"&gt;Multiple Django forms in the same view&lt;/a&gt; (How to know which form has been submitted)&lt;/li&gt;

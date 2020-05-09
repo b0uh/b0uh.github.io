@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="en">
 <head>
   <meta charset="utf-8">
 
@@ -159,7 +159,7 @@
 <br>
 <br></p>
 <p>In this blog post, we will see how to host a new Django project on Clever Cloud (<a href="https://www.clever-cloud.com/">www.clever-cloud.com</a>). If you don't have a Clever Cloud account, you can signup and you will get a 20€ credit to test the platform ;)</p>
-<h1>1/ Create a Django project</h1>
+<h2>1/ Create a Django project</h2>
 <div class="highlight"><pre><span></span><code>$ django-admin startproject fooproject
 $ <span class="nb">cd</span> fooproject
 $ <span class="nb">echo</span> <span class="s2">&quot;Django&quot;</span> &gt; requirements.txt
@@ -171,7 +171,7 @@ $ git commit -m <span class="s2">&quot;initial commit&quot;</span>
 
 <p>For more information, please take a look at the wonderful <a href="https://docs.djangoproject.com/">Django's documentation</a>.</p>
 <p><strong>Note</strong>: currently Clever Cloud does not support <code>pipenv</code> wonderful <code>Pipfile</code> &amp; <code>Pipfle.lock</code> files. The traditional <code>requirements.txt</code> is required.</p>
-<h1>2/ Create the application on Clever Cloud</h1>
+<h2>2/ Create the application on Clever Cloud</h2>
 <ol>
 <li>Create a new application (Personal Space &gt; Add an application)</li>
 <li>Create a brand new app</li>
@@ -181,7 +181,7 @@ $ git commit -m <span class="s2">&quot;initial commit&quot;</span>
 <li>No need for an add-on for now.</li>
 </ol>
 <p>And that's it !</p>
-<h1>3/ Deploy your application</h1>
+<h2>3/ Deploy your application</h2>
 <p>Go to the <em>Information</em> section for your application and at the top you should see a line starting by
 <code>git remote add ...</code>, copy it. It may be one two lines actually if you have a small screen, eg. 13".</p>
 <p>On your project you should do something like this (it's an example):</p>
@@ -192,7 +192,7 @@ $ git push clever master
 
 <p>Come back to your Clever cloud dashboard and go to the <em>Logs</em> section and see your application deploying :) (You may want to scroll down to see the latest logs)</p>
 <p>And you have done your first deploy !</p>
-<h1>4/ But the deployment failed :(</h1>
+<h2>4/ But the deployment failed :(</h2>
 <p>We missed some steps to ensure that the deploy run smoothly, mainly configuration steps. We need to specify the module to load, by adding the following file <code>clevercloud/python.json</code> in our project (replace <code>fooproject</code> by your project):</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
     <span class="nt">&quot;deploy&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -215,7 +215,7 @@ $ git push clever master
 
 <p>Commit and push your new settings file, a new deploy should be triggered. You should now have a deployed and running application!</p>
 <p><img class="wp-post-image" alt="Django deploy screen" src="https://b0uh.github.io/medias/clever-cloud-django-deploy.gif"></p>
-<h1>5/ Use a database</h1>
+<h2>5/ Use a database</h2>
 <ol>
 <li>On Clever cloud dashboard, click on <em>Add an add-on</em></li>
 <li>Select <em>PostgreSQL</em></li>
@@ -239,7 +239,7 @@ $ git push clever master
 
 <p>Don't forget to add the <code>psycopg2</code> package to your <code>requirements.txt</code> file.</p>
 <p>Commit those changes and push them in order to deploy again your application.</p>
-<h1>6/ Manage your static and medias files</h1>
+<h2>6/ Manage your static and medias files</h2>
 <blockquote>
 <p>It is important to understand that the notion of "static" files is different between Clever cloud and Django!</p>
 <p>In Django there is a difference between the file uploaded with the project (static files) and the file uploaded by the users (media files) but for Clever cloud static files are all the files you want to serve statically.</p>
@@ -269,7 +269,7 @@ $ git push clever master
 
 
 <p>Redeploy and you now have a Django project with your media files handled.</p>
-<h1>7/ Continuous integration</h1>
+<h2>7/ Continuous integration</h2>
 <p>We are still missing something to fully use our two addons. We need to do migrations to create the DB schema and we need to collect the static. To automatize those tasks after each new deployments we will use the <code>clevercloud/python.json</code> file and add a <code>managetasks</code> entry.</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
     <span class="nt">&quot;deploy&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -284,7 +284,7 @@ $ git push clever master
 
 
 <p>Note: Another way to handle that is to use <a href="https://www.clever-cloud.com/doc/clever-cloud-overview/hooks/">hooks</a> that are more documented and seems more flexible.</p>
-<h1>8/ Create a super user</h1>
+<h2>8/ Create a super user</h2>
 <p>Go to <em>Profile</em> then <em>SSH Key</em> and add your SSH key. After that you can ssh the server and create the super user.</p>
 <div class="highlight"><pre><span></span><code>$ ssh -t ssh@sshgateway-clevercloud-customers.services.clever-cloud.com &lt;APP_ID&gt;
 $ <span class="nb">cd</span> &lt;APP_ID&gt;/
@@ -293,7 +293,7 @@ $ ./manage.py createsuperuser
 
 
 <p>This should be the only time you need to connect through SSH to Clever Cloud. Please keep in mind that you should avoid SSH access as much as possible for security reasons.</p>
-<h1>Conclusion</h1>
+<h2>Conclusion</h2>
 <p>I hope you have managed to deploy your own Django project on Clever Cloud. The service is really smooth and easy to use, congratz to the team!</p>
               </span>
 

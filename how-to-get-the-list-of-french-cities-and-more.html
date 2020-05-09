@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="en">
 <head>
   <meta charset="utf-8">
 
@@ -161,11 +161,11 @@
               </div>
 
               <span itemprop="articleBody">
-                <h1>Introduction</h1>
+                <h2>Introduction</h2>
 <p>All I wanted was a DB of current french cities, their zip codes and their GPS coordinates. It turned out that it was not an easy thing to have !</p>
-<h1>Opendata in France (the source)</h1>
+<h2>Opendata in France (the source)</h2>
 <p>So in France we got some nice stuff about opendata since a few years, and that were I got my sources.</p>
-<h2>INSEE</h2>
+<h3>INSEE</h3>
 <p>For the list of current french cities, the only trusted source is INSEE. They provide that here <a href="https://www.insee.fr/fr/information/2028028">https://www.insee.fr/fr/information/2028028</a> (<a href="https://www.insee.fr/fr/statistiques/fichier/2028028/table-appartenance-geo-communes-17.zip">direct link to 2017 data</a>).</p>
 <p>First thing to know:</p>
 <blockquote>
@@ -181,7 +181,7 @@
 <li>License: ?</li>
 </ul>
 <p>This file will be our trusted source for current french cities. From this file we will extract from the tab "COM" only the first three columns (<code>CODEGEO</code>, <code>LIBGEO</code> and <code>DEP</code>) and put that into a CSV file encoding with UTF8 so we can read it easily.</p>
-<h2>La Poste / dataNOVA</h2>
+<h3>La Poste / dataNOVA</h3>
 <p>For the list of zip code, we got to go "La Poste" website, because, yeah, it is another state agency that handle that. More precisely we go to dataNOVA, the subsidiary that manage all open data for La Poste group. The data can be found here <a href="https://datanova.legroupe.laposte.fr/explore/dataset/laposte_hexasmal/export/">https://datanova.legroupe.laposte.fr/explore/dataset/laposte_hexasmal/export/</a> (<a href="https://datanova.legroupe.laposte.fr/explore/dataset/laposte_hexasmal/download/?format=csv&amp;timezone=Europe/Berlin&amp;use_labels_for_header=true">direct link to CSV</a>)</p>
 <p>Some informations about the file:</p>
 <ul>
@@ -192,7 +192,7 @@
 <li>License: <a href="https://opendatacommons.org/licenses/odbl/">ODdL</a></li>
 </ul>
 <p>This file will be our trusted source for zip codes. It also contains the GPS coordinates which can be useful!</p>
-<h1>The script</h1>
+<h2>The script</h2>
 <p>The script I made to merge data from INSEE and from La Poste.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">csv</span>
 
@@ -354,9 +354,9 @@
 </code></pre></div>
 
 
-<h1>Result</h1>
+<h2>Result</h2>
 <p>You can download the <a href="https://b0uh.github.io/medias/french_cities_2017.csv">result</a>. It contains INSEE code, name, department, zip code and GPS coordinates for all french cities.</p>
-<h1>Stuffs to remember when dealing with french cities data</h1>
+<h2>Stuffs to remember when dealing with french cities data</h2>
 <ul>
 <li>Keep the INSEE code (<code>CODEGEO</code>) as the key to identify a city in your system.</li>
 <li>Some cities can have multiple zip codes</li>

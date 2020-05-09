@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="en">
 <head>
   <meta charset="utf-8">
 
@@ -156,11 +156,11 @@
 
               <span itemprop="articleBody">
                 <p><strong>TL;DR:</strong> When developing with NodeJS, you should be aware of regular expression denial of service (ReDoS).</p>
-<h1>Introduction</h1>
+<h2>Introduction</h2>
 <p>A ReDoS (Regular expression Denial of Service) is a type of attack used to put down a web server. This is possible when the code run by the server contains a regular expression that triggers too many backtracking.</p>
 <p>Let's step back quickly to understand what it really means when developing with Node.js. It is important to understand how the event loop works. It <a href="https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/">"allows Node.js to perform non-blocking I/O operations — despite the fact that JavaScript is single-threaded — by offloading operations to the system kernel whenever possible"</a>. Therefore we should avoid to <a href="https://nodejs.org/en/docs/guides/dont-block-the-event-loop/">block the event loop</a>.</p>
 <p>When the event loop is blocked Node.js cannot process anything else and the server is paralyzed. When the code contains unsafe regular expressions it can become an attack vector. Instead of having to send a lot of requests to put down a server with a classic DoS, you can send only a few requests that will trigger the unsafe regular expression and put down the server.</p>
-<h1>Examples</h1>
+<h2>Examples</h2>
 <p>Try to execute the following regular expression with the suggested input. You will notice that Node.js take a long time (several seconds) to respond.</p>
 <div class="highlight"><pre><span></span><code><span class="sr">/^(A+)*B/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">.</span><span class="nx">repeat</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;E&#39;</span><span class="p">)</span>
 </code></pre></div>
@@ -174,7 +174,7 @@
 </code></pre></div>
 
 
-<h1>What can I do about it?</h1>
+<h2>What can I do about it?</h2>
 <p>There are some tools out there like <a href="https://github.com/substack/safe-regex"><code>safe-regex</code></a> and <a href="https://www.cs.bham.ac.uk/~hxt/research/rxxr2/"><code>rxxr2</code></a> to try to detect unsafe regular expressions. Unfortunately none of them work 100% of the time.</p>
 <p>Since this security issue is directly linked to how Node.js interprets regular expression, the safest solution is to use a different engine: <a href="https://github.com/google/re2/"><code>re2</code></a>. However, switching engine also means that some of your regular expressions may <a href="https://www.npmjs.com/package/re2#limitations-things-re2-does-not-support">not work anymore</a>.</p>
 <p>In conclusion, you can continue to use Node.js regular expression engine as long as you as aware of ReDoS and avoid catastrophic backtracking. If you are not sure about your code, don't hesitate to use <code>re2</code>, this is the simplest solution to be safe :)</p>
