@@ -5,14 +5,14 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://b0uh.github.io/</loc>
-<lastmod>2020-06-13T09:08:13-00:00</lastmod>
+<lastmod>2020-08-01T07:58:58-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://b0uh.github.io/archives.html</loc>
-<lastmod>2020-06-13T09:08:13-00:00</lastmod>
+<lastmod>2020-08-01T07:58:58-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -22,6 +22,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <lastmod>2018-10-08T12:30:00+02:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://b0uh.github.io/python-geofencing.html</loc>
+<lastmod>2020-08-01T10:00:00+02:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>1</priority>
 </url>
 
 <url>
