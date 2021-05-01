@@ -1,5 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2021-03-06T21:45:00+01:00</updated><entry><title>Django model: change field name with no DB impact</title><link href="https://b0uh.github.io/django-model-change-field-name-with-no-db-impact.html" rel="alternate"></link><published>2021-03-06T21:45:00+01:00</published><updated>2021-03-06T21:45:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2021-03-06:/django-model-change-field-name-with-no-db-impact.html</id><summary type="html">&lt;p&gt;How to avoid operations on your database while you change a model field name.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; Use &lt;a href="https://docs.djangoproject.com/en/dev/ref/models/fields/#db-column"&gt;&lt;code&gt;db_column&lt;/code&gt;&lt;/a&gt; and &lt;a href="https://docs.djangoproject.com/en/dev/ref/migration-operations/#django.db.migrations.operations.SeparateDatabaseAndState"&gt;&lt;code&gt;SeparateDatabaseAndState&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2021-05-01T14:30:00+02:00</updated><entry><title>The difference between Django and DRF `reverse` methods</title><link href="https://b0uh.github.io/the-difference-between-django-and-drf-reverse-methods.html" rel="alternate"></link><published>2021-05-01T14:30:00+02:00</published><updated>2021-05-01T14:30:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2021-05-01:/the-difference-between-django-and-drf-reverse-methods.html</id><summary type="html">&lt;p&gt;Which &lt;code&gt;reverse&lt;/code&gt; method use? Django's or DRF's?&lt;/p&gt;</summary><content type="html">&lt;p&gt;I noticed recently that both Django and Django REST framework have a &lt;code&gt;reverse&lt;/code&gt; method:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.djangoproject.com/en/3.2/ref/urlresolvers/#reverse"&gt;Django reverse&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.django-rest-framework.org/api-guide/reverse/#reverse"&gt;DRF reverse&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And I started wondering which one to use...&lt;/p&gt;
+&lt;p&gt;There are 2 differences:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;absolute or relative URI&lt;/li&gt;
+&lt;li&gt;use or not the request version to resolve to the proper version of the URI&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Relative or absolute&lt;/h2&gt;
+&lt;p&gt;Django &lt;code&gt;reverse&lt;/code&gt; returns a relative  URI when DRF &lt;code&gt;reverse&lt;/code&gt; can return an absolute URI.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.urls&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;reverse&lt;/span&gt;
+&lt;span class="n"&gt;reverse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;admin:login&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Returns &lt;code&gt;/admin/login/&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rest_framework.reverse&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;reverse&lt;/span&gt;
+&lt;span class="n"&gt;reverse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;admin:login&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Returns &lt;code&gt;http://127.0.0.1:8000/admin/login/&lt;/code&gt;, assuming you are running your project locally with &lt;code&gt;./manage.py runserver&lt;/code&gt;.
+The &lt;code&gt;request&lt;/code&gt; parameter is optional, if you don't pass it you will get a relative URI.&lt;/p&gt;
+&lt;h2&gt;URLs for versioned APIs&lt;/h2&gt;
+&lt;p&gt;As explained in &lt;a href="https://www.django-rest-framework.org/api-guide/versioning/#reversing-urls-for-versioned-apis"&gt;DRF documentation&lt;/a&gt; when the versionning is used DRF's &lt;code&gt;reverse&lt;/code&gt; can apply any URL transformations appropriate to the request version. For example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rest_framework.reverse&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;reverse&lt;/span&gt;
+&lt;span class="n"&gt;reverse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;bookings-list&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Would look up for the &lt;code&gt;v1:bookings-list&lt;/code&gt; if &lt;code&gt;NamespaceVersioning&lt;/code&gt; was being used, and the API version was &lt;code&gt;v1&lt;/code&gt;. That would resolve to something like &lt;code&gt;http://127.0.0.1:8000/v1/bookings/&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;reverse_lazy&lt;/h2&gt;
+&lt;p&gt;The same differences exist between Django and DRF &lt;code&gt;reverse_lazy&lt;/code&gt; methods.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://docs.djangoproject.com/en/3.2/ref/urlresolvers/#reverse-lazy"&gt;Django reverse_lazy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.django-rest-framework.org/api-guide/reverse/#reverse_lazy"&gt;DRF reverse_lazy&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="python"></category><category term="django"></category><category term="drf"></category><category term="djangorestframework"></category><category term="reverse"></category><category term="reverse_lazy"></category><category term="url"></category><category term="uri"></category><category term="version"></category></entry><entry><title>Django model: change field name with no DB impact</title><link href="https://b0uh.github.io/django-model-change-field-name-with-no-db-impact.html" rel="alternate"></link><published>2021-03-06T21:45:00+01:00</published><updated>2021-03-06T21:45:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2021-03-06:/django-model-change-field-name-with-no-db-impact.html</id><summary type="html">&lt;p&gt;How to avoid operations on your database while you change a model field name.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; Use &lt;a href="https://docs.djangoproject.com/en/dev/ref/models/fields/#db-column"&gt;&lt;code&gt;db_column&lt;/code&gt;&lt;/a&gt; and &lt;a href="https://docs.djangoproject.com/en/dev/ref/migration-operations/#django.db.migrations.operations.SeparateDatabaseAndState"&gt;&lt;code&gt;SeparateDatabaseAndState&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;h2&gt;The issue we are trying to solve&lt;/h2&gt;
 &lt;p&gt;Let say we have a model&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Recipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;

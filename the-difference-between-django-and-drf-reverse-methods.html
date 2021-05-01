@@ -5,16 +5,16 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Thomas Loiret">
-    <meta name="description" content="Thomas Loiret's blog">
+  <meta name="description" content="Which reverse method use? Django's or DRF's?">
 
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@b0uh" />
-    <meta name="twitter:title" content="Thomas Loiret - Random thoughts" />
-    <meta name="twitter:description" content="Thomas Loiret's blog" />
+    <meta name="twitter:title" content="The difference between Django and DRF `reverse` methods - Thomas Loiret - Random thoughts" />
+    <meta name="twitter:description" content="Which reverse method use? Django's or DRF's?" />
 
   <meta name="google-site-verification" content="jZBc2U9MHiBnSlgpoFEed-V3PZ16pMNv0GSX4hOh4mg" />
 
-  <title>Thomas Loiret - Random thoughts - Categories</title>
+  <title>The difference between Django and DRF `reverse` methods - Thomas Loiret - Random thoughts</title>
 
   <!-- Custom styles for this template -->
   <!-- build:css stylesheets/main.css -->
@@ -122,17 +122,92 @@
 </header>
 
 <div class="container">
-    <h1>Categories on Thomas Loiret - Random thoughts</h1>
-    <ul>
-        <li><a href="https://b0uh.github.io/category/data.html">Data</a> (1)</li>
-        <li><a href="https://b0uh.github.io/category/django.html">django</a> (1)</li>
-        <li><a href="https://b0uh.github.io/category/marketplace.html">Marketplace</a> (1)</li>
-        <li><a href="https://b0uh.github.io/category/performances.html">performances</a> (1)</li>
-        <li><a href="https://b0uh.github.io/category/privacy.html">privacy</a> (1)</li>
-        <li><a href="https://b0uh.github.io/category/python.html">python</a> (12)</li>
-        <li><a href="https://b0uh.github.io/category/security-javascript.html">security, javascript</a> (1)</li>
-        <li><a href="https://b0uh.github.io/category/startup.html">Startup</a> (1)</li>
-    </ul>
+
+      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-60">
+
+
+        <!-- Start of the blogpost -->
+        <div class="row">
+          <div class="col-xs-10  col-xs-offset-1  col-md-8  col-md-offset-2  push-down-60">
+
+            <!-- Start of the content -->
+            <div class="post-content">
+
+              <h1 itemprop="name">The difference between Django and DRF `reverse` methods</h1>
+
+              <div class="meta__container--without-image">
+                <div class="row">
+                  <div class="col-xs-12  col-sm-8">
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                      <div class="meta__info" itemprop="name">
+                        Thomas Loiret
+                      </div>
+                    </span>
+                  </div>
+                  <div class="col-xs-12  col-sm-4">
+                    <div class="meta__comments">
+                      <span class="meta__date" itemprop="datePublished" content="2021-05-01">
+                        <span class="glyphicon glyphicon-calendar"></span>  &nbsp; Sat 01 May 2021
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <span itemprop="articleBody">
+                <p>I noticed recently that both Django and Django REST framework have a <code>reverse</code> method:</p>
+<ul>
+<li><a href="https://docs.djangoproject.com/en/3.2/ref/urlresolvers/#reverse">Django reverse</a></li>
+<li><a href="https://www.django-rest-framework.org/api-guide/reverse/#reverse">DRF reverse</a></li>
+</ul>
+<p>And I started wondering which one to use...</p>
+<p>There are 2 differences:</p>
+<ul>
+<li>absolute or relative URI</li>
+<li>use or not the request version to resolve to the proper version of the URI</li>
+</ul>
+<h2>Relative or absolute</h2>
+<p>Django <code>reverse</code> returns a relative  URI when DRF <code>reverse</code> can return an absolute URI.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;admin:login&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>Returns <code>/admin/login/</code></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">rest_framework.reverse</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;admin:login&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>Returns <code>http://127.0.0.1:8000/admin/login/</code>, assuming you are running your project locally with <code>./manage.py runserver</code>.
+The <code>request</code> parameter is optional, if you don't pass it you will get a relative URI.</p>
+<h2>URLs for versioned APIs</h2>
+<p>As explained in <a href="https://www.django-rest-framework.org/api-guide/versioning/#reversing-urls-for-versioned-apis">DRF documentation</a> when the versionning is used DRF's <code>reverse</code> can apply any URL transformations appropriate to the request version. For example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">rest_framework.reverse</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;bookings-list&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>Would look up for the <code>v1:bookings-list</code> if <code>NamespaceVersioning</code> was being used, and the API version was <code>v1</code>. That would resolve to something like <code>http://127.0.0.1:8000/v1/bookings/</code>.</p>
+<h2>reverse_lazy</h2>
+<p>The same differences exist between Django and DRF <code>reverse_lazy</code> methods.</p>
+<ul>
+<li><a href="https://docs.djangoproject.com/en/3.2/ref/urlresolvers/#reverse-lazy">Django reverse_lazy</a></li>
+<li><a href="https://www.django-rest-framework.org/api-guide/reverse/#reverse_lazy">DRF reverse_lazy</a></li>
+</ul>
+              </span>
+
+              <div class="meta__container--without-image">
+                <div class="row">
+                </div>
+              </div>
+
+              <br>
+            </div>
+          </div>
+        </div>
+      </div>
+
 </div>
 
 <footer class="copyrights">
