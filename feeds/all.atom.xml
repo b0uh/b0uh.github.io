@@ -1,5 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2021-05-01T14:30:00+02:00</updated><entry><title>The difference between Django and DRF `reverse` methods</title><link href="https://b0uh.github.io/the-difference-between-django-and-drf-reverse-methods.html" rel="alternate"></link><published>2021-05-01T14:30:00+02:00</published><updated>2021-05-01T14:30:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2021-05-01:/the-difference-between-django-and-drf-reverse-methods.html</id><summary type="html">&lt;p&gt;Which &lt;code&gt;reverse&lt;/code&gt; method use? Django's or DRF's?&lt;/p&gt;</summary><content type="html">&lt;p&gt;I noticed recently that both Django and Django REST framework have a &lt;code&gt;reverse&lt;/code&gt; method:&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2021-11-27T10:15:00+01:00</updated><entry><title>DRF Viewset: permissions policy per method</title><link href="https://b0uh.github.io/drf-viewset-permissions-policy-per-method.html" rel="alternate"></link><published>2021-11-27T10:15:00+01:00</published><updated>2021-11-27T10:15:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2021-11-27:/drf-viewset-permissions-policy-per-method.html</id><summary type="html">&lt;p&gt;How to define permissions policy at a ViewSet methods level ?&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Setting permissions policy in DRF&lt;/h2&gt;
+&lt;p&gt;As the Django Rest Framework &lt;a href="https://www.django-rest-framework.org/api-guide/permissions/"&gt;documentation&lt;/a&gt; explains you can set the permissions policy in 3 places:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;In the settings (&lt;code&gt;REST_FRAMEWORK["DEFAULT_PERMISSION_CLASSES"]&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;At the ViewSet level (using &lt;code&gt;permission_classes&lt;/code&gt; attribute)&lt;/li&gt;
+&lt;li&gt;At a ViewSet action level (using &lt;code&gt;@action(permission_classes=[], ...)&lt;/code&gt;)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; It is important to know that each level of permission overrides the previous one. They are not cumulative.&lt;/p&gt;
+&lt;h2&gt;The issue&lt;/h2&gt;
+&lt;p&gt;It is already possible to set permissions policy for an action so we got some flexibility here. But what about the standard methods &lt;code&gt;create()&lt;/code&gt;, &lt;code&gt;retrieve()&lt;/code&gt;, &lt;code&gt;update()&lt;/code&gt;, &lt;code&gt;partial_update()&lt;/code&gt;, &lt;code&gt;destroy()&lt;/code&gt; and &lt;code&gt;list()&lt;/code&gt;? What if you want to set different permissions for &lt;code&gt;create&lt;/code&gt; and &lt;code&gt;list&lt;/code&gt; methods for example?&lt;/p&gt;
+&lt;p&gt;That is precisely the issue we will try to fix in this blog post.&lt;/p&gt;
+&lt;h2&gt;The solution - show me the code&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyViewSet&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;PermissionPolicyMixin&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ModelViewSet&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="c1"&gt;# By default, we check that the user has the &amp;quot;write&amp;quot; permission&lt;/span&gt;
+    &lt;span class="n"&gt;permission_classes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IsWriteUser&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;permission_classes_per_method&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="c1"&gt;# except for list and retrieve where both users with &amp;quot;write&amp;quot; or &amp;quot;read-only&amp;quot;&lt;/span&gt;
+        &lt;span class="c1"&gt;# permissions can access the endpoints.&lt;/span&gt;
+        &lt;span class="s2"&gt;&amp;quot;list&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IsWriteUser&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;IsReadOnlyUser&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+        &lt;span class="s2"&gt;&amp;quot;retrieve&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;IsWriteUser&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt; &lt;span class="n"&gt;IsReadOnlyUser&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;PermissionPolicyMixin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_permissions&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="c1"&gt;# This line is heavily inspired from `APIView.dispatch`.&lt;/span&gt;
+            &lt;span class="c1"&gt;# It returns the method associated with an endpoint.&lt;/span&gt;
+            &lt;span class="n"&gt;handler&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;getattr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;method&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;lower&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+        &lt;span class="k"&gt;except&lt;/span&gt; &lt;span class="ne"&gt;AttributeError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;handler&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;
+
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="n"&gt;handler&lt;/span&gt;
+            &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;permission_classes_per_method&lt;/span&gt;
+            &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;permission_classes_per_method&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;handler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="p"&gt;):&lt;/span&gt;
+            &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;permission_classes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;permission_classes_per_method&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;handler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__name__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+        &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;check_permissions&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Explanation&lt;/h2&gt;
+&lt;p&gt;With the &lt;code&gt;PermissionPolicyMixin&lt;/code&gt; mixin we intervene the permissions process of Django Rest Framework. Before checking the permission for an endpoint we check if the method associated exists in the &lt;code&gt;permission_classes_per_method&lt;/code&gt; attribute. If that is the case we set &lt;code&gt;self.permission_classes&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This mixin allows us also to override the &lt;code&gt;permission_classes&lt;/code&gt; set in the &lt;code&gt;@action()&lt;/code&gt;. So it can also help to define all the permissions policy in one place.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; It is important when a ViewSet inherits of &lt;code&gt;PermissionPolicyMixin&lt;/code&gt; that this mixin is first, or at least before any classes like &lt;code&gt;*ViewSet&lt;/code&gt; or &lt;code&gt;*ModelMixin&lt;/code&gt;.&lt;/p&gt;</content><category term="python"></category><category term="django"></category><category term="drf"></category><category term="djangorestframework"></category><category term="viewset"></category><category term="permissions"></category><category term="permission_classes"></category><category term="method"></category><category term="override"></category><category term="policy"></category></entry><entry><title>The difference between Django and DRF `reverse` methods</title><link href="https://b0uh.github.io/the-difference-between-django-and-drf-reverse-methods.html" rel="alternate"></link><published>2021-05-01T14:30:00+02:00</published><updated>2021-05-01T14:30:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2021-05-01:/the-difference-between-django-and-drf-reverse-methods.html</id><summary type="html">&lt;p&gt;Which &lt;code&gt;reverse&lt;/code&gt; method use? Django's or DRF's?&lt;/p&gt;</summary><content type="html">&lt;p&gt;I noticed recently that both Django and Django REST framework have a &lt;code&gt;reverse&lt;/code&gt; method:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://docs.djangoproject.com/en/3.2/ref/urlresolvers/#reverse"&gt;Django reverse&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://www.django-rest-framework.org/api-guide/reverse/#reverse"&gt;DRF reverse&lt;/a&gt;&lt;/li&gt;
