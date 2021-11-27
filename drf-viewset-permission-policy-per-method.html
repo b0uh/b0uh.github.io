@@ -158,9 +158,9 @@
                 <h2>Setting the permission policy in DRF</h2>
 <p>As the Django Rest Framework <a href="https://www.django-rest-framework.org/api-guide/permissions/#setting-the-permission-policy">documentation</a> explains you can set the permission policy in 3 places:</p>
 <ol>
-<li>In the settings (<code>REST_FRAMEWORK["DEFAULT_PERMISSION_CLASSES"]</code>)</li>
-<li>At the ViewSet level (using <code>permission_classes</code> attribute)</li>
-<li>At a ViewSet action level (using <code>@action(permission_classes=[], ...)</code>)</li>
+<li>In the settings (<code>DEFAULT_PERMISSION_CLASSES</code>)</li>
+<li>At the ViewSet level (using the <code>permission_classes</code> attribute of ViewSet)</li>
+<li>At a ViewSet action level (using the <code>permission_classes</code> of the <code>@action</code> decorator)</li>
 </ol>
 <p><strong>Note:</strong> It is important to know that each level of permission overrides the previous one. They are not cumulative.</p>
 <h2>The issue</h2>
