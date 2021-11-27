@@ -5,16 +5,16 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Thomas Loiret">
-  <meta name="description" content="How to define permissions policy at a ViewSet methods level ?">
+  <meta name="description" content="How to define permission policy at a ViewSet methods level ?">
 
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@b0uh" />
-    <meta name="twitter:title" content="DRF Viewset: permissions policy per method - Thomas Loiret - Random thoughts" />
-    <meta name="twitter:description" content="How to define permissions policy at a ViewSet methods level ?" />
+    <meta name="twitter:title" content="DRF Viewset: permission policy per method - Thomas Loiret - Random thoughts" />
+    <meta name="twitter:description" content="How to define permission policy at a ViewSet methods level ?" />
 
   <meta name="google-site-verification" content="jZBc2U9MHiBnSlgpoFEed-V3PZ16pMNv0GSX4hOh4mg" />
 
-  <title>DRF Viewset: permissions policy per method - Thomas Loiret - Random thoughts</title>
+  <title>DRF Viewset: permission policy per method - Thomas Loiret - Random thoughts</title>
 
   <!-- Custom styles for this template -->
   <!-- build:css stylesheets/main.css -->
@@ -133,7 +133,7 @@
             <!-- Start of the content -->
             <div class="post-content">
 
-              <h1 itemprop="name">DRF Viewset: permissions policy per method</h1>
+              <h1 itemprop="name">DRF Viewset: permission policy per method</h1>
 
               <div class="meta__container--without-image">
                 <div class="row">
@@ -155,8 +155,8 @@
               </div>
 
               <span itemprop="articleBody">
-                <h2>Setting permissions policy in DRF</h2>
-<p>As the Django Rest Framework <a href="https://www.django-rest-framework.org/api-guide/permissions/">documentation</a> explains you can set the permissions policy in 3 places:</p>
+                <h2>Setting the permission policy in DRF</h2>
+<p>As the Django Rest Framework <a href="https://www.django-rest-framework.org/api-guide/permissions/#setting-the-permission-policy">documentation</a> explains you can set the permission policy in 3 places:</p>
 <ol>
 <li>In the settings (<code>REST_FRAMEWORK["DEFAULT_PERMISSION_CLASSES"]</code>)</li>
 <li>At the ViewSet level (using <code>permission_classes</code> attribute)</li>
@@ -164,7 +164,7 @@
 </ol>
 <p><strong>Note:</strong> It is important to know that each level of permission overrides the previous one. They are not cumulative.</p>
 <h2>The issue</h2>
-<p>It is already possible to set permissions policy for an action so we got some flexibility here. But what about the standard methods <code>create()</code>, <code>retrieve()</code>, <code>update()</code>, <code>partial_update()</code>, <code>destroy()</code> and <code>list()</code>? What if you want to set different permissions for <code>create</code> and <code>list</code> methods for example?</p>
+<p>It is already possible to set permission policy for a ViewSet action so we got some flexibility here. But what about the standard methods <code>create()</code>, <code>retrieve()</code>, <code>update()</code>, <code>partial_update()</code>, <code>destroy()</code> and <code>list()</code>? What if you want to set different permissions for <code>create</code> and <code>list</code> methods for example?</p>
 <p>That is precisely the issue we will try to fix in this blog post.</p>
 <h2>The solution - show me the code</h2>
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">MyViewSet</span><span class="p">(</span><span class="n">PermissionPolicyMixin</span><span class="p">,</span> <span class="n">ModelViewSet</span><span class="p">):</span>
@@ -200,9 +200,9 @@
 
 
 <h2>Explanation</h2>
-<p>With the <code>PermissionPolicyMixin</code> mixin we intervene the permissions process of Django Rest Framework. Before checking the permission for an endpoint we check if the method associated exists in the <code>permission_classes_per_method</code> attribute. If that is the case we set <code>self.permission_classes</code>.</p>
-<p>This mixin allows us also to override the <code>permission_classes</code> set in the <code>@action()</code>. So it can also help to define all the permissions policy in one place.</p>
-<p><strong>Note:</strong> It is important when a ViewSet inherits of <code>PermissionPolicyMixin</code> that this mixin is first, or at least before any classes like <code>*ViewSet</code> or <code>*ModelMixin</code>.</p>
+<p>With the <code>PermissionPolicyMixin</code> mixin we alter the permission process of Django Rest Framework. Before checking the permission for an endpoint we check if the method associated exists in the <code>permission_classes_per_method</code> attribute. If so, we set <code>self.permission_classes</code>.</p>
+<p>This mixin also allows us to override the <code>permission_classes</code> set in the <code>@action()</code> decorator. So it can also help to define all the permission policies in one place.</p>
+<p><strong>Note:</strong> When a ViewSet inherits of <code>PermissionPolicyMixin</code>, it is important that the mixin is set first, or at least before any classes like <code>*ViewSet</code> or <code>*ModelMixin</code>.</p>
               </span>
 
               <div class="meta__container--without-image">
