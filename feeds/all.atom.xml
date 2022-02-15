@@ -1,10 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2021-11-27T10:30:00+01:00</updated><entry><title>DRF Viewset: permission policy per method</title><link href="https://b0uh.github.io/drf-viewset-permission-policy-per-method.html" rel="alternate"></link><published>2021-11-27T10:30:00+01:00</published><updated>2021-11-27T10:30:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2021-11-27:/drf-viewset-permission-policy-per-method.html</id><summary type="html">&lt;p&gt;How to define permission policy at a ViewSet methods level ?&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Setting the permission policy in DRF&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2022-02-15T20:30:00+01:00</updated><entry><title>How did I get there?</title><link href="https://b0uh.github.io/how-did-i-get-there.html" rel="alternate"></link><published>2022-02-15T20:30:00+01:00</published><updated>2022-02-15T20:30:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2022-02-15:/how-did-i-get-there.html</id><summary type="html">&lt;p&gt;A couple of tricks to understand the path taken to a certain point in the code.&lt;/p&gt;</summary><content type="html">&lt;p&gt;You have a complex piece of code and you don't understand how you end up in a specific method? &lt;strong&gt;The solution is to get the stack trace.&lt;/strong&gt;&lt;/p&gt;
+&lt;h1&gt;Print the stack trace&lt;/h1&gt;
+&lt;p&gt;The solution is to use the &lt;code&gt;traceback&lt;/code&gt; module:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;traceback&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;print_stack&lt;/span&gt;
+
+&lt;span class="n"&gt;print_stack&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; this will print it to &lt;code&gt;stderr&lt;/code&gt;. If you want to print to &lt;code&gt;stdout&lt;/code&gt; use &lt;code&gt;print_stack(file=sys.stdout)&lt;/code&gt;.&lt;/p&gt;
+&lt;h1&gt;While using &lt;code&gt;pdb&lt;/code&gt;&lt;/h1&gt;
+&lt;p&gt;You can easily get the stack trace while using the &lt;a href="https://docs.python.org/3/library/pdb.html"&gt;Python Debugger&lt;/a&gt; (&lt;code&gt;pdb&lt;/code&gt;). To do so, simply type &lt;code&gt;w&lt;/code&gt; (or &lt;code&gt;where&lt;/code&gt;). It will print the stack trace.&lt;/p&gt;
+&lt;h1&gt;Example&lt;/h1&gt;
+&lt;p&gt;Let's take the following file &lt;code&gt;script.py&lt;/code&gt; as example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;traceback&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;print_stack&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;pass&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="n"&gt;print_stack&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="n"&gt;bar&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The output will be:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;  &lt;span class="n"&gt;File&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;script.py&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;module&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+  &lt;span class="n"&gt;File&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;script.py&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;
+    &lt;span class="n"&gt;print_stack&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Each entry is composed of 2 lines:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;the first one contains the location (i.e. file, line and current method),&lt;/li&gt;
+&lt;li&gt;the second line indicates the method that led to the next step.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; The stack trace contains only the methods that are still ongoing when we hit the &lt;code&gt;print_stack()&lt;/code&gt;. In the previous example, there is no trace of the &lt;code&gt;bar&lt;/code&gt; method in the output as its execution was already done when we reached the &lt;code&gt;print_stack()&lt;/code&gt;.&lt;/p&gt;</content><category term="python"></category><category term="python"></category><category term="stacktrace"></category><category term="stack trace"></category><category term="pdb"></category><category term="where"></category><category term="call trace"></category></entry><entry><title>DRF Viewset: permission policy per method</title><link href="https://b0uh.github.io/drf-viewset-permission-policy-per-method.html" rel="alternate"></link><published>2021-11-27T10:30:00+01:00</published><updated>2021-11-27T10:30:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2021-11-27:/drf-viewset-permission-policy-per-method.html</id><summary type="html">&lt;p&gt;How to define permission policy at a ViewSet methods level ?&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Setting the permission policy in DRF&lt;/h2&gt;
 &lt;p&gt;As the Django Rest Framework &lt;a href="https://www.django-rest-framework.org/api-guide/permissions/#setting-the-permission-policy"&gt;documentation&lt;/a&gt; explains you can set the permission policy in 3 places:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;In the settings (&lt;code&gt;DEFAULT_PERMISSION_CLASSES&lt;/code&gt;)&lt;/li&gt;
 &lt;li&gt;At the ViewSet level (using the &lt;code&gt;permission_classes&lt;/code&gt; attribute of ViewSet)&lt;/li&gt;
-&lt;li&gt;At a ViewSet action level (using the &lt;code&gt;permission_classes&lt;/code&gt; of the &lt;code&gt;@action&lt;/code&gt; decorator)&lt;/li&gt;
+&lt;li&gt;At a ViewSet action level (using the &lt;code&gt;permission_classes&lt;/code&gt; of the &lt;code&gt;@action&lt;/code&gt; decorator)
+oo&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; It is important to know that each level of permission overrides the previous one. They are not cumulative.&lt;/p&gt;
 &lt;h2&gt;The issue&lt;/h2&gt;

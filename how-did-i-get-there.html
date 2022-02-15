@@ -5,16 +5,16 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Thomas Loiret">
-    <meta name="description" content="Thomas Loiret's blog">
+  <meta name="description" content="A couple of tricks to understand the path taken to a certain point in the code.">
 
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@b0uh" />
-    <meta name="twitter:title" content="Thomas Loiret - Random thoughts" />
-    <meta name="twitter:description" content="Thomas Loiret's blog" />
+    <meta name="twitter:title" content="How did I get there? - Thomas Loiret - Random thoughts" />
+    <meta name="twitter:description" content="A couple of tricks to understand the path taken to a certain point in the code." />
 
   <meta name="google-site-verification" content="jZBc2U9MHiBnSlgpoFEed-V3PZ16pMNv0GSX4hOh4mg" />
 
-  <title>Thomas Loiret - Random thoughts - Categories</title>
+  <title>How did I get there? - Thomas Loiret - Random thoughts</title>
 
   <!-- Custom styles for this template -->
   <!-- build:css stylesheets/main.css -->
@@ -122,17 +122,93 @@
 </header>
 
 <div class="container">
-    <h1>Categories on Thomas Loiret - Random thoughts</h1>
-    <ul>
-        <li><a href="https://b0uh.github.io/category/data.html">Data</a> (1)</li>
-        <li><a href="https://b0uh.github.io/category/django.html">django</a> (1)</li>
-        <li><a href="https://b0uh.github.io/category/marketplace.html">Marketplace</a> (1)</li>
-        <li><a href="https://b0uh.github.io/category/performances.html">performances</a> (1)</li>
-        <li><a href="https://b0uh.github.io/category/privacy.html">privacy</a> (1)</li>
-        <li><a href="https://b0uh.github.io/category/python.html">python</a> (14)</li>
-        <li><a href="https://b0uh.github.io/category/security-javascript.html">security, javascript</a> (1)</li>
-        <li><a href="https://b0uh.github.io/category/startup.html">Startup</a> (1)</li>
-    </ul>
+
+      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-60">
+
+
+        <!-- Start of the blogpost -->
+        <div class="row">
+          <div class="col-xs-10  col-xs-offset-1  col-md-8  col-md-offset-2  push-down-60">
+
+            <!-- Start of the content -->
+            <div class="post-content">
+
+              <h1 itemprop="name">How did I get there?</h1>
+
+              <div class="meta__container--without-image">
+                <div class="row">
+                  <div class="col-xs-12  col-sm-8">
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                      <div class="meta__info" itemprop="name">
+                        Thomas Loiret
+                      </div>
+                    </span>
+                  </div>
+                  <div class="col-xs-12  col-sm-4">
+                    <div class="meta__comments">
+                      <span class="meta__date" itemprop="datePublished" content="2022-02-15">
+                        <span class="glyphicon glyphicon-calendar"></span>  &nbsp; Tue 15 February 2022
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <span itemprop="articleBody">
+                <p>You have a complex piece of code and you don't understand how you end up in a specific method? <strong>The solution is to get the stack trace.</strong></p>
+<h1>Print the stack trace</h1>
+<p>The solution is to use the <code>traceback</code> module:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">traceback</span> <span class="kn">import</span> <span class="n">print_stack</span>
+
+<span class="n">print_stack</span><span class="p">()</span>
+</code></pre></div>
+
+
+<p><strong>Note:</strong> this will print it to <code>stderr</code>. If you want to print to <code>stdout</code> use <code>print_stack(file=sys.stdout)</code>.</p>
+<h1>While using <code>pdb</code></h1>
+<p>You can easily get the stack trace while using the <a href="https://docs.python.org/3/library/pdb.html">Python Debugger</a> (<code>pdb</code>). To do so, simply type <code>w</code> (or <code>where</code>). It will print the stack trace.</p>
+<h1>Example</h1>
+<p>Let's take the following file <code>script.py</code> as example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">traceback</span> <span class="kn">import</span> <span class="n">print_stack</span>
+
+<span class="k">def</span> <span class="nf">bar</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+<span class="k">def</span> <span class="nf">foo</span><span class="p">():</span>
+    <span class="n">print_stack</span><span class="p">()</span>
+
+<span class="n">bar</span><span class="p">()</span>
+<span class="n">foo</span><span class="p">()</span>
+</code></pre></div>
+
+
+<p>The output will be:</p>
+<div class="highlight"><pre><span></span><code>  <span class="n">File</span> <span class="s2">&quot;script.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">10</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+    <span class="n">foo</span><span class="p">()</span>
+  <span class="n">File</span> <span class="s2">&quot;script.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">7</span><span class="p">,</span> <span class="ow">in</span> <span class="n">foo</span>
+    <span class="n">print_stack</span><span class="p">()</span>
+</code></pre></div>
+
+
+<p>Each entry is composed of 2 lines:</p>
+<ul>
+<li>the first one contains the location (i.e. file, line and current method),</li>
+<li>the second line indicates the method that led to the next step.</li>
+</ul>
+<p><strong>Note:</strong> The stack trace contains only the methods that are still ongoing when we hit the <code>print_stack()</code>. In the previous example, there is no trace of the <code>bar</code> method in the output as its execution was already done when we reached the <code>print_stack()</code>.</p>
+              </span>
+
+              <div class="meta__container--without-image">
+                <div class="row">
+                </div>
+              </div>
+
+              <br>
+            </div>
+          </div>
+        </div>
+      </div>
+
 </div>
 
 <footer class="copyrights">
