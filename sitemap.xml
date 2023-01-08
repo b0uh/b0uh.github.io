@@ -5,7 +5,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://b0uh.github.io/</loc>
-<lastmod>2023-01-08T17:45:50-00:00</lastmod>
+<lastmod>2023-01-08T17:51:36-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -18,7 +18,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </url>
 
 <url>
-<loc>https://b0uh.github.io/djangodrf-how-to-authentificate-a-user-in-tests.html</loc>
+<loc>https://b0uh.github.io/djangodrf-how-to-authenticate-a-user-in-tests.html</loc>
 <lastmod>2023-01-08T18:40:00+01:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>1</priority>

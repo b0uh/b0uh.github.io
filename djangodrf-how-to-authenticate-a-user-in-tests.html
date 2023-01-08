@@ -9,12 +9,12 @@
 
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@b0uh" />
-    <meta name="twitter:title" content="Django/DRF: how to authentificate a user in tests? - Thomas Loiret - Random thoughts" />
+    <meta name="twitter:title" content="Django/DRF: how to authenticate a user in tests? - Thomas Loiret - Random thoughts" />
     <meta name="twitter:description" content="What are the different options to log a user in tests?" />
 
   <meta name="google-site-verification" content="jZBc2U9MHiBnSlgpoFEed-V3PZ16pMNv0GSX4hOh4mg" />
 
-  <title>Django/DRF: how to authentificate a user in tests? - Thomas Loiret - Random thoughts</title>
+  <title>Django/DRF: how to authenticate a user in tests? - Thomas Loiret - Random thoughts</title>
 
   <!-- Custom styles for this template -->
   <!-- build:css stylesheets/main.css -->
@@ -134,7 +134,7 @@
             <!-- Start of the content -->
             <div class="post-content">
 
-              <h1 itemprop="name">Django/DRF: how to authentificate a user in tests?</h1>
+              <h1 itemprop="name">Django/DRF: how to authenticate a user in tests?</h1>
 
               <div class="meta__container--without-image">
                 <div class="row">
@@ -156,7 +156,7 @@
               </div>
 
               <span itemprop="articleBody">
-                <p><strong>TL;DR:</strong> Use <code>client.force_login()</code> and <code>client.force_authenticate()</code> if you don't care how the user is authentified. Otherwise, use <code>client.login()</code> and <code>client.credentials()</code> according to your needs.</p>
+                <p><strong>TL;DR:</strong> Use <code>client.force_login()</code> and <code>client.force_authenticate()</code> if you don't care how the user is authenticated. Otherwise, use <code>client.login()</code> and <code>client.credentials()</code> according to your needs.</p>
 <h1>Introduction</h1>
 <p>When we write tests, we might need to simulate a connected user doing a request.
 To do so, Django provides a convenient <a href="https://docs.djangoproject.com/en/dev/topics/testing/tools/#the-test-client">test client</a> and DRF provides something similar with its <a href="https://www.django-rest-framework.org/api-guide/testing/#apiclient">api test client</a>.</p>
