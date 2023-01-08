@@ -163,17 +163,14 @@
 <p>When the event loop is blocked Node.js cannot process anything else and the server is paralyzed. When the code contains unsafe regular expressions it can become an attack vector. Instead of having to send a lot of requests to put down a server with a classic DoS, you can send only a few requests that will trigger the unsafe regular expression and put down the server.</p>
 <h2>Examples</h2>
 <p>Try to execute the following regular expression with the suggested input. You will notice that Node.js take a long time (several seconds) to respond.</p>
-<div class="highlight"><pre><span></span><code><span class="sr">/^(A+)*B/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">.</span><span class="nx">repeat</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;E&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="sr">/^(A+)*B/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">.</span><span class="nx">repeat</span><span class="p">(</span><span class="mf">30</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;E&#39;</span><span class="p">)</span>
 </code></pre></div>
 
-
-<div class="highlight"><pre><span></span><code><span class="sr">/(\w+\d+)+C/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="s1">&#39;a1&#39;</span><span class="p">.</span><span class="nx">repeat</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="sr">/(\w+\d+)+C/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="s1">&#39;a1&#39;</span><span class="p">.</span><span class="nx">repeat</span><span class="p">(</span><span class="mf">25</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
 </code></pre></div>
 
-
-<div class="highlight"><pre><span></span><code><span class="sr">/\s*\n/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">.</span><span class="nx">repeat</span><span class="p">(</span><span class="mi">50000</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><code><span class="sr">/\s*\n/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">.</span><span class="nx">repeat</span><span class="p">(</span><span class="mf">50000</span><span class="p">))</span>
 </code></pre></div>
-
 
 <h2>What can I do about it?</h2>
 <p>There are some tools out there like <a href="https://github.com/substack/safe-regex"><code>safe-regex</code></a> and <a href="https://www.cs.bham.ac.uk/~hxt/research/rxxr2/"><code>rxxr2</code></a> to try to detect unsafe regular expressions. Unfortunately none of them work 100% of the time.</p>

@@ -169,14 +169,13 @@
 <span class="p">]</span>
 </code></pre></div>
 
-
 <h2>Step 2: Add the view and check access</h2>
 <p>Add the following view in <code>myproject/views.py</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
 <span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponseForbidden</span>
 
 <span class="k">def</span> <span class="nf">media_access</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    When trying to access :</span>
 <span class="sd">    myproject.com/media/uploads/passport.png</span>
 
@@ -214,7 +213,6 @@
         <span class="k">return</span> <span class="n">HttpResponseForbidden</span><span class="p">(</span><span class="s1">&#39;Not authorized to access this media.&#39;</span><span class="p">)</span>
 </code></pre></div>
 
-
 <p>Here the important part is about the variable <code>user_documents</code>. It should contain reference to all files the user has access. In my case I extended the <code>User</code> model to add a field <code>identity_document</code> that why I can access it here.</p>
 <p>In this <code>media_acces</code> view, you can implement any authorization logic.</p>
 <h2>Step 3: Configure nginx</h2>
@@ -251,7 +249,6 @@
 
 <span class="p">}</span>
 </code></pre></div>
-
 
 <p>You can notice there is no <code>location ^~ /media/</code> that's because this URL is handle by django.</p>
 <h2>Conclusion</h2>

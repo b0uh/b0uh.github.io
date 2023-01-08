@@ -161,22 +161,19 @@
 <div class="highlight"><pre><span></span><code><span class="go">pip install virtualenvwrapper</span>
 </code></pre></div>
 
-
 <h2>Enable virtualenvwrapper with ZSH + Oh My Zsh</h2>
 <p>In order to use ZSH you should go to the <a href="https://admin.alwaysdata.com/ssh/">adminstration panel</a> (Remote access &gt; SSH). Then with <a href="https://github.com/robbyrussell/oh-my-zsh">Oh My Zsh</a>, you can use the virtualenvwrapper plugin by adding this into your .zshrc file :</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$HOME</span>/.local/bin
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$HOME</span>/.local/bin
 </code></pre></div>
-
 
 <p>And activate your plugin :</p>
-<div class="highlight"><pre><span></span><code><span class="nv">plugins</span><span class="o">=(</span>git virtualenvwrapper<span class="o">)</span>
+<div class="highlight"><pre><span></span><code><span class="nv">plugins</span><span class="o">=(</span>git<span class="w"> </span>virtualenvwrapper<span class="o">)</span>
 </code></pre></div>
-
 
 <h2>Enable virtualenvwrapper with other shells</h2>
 <p>Edit ~/.bashrc (or your startup shell script) and add:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">WORKON_HOME</span><span class="o">=</span><span class="nv">$HOME</span>/.virtualenvs
-<span class="nb">source</span> <span class="nv">$HOME</span>/.local/bin/virtualenvwrapper.sh
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">WORKON_HOME</span><span class="o">=</span><span class="nv">$HOME</span>/.virtualenvs
+<span class="nb">source</span><span class="w"> </span><span class="nv">$HOME</span>/.local/bin/virtualenvwrapper.sh
 </code></pre></div>
               </span>
 

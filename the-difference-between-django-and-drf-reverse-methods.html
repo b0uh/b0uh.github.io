@@ -173,12 +173,10 @@
 <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;admin:login&quot;</span><span class="p">)</span>
 </code></pre></div>
 
-
 <p>Returns <code>/admin/login/</code></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">rest_framework.reverse</span> <span class="kn">import</span> <span class="n">reverse</span>
 <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;admin:login&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
 </code></pre></div>
-
 
 <p>Returns <code>http://127.0.0.1:8000/admin/login/</code>, assuming you are running your project locally with <code>./manage.py runserver</code>.
 The <code>request</code> parameter is optional, if you don't pass it you will get a relative URI.</p>
@@ -187,7 +185,6 @@ The <code>request</code> parameter is optional, if you don't pass it you will ge
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">rest_framework.reverse</span> <span class="kn">import</span> <span class="n">reverse</span>
 <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;bookings-list&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
 </code></pre></div>
-
 
 <p>Would look up for the <code>v1:bookings-list</code> if <code>NamespaceVersioning</code> was being used, and the API version was <code>v1</code>. That would resolve to something like <code>http://127.0.0.1:8000/v1/bookings/</code>.</p>
 <h2>reverse_lazy</h2>

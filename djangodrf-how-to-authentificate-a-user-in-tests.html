@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Thomas Loiret">
+  <meta name="description" content="What are the different options to log a user in tests?">
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@b0uh" />
+    <meta name="twitter:title" content="Django/DRF: how to authentificate a user in tests? - Thomas Loiret - Random thoughts" />
+    <meta name="twitter:description" content="What are the different options to log a user in tests?" />
+
+  <meta name="google-site-verification" content="jZBc2U9MHiBnSlgpoFEed-V3PZ16pMNv0GSX4hOh4mg" />
+
+  <title>Django/DRF: how to authentificate a user in tests? - Thomas Loiret - Random thoughts</title>
+
+  <!-- Custom styles for this template -->
+  <!-- build:css stylesheets/main.css -->
+  <link rel="stylesheet" href="https://b0uh.github.io/theme/css/main.min.css">
+  <link rel="stylesheet" href="https://b0uh.github.io/theme/css/custom.min.css">
+  <link rel="stylesheet" href="https://b0uh.github.io/theme/css/pygments/autumn.min.css">
+
+  <!-- endbuild -->
+
+  <link href="https://b0uh.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Thomas Loiret - Random thoughts Atom Feed" />
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+  <![endif]-->
+
+  <!-- Google Fonts -->
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Open+Sans:300,400,700:latin', 'Lato:700,900:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+  </script>
+</head>
+
+<body>
+<!-- header -->
+<header class="header  push-down-45">
+  <div class="container">
+
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#readable-navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <nav class="navbar  navbar-default" role="navigation">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse  navbar-collapse" id="readable-navbar-collapse">
+        <ul class="navigation">
+
+          <li>
+            <a href="https://b0uh.github.io">Home</a>
+          </li>
+
+            <li>
+              <a href="https://b0uh.github.io/pages/about.html">About</a>
+            </li>
+
+          <li>
+            <a href="https://b0uh.github.io/archives.html">Archives</a>
+          </li>
+
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </nav>
+
+    <div class="hidden-xs  hidden-sm">
+      <div class="social">
+        <a href="#" class="search__container">
+          <span class="glyphicon  glyphicon-flash"></span>
+        </a>
+        <ul class="social__dropdown">
+            <li>
+              <a href="https://b0uh.github.io/feeds/all.atom.xml" target="_blank" class="social__container">
+                <span class="zocial-rss"></span>
+              </a>
+            </li>
+          <li>
+            <a href="https://twitter.com/b0uh" target="_blank" class="social__container">
+              <span class="zocial-twitter"></span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.linkedin.com/in/thomasloiret/" target="_blank" class="social__container">
+              <span class="zocial-linkedin"></span>
+            </a>
+          </li>
+          <!-- <li>
+            <a href="https://www.malt.fr/profile/thomasloiret" target="_blank" class="social__container">
+              <img src="https://b0uh.github.io/theme/images/icons/malt-25px.png" />
+            </a>
+          </li> -->
+          <li>
+            <a href="https://www.last.fm/user/b0uh" target="_blank" class="social__container">
+              <span class="zocial-lastfm"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-60">
+
+
+        <!-- Start of the blogpost -->
+        <div class="row">
+          <div class="col-xs-10  col-xs-offset-1  col-md-8  col-md-offset-2  push-down-60">
+
+            <!-- Start of the content -->
+            <div class="post-content">
+
+              <h1 itemprop="name">Django/DRF: how to authentificate a user in tests?</h1>
+
+              <div class="meta__container--without-image">
+                <div class="row">
+                  <div class="col-xs-12  col-sm-8">
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                      <div class="meta__info" itemprop="name">
+                        Thomas Loiret
+                      </div>
+                    </span>
+                  </div>
+                  <div class="col-xs-12  col-sm-4">
+                    <div class="meta__comments">
+                      <span class="meta__date" itemprop="datePublished" content="2022-12-25">
+                        <span class="glyphicon glyphicon-calendar"></span>  &nbsp; Sun 25 December 2022
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <span itemprop="articleBody">
+                <p><strong>TL;DR:</strong> Use <code>client.force_login()</code> and <code>client.force_authenticate()</code> if you don't care how the user is authentified. Otherwise, use <code>client.login()</code> and <code>client.credentials()</code> according to your needs.</p>
+<h1>Introduction</h1>
+<p>When we write tests, we might need to simulate a connected user doing a request.
+To do so, Django provides a convenient <a href="https://docs.djangoproject.com/en/dev/topics/testing/tools/#the-test-client">test client</a> and DRF provides something similar with its <a href="https://www.django-rest-framework.org/api-guide/testing/#apiclient">api test client</a>.</p>
+<p>You can easily simulate a user calling an API or view using:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/customer/details/&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>In this article we will see 5 different ways to login a user and when to use them.</p>
+<h1>Django</h1>
+<h2>client.login()</h2>
+<p>This one is useful to simulate a session authentication when working only with Django (no DRF). (<a href="https://docs.djangoproject.com/en/dev/topics/testing/tools/#django.test.Client.login">official documentation</a>)</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;john&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;johnpassword&quot;</span><span class="p">)</span>
+
+<span class="c1"># Log in</span>
+<span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;john&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;johnpassword&quot;</span><span class="p">)</span>
+
+<span class="c1"># Log out</span>
+<span class="n">client</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+</code></pre></div>
+
+<h2>client.force_login()</h2>
+<p>This one is quite handy because there is no need to know the user login/password. It is however important to know that this method skips the authentication and verification steps. (<a href="https://docs.djangoproject.com/en/dev/topics/testing/tools/#django.test.Client.force_login">official documentation</a>)</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="s2">&quot;john&quot;</span><span class="p">)</span>
+
+<span class="c1"># Log in</span>
+<span class="n">client</span><span class="o">.</span><span class="n">force_login</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+
+<span class="c1"># Log out</span>
+<span class="n">client</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+</code></pre></div>
+
+<h1>Django Rest Framework</h1>
+<h2>client.login()</h2>
+<p>It is a similar method as the Django test client <code>client.login()</code> seen previously, but for DRF. (<a href="https://www.django-rest-framework.org/api-guide/testing/#loginkwargs">official documentation</a>)</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">rest_framework.test</span> <span class="kn">import</span> <span class="n">APIClient</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">APIClient</span><span class="p">()</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;john&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;johnpassword&quot;</span><span class="p">)</span>
+
+<span class="c1"># Log in</span>
+<span class="n">client</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;john&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;johnpassword&quot;</span><span class="p">)</span>
+
+<span class="c1"># Log out</span>
+<span class="n">client</span><span class="o">.</span><span class="n">logout</span><span class="p">()</span>
+</code></pre></div>
+
+<h2>client.force_authenticate()</h2>
+<p>This one is comparable to Django test client <code>client.force_login()</code> but for DRF. It is quite handy because you just need the user, no credentials needed. (<a href="https://www.django-rest-framework.org/api-guide/testing/#force_authenticateusernone-tokennone">official documentation</a>)</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">rest_framework.test</span> <span class="kn">import</span> <span class="n">APIClient</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">APIClient</span><span class="p">()</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="s2">&quot;john&quot;</span><span class="p">)</span>
+
+<span class="c1"># Log in</span>
+<span class="n">client</span><span class="o">.</span><span class="n">force_authenticate</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+
+<span class="c1"># Log out</span>
+<span class="n">client</span><span class="o">.</span><span class="n">force_authenticate</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</code></pre></div>
+
+<h2>client.credentials()</h2>
+<p>Finally, this one is useful if you want to test login using authentication headers. (<a href="https://www.django-rest-framework.org/api-guide/testing/#credentialskwargs">official documentation</a>)</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">rest_framework.test</span> <span class="kn">import</span> <span class="n">APIClient</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">rest_framework.authtoken.models</span> <span class="kn">import</span> <span class="n">Token</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">APIClient</span><span class="p">()</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="s2">&quot;john&quot;</span><span class="p">)</span>
+<span class="n">token</span> <span class="o">=</span> <span class="n">Token</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+
+<span class="c1"># Log in</span>
+<span class="n">client</span><span class="o">.</span><span class="n">credentials</span><span class="p">(</span><span class="n">HTTP_AUTHORIZATION</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Token </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Log out</span>
+<span class="n">client</span><span class="o">.</span><span class="n">credentials</span><span class="p">()</span>
+</code></pre></div>
+
+<h1>Beware of log out</h1>
+<p>As you may have noticed, the log out method is different depending on how you logged in in the first place. If you use different logs in method, be careful which log out method you are using :)</p>
+              </span>
+
+              <div class="meta__container--without-image">
+                <div class="row">
+                </div>
+              </div>
+
+              <br>
+            </div>
+          </div>
+        </div>
+      </div>
+
+</div>
+
+<footer class="copyrights">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12  col-sm-6">
+        Powered by <a href="https://github.com/getpelican/pelican">Pelican</a>.
+      </div>
+      <div class="col-xs-12  col-sm-6">
+        <div class="copyrights--right">
+          Made with <span class="glyphicon  glyphicon-heart"></span> in Nantes.
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  <script src="https://b0uh.github.io/theme/scripts/jquery.min.js"></script>
+  <script src="https://b0uh.github.io/theme/scripts/underscore.min.js"></script>
+  <script src="https://b0uh.github.io/theme/scripts/bootstrap.min.js"></script>
+  <script src="https://b0uh.github.io/theme/scripts/main.min.js"></script>
+
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-98369697-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+  <!-- Chiffre.io - Privacy-first analytics -->
+  <script id="chiffre:analytics-config" type="application/json">
+    {
+      "publicKey": "pk.VvetZOQ0g5XwOL2W6hVvG7gFQTk3xdUMczDkqSCZUxE",
+      "pushURL":   "https://push.chiffre.io/event/ceJKfYgcLN6XkYn8"
+    }
+  </script>
+  <script
+    src="https://embed.chiffre.io/analytics.js"
+    crossorigin="anonymous"
+    async=""
+  >
+  </script>
+  <noscript>
+    <img
+      src="https://push.chiffre.io/noscript/ceJKfYgcLN6XkYn8"
+      alt="Chiffre.io anonymous visit counting for clients without JavaScript"
+      crossorigin="anonymous"
+      width="1px"
+      height="1px"
+      style="display:none"
+    />
+  </noscript>
+
+
+</body>
+</html>

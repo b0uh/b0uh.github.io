@@ -174,7 +174,6 @@
     <span class="n">content</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">()</span>
 </code></pre></div>
 
-
 <h2>urls.py</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="kn">import</span> <span class="n">url</span>
 
@@ -184,7 +183,6 @@
     <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^detail/(?P&lt;pk&gt;\w+)/$&quot;</span><span class="p">,</span> <span class="n">QuestionDetail</span><span class="o">.</span><span class="n">as_view</span><span class="p">()),</span>
 <span class="p">]</span>
 </code></pre></div>
-
 
 <h2>views.py</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.contrib.auth.mixins</span> <span class="kn">import</span> <span class="n">LoginRequiredMixin</span>
@@ -240,27 +238,25 @@
         <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">template_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="o">**</span><span class="n">ctxt</span><span class="p">))</span>
 </code></pre></div>
 
-
 <p>Here the view inherit from <a href="https://docs.djangoproject.com/en/1.11/ref/class-based-views/base/#django.views.generic.base.View"><code>View</code></a> in order to keep a class based view style. All methods here has been inspired by other CBV like <a href="https://docs.djangoproject.com/en/1.11/ref/class-based-views/generic-editing/#django.views.generic.edit.UpdateView"><code>UpdateView</code></a>.</p>
 <h2>question_detail.html</h2>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;fieldset&gt;</span>
-    <span class="nt">&lt;legend&gt;</span>Answer the question<span class="nt">&lt;/legend&gt;</span>
-    <span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
-        <span class="cp">{%</span> <span class="k">csrf_token</span> <span class="cp">%}</span>
-        <span class="cp">{{</span> <span class="nv">response_form</span> <span class="cp">}}</span>
-        <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">&quot;response&quot;</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span> <span class="na">value=</span><span class="s">&quot;Submit&quot;</span> <span class="nt">/&gt;</span>
-    <span class="nt">&lt;/form&gt;</span>
+<span class="w">    </span><span class="nt">&lt;legend&gt;</span>Answer<span class="w"> </span>the<span class="w"> </span>question<span class="nt">&lt;/legend&gt;</span>
+<span class="w">    </span><span class="nt">&lt;form</span><span class="w"> </span><span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="cp">{%</span> <span class="k">csrf_token</span> <span class="cp">%}</span>
+<span class="w">        </span><span class="cp">{{</span> <span class="nv">response_form</span> <span class="cp">}}</span>
+<span class="w">        </span><span class="nt">&lt;input</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;response&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;submit&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;Submit&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/form&gt;</span>
 <span class="nt">&lt;/fieldset&gt;</span>
 <span class="nt">&lt;fieldset&gt;</span>
-    <span class="nt">&lt;legend&gt;</span>Add a comment<span class="nt">&lt;/legend&gt;</span>
-    <span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
-        <span class="cp">{%</span> <span class="k">csrf_token</span> <span class="cp">%}</span>
-        <span class="cp">{{</span> <span class="nv">comment_form</span> <span class="cp">}}</span>
-        <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">&quot;comment&quot;</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span> <span class="na">value=</span><span class="s">&quot;Submit&quot;</span> <span class="nt">/&gt;</span>
-    <span class="nt">&lt;/form&gt;</span>
+<span class="w">    </span><span class="nt">&lt;legend&gt;</span>Add<span class="w"> </span>a<span class="w"> </span>comment<span class="nt">&lt;/legend&gt;</span>
+<span class="w">    </span><span class="nt">&lt;form</span><span class="w"> </span><span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="cp">{%</span> <span class="k">csrf_token</span> <span class="cp">%}</span>
+<span class="w">        </span><span class="cp">{{</span> <span class="nv">comment_form</span> <span class="cp">}}</span>
+<span class="w">        </span><span class="nt">&lt;input</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;comment&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;submit&quot;</span><span class="w"> </span><span class="na">value=</span><span class="s">&quot;Submit&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/form&gt;</span>
 <span class="nt">&lt;/fieldset&gt;</span>
 </code></pre></div>
-
 
 <p>For each form, in the template the should name the submit button in order to know in the view which form has been submitted.</p>
 <h2>Inspirations</h2>

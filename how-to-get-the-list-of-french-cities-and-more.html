@@ -220,8 +220,8 @@
                 <span class="s1">&#39;DEP&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;DEP&#39;</span><span class="p">],</span>
             <span class="p">}</span>
 
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Reading of INSEE file&quot;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">{} cities found.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">INSEE_DATA</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reading of INSEE file&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">{}</span><span class="s2"> cities found.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">INSEE_DATA</span><span class="p">)))</span>
 
 
 <span class="c1">#</span>
@@ -241,7 +241,7 @@
     <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;coordonnees_gps&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
         <span class="n">gps_coordinates</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;coordonnees_gps&#39;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">gps_coordinates</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">gps_coordinates</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">zip_code</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Code_postal&#39;</span><span class="p">]</span>
 
     <span class="c1"># Exceptions because LAPOSTE &#39;Code_commune_INSEE&#39; is not up to date...</span>
@@ -287,9 +287,9 @@
             <span class="n">LAPOSTE_DATA</span><span class="p">[</span><span class="n">code_insee</span><span class="p">][</span><span class="s1">&#39;zipcodes&#39;</span><span class="p">][</span><span class="n">zip_code</span><span class="p">]</span> <span class="o">=</span> <span class="n">gps_coordinates</span>
 <span class="n">laposte_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Reading of LAPOSTE file&quot;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">{} cities found.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">INSEE_DATA</span><span class="p">)))</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">{} cities discarded because of missing GPS coordinates.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count_city_without_gps</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reading of LAPOSTE file&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">{}</span><span class="s2"> cities found.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">INSEE_DATA</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">{}</span><span class="s2"> cities discarded because of missing GPS coordinates.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count_city_without_gps</span><span class="p">))</span>
 
 <span class="n">cities_insee_not_laposte</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">code_insee</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">INSEE_DATA</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -298,7 +298,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">cities_insee_not_laposte</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">code_insee</span><span class="p">)</span>
 
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">{} cities are missing in LAPOSTE file (because only present on the INSEE file, probably new cities)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cities_insee_not_laposte</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">{}</span><span class="s2"> cities are missing in LAPOSTE file (because only present on the INSEE file, probably new cities)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cities_insee_not_laposte</span><span class="p">)))</span>
 
 
 <span class="c1">#</span>
@@ -314,9 +314,9 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">deleted_cities</span> <span class="o">=</span> <span class="n">deleted_cities</span> <span class="o">+</span> <span class="mi">1</span>
 
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Merging of INSEE and LAPOSTE files&quot;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">{} cities merged.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">MERGED_DATA</span><span class="p">)))</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">{} cities discarded because not in the INSEE file (probably former cities)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">deleted_cities</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Merging of INSEE and LAPOSTE files&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">{}</span><span class="s2"> cities merged.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">MERGED_DATA</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">{}</span><span class="s2"> cities discarded because not in the INSEE file (probably former cities)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">deleted_cities</span><span class="p">))</span>
 
 
 <span class="c1">#</span>
@@ -339,21 +339,19 @@
             <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre></div>
 
-
 <p>Output of the script:</p>
-<div class="highlight"><pre><span></span><code><span class="n">Reading</span> <span class="k">of</span> <span class="n">INSEE</span> <span class="n">file</span>
-    <span class="mi">35416</span> <span class="n">cities</span> <span class="k">found</span><span class="p">.</span>
+<div class="highlight"><pre><span></span><code>Reading of INSEE file
+    35416 cities found.
 
-<span class="n">Reading</span> <span class="k">of</span> <span class="n">LAPOSTE</span> <span class="n">file</span>
-    <span class="mi">35416</span> <span class="n">cities</span> <span class="k">found</span><span class="p">.</span>
-    <span class="mi">267</span> <span class="n">cities</span> <span class="n">discarded</span> <span class="n">because</span> <span class="k">of</span> <span class="n">missing</span> <span class="n">GPS</span> <span class="n">coordinates</span><span class="p">.</span>
-    <span class="mi">2</span> <span class="n">cities</span> <span class="k">are</span> <span class="n">missing</span> <span class="k">in</span> <span class="n">LAPOSTE</span> <span class="n">file</span> <span class="p">(</span><span class="n">because</span> <span class="k">only</span> <span class="n">present</span> <span class="k">on</span> <span class="n">the</span> <span class="n">INSEE</span> <span class="n">file</span><span class="p">,</span> <span class="n">probably</span> <span class="k">new</span> <span class="n">cities</span><span class="p">)</span>
+Reading of LAPOSTE file
+    35416 cities found.
+    267 cities discarded because of missing GPS coordinates.
+    2 cities are missing in LAPOSTE file (because only present on the INSEE file, probably new cities)
 
-<span class="n">Merging</span> <span class="k">of</span> <span class="n">INSEE</span> <span class="k">and</span> <span class="n">LAPOSTE</span> <span class="n">files</span>
-    <span class="mi">35414</span> <span class="n">cities</span> <span class="n">merged</span><span class="p">.</span>
-    <span class="mi">478</span> <span class="n">cities</span> <span class="n">discarded</span> <span class="n">because</span> <span class="k">not</span> <span class="k">in</span> <span class="n">the</span> <span class="n">INSEE</span> <span class="n">file</span> <span class="p">(</span><span class="n">probably</span> <span class="n">former</span> <span class="n">cities</span><span class="p">)</span>
+Merging of INSEE and LAPOSTE files
+    35414 cities merged.
+    478 cities discarded because not in the INSEE file (probably former cities)
 </code></pre></div>
-
 
 <h2>Result</h2>
 <p>You can download the <a href="https://b0uh.github.io/medias/french_cities_2017.csv">result</a>. It contains INSEE code, name, department, zip code and GPS coordinates for all french cities.</p>

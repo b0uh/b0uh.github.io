@@ -5,14 +5,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://b0uh.github.io/</loc>
-<lastmod>2022-09-01T19:45:51-00:00</lastmod>
-<changefreq>monthly</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>https://b0uh.github.io/archives.html</loc>
-<lastmod>2022-09-01T19:45:51-00:00</lastmod>
+<lastmod>2023-01-08T17:41:00-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -22,6 +15,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <lastmod>2018-10-08T12:30:00+02:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://b0uh.github.io/djangodrf-how-to-authentificate-a-user-in-tests.html</loc>
+<lastmod>2022-12-25T14:30:00+01:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>1</priority>
 </url>
 
 <url>

@@ -164,7 +164,6 @@
 <span class="n">print_stack</span><span class="p">()</span>
 </code></pre></div>
 
-
 <p><strong>Note:</strong> this will print it to <code>stderr</code>. If you want to print to <code>stdout</code> use <code>print_stack(file=sys.stdout)</code>.</p>
 <h1>While using <code>pdb</code></h1>
 <p>You can easily get the stack trace while using the <a href="https://docs.python.org/3/library/pdb.html">Python Debugger</a> (<code>pdb</code>). To do so, simply type <code>w</code> (or <code>where</code>). It will print the stack trace.</p>
@@ -182,14 +181,12 @@
 <span class="n">foo</span><span class="p">()</span>
 </code></pre></div>
 
-
 <p>The output will be:</p>
 <div class="highlight"><pre><span></span><code>  <span class="n">File</span> <span class="s2">&quot;script.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">10</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
     <span class="n">foo</span><span class="p">()</span>
   <span class="n">File</span> <span class="s2">&quot;script.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">7</span><span class="p">,</span> <span class="ow">in</span> <span class="n">foo</span>
     <span class="n">print_stack</span><span class="p">()</span>
 </code></pre></div>
-
 
 <p>Each entry is composed of 2 lines:</p>
 <ul>

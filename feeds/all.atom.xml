@@ -1,5 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2022-06-01T22:00:00+02:00</updated><entry><title>Tech lead: delegate</title><link href="https://b0uh.github.io/tech-lead-delegate.html" rel="alternate"></link><published>2022-06-01T22:00:00+02:00</published><updated>2022-06-01T22:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2022-06-01:/tech-lead-delegate.html</id><summary type="html">&lt;p&gt;Don't be on the critical path unless it is for a very short period of time.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; As a tech lead, don't be on the critical path unless it is for a very short period of time.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2022-12-25T14:30:00+01:00</updated><entry><title>Django/DRF: how to authentificate a user in tests?</title><link href="https://b0uh.github.io/djangodrf-how-to-authentificate-a-user-in-tests.html" rel="alternate"></link><published>2022-12-25T14:30:00+01:00</published><updated>2022-12-25T14:30:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2022-12-25:/djangodrf-how-to-authentificate-a-user-in-tests.html</id><summary type="html">&lt;p&gt;What are the different options to log a user in tests?&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; Use &lt;code&gt;client.force_login()&lt;/code&gt; and &lt;code&gt;client.force_authenticate()&lt;/code&gt; if you don't care how the user is authentified. Otherwise, use &lt;code&gt;client.login()&lt;/code&gt; and &lt;code&gt;client.credentials()&lt;/code&gt; according to your needs.&lt;/p&gt;
+&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;When we write tests, we might need to simulate a connected user doing a request.
+To do so, Django provides a convenient &lt;a href="https://docs.djangoproject.com/en/dev/topics/testing/tools/#the-test-client"&gt;test client&lt;/a&gt; and DRF provides something similar with its &lt;a href="https://www.django-rest-framework.org/api-guide/testing/#apiclient"&gt;api test client&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;You can easily simulate a user calling an API or view using:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.test&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Client&lt;/span&gt;
+&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Client&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;response&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/customer/details/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;In this article we will see 5 different ways to login a user and when to use them.&lt;/p&gt;
+&lt;h1&gt;Django&lt;/h1&gt;
+&lt;h2&gt;client.login()&lt;/h2&gt;
+&lt;p&gt;This one is useful to simulate a session authentication when working only with Django (no DRF). (&lt;a href="https://docs.djangoproject.com/en/dev/topics/testing/tools/#django.test.Client.login"&gt;official documentation&lt;/a&gt;)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.test&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Client&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.contrib.auth.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;User&lt;/span&gt;
+
+&lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Client&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;User&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;create_user&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;john&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;johnpassword&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Log in&lt;/span&gt;
+&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;login&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;john&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;johnpassword&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Log out&lt;/span&gt;
+&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;logout&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;client.force_login()&lt;/h2&gt;
+&lt;p&gt;This one is quite handy because there is no need to know the user login/password. It is however important to know that this method skips the authentication and verification steps. (&lt;a href="https://docs.djangoproject.com/en/dev/topics/testing/tools/#django.test.Client.force_login"&gt;official documentation&lt;/a&gt;)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.test&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Client&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.contrib.auth.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;User&lt;/span&gt;
+
+&lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Client&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;User&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;create_user&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;john&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Log in&lt;/span&gt;
+&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;force_login&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Log out&lt;/span&gt;
+&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;logout&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h1&gt;Django Rest Framework&lt;/h1&gt;
+&lt;h2&gt;client.login()&lt;/h2&gt;
+&lt;p&gt;It is a similar method as the Django test client &lt;code&gt;client.login()&lt;/code&gt; seen previously, but for DRF. (&lt;a href="https://www.django-rest-framework.org/api-guide/testing/#loginkwargs"&gt;official documentation&lt;/a&gt;)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rest_framework.test&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;APIClient&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.contrib.auth.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;User&lt;/span&gt;
+
+&lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;APIClient&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;User&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;create_user&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;john&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;johnpassword&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Log in&lt;/span&gt;
+&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;login&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;username&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;john&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;johnpassword&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Log out&lt;/span&gt;
+&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;logout&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;client.force_authenticate()&lt;/h2&gt;
+&lt;p&gt;This one is comparable to Django test client &lt;code&gt;client.force_login()&lt;/code&gt; but for DRF. It is quite handy because you just need the user, no credentials needed. (&lt;a href="https://www.django-rest-framework.org/api-guide/testing/#force_authenticateusernone-tokennone"&gt;official documentation&lt;/a&gt;)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rest_framework.test&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;APIClient&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.contrib.auth.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;User&lt;/span&gt;
+
+&lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;APIClient&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;User&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;create_user&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;john&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Log in&lt;/span&gt;
+&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;force_authenticate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Log out&lt;/span&gt;
+&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;force_authenticate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;client.credentials()&lt;/h2&gt;
+&lt;p&gt;Finally, this one is useful if you want to test login using authentication headers. (&lt;a href="https://www.django-rest-framework.org/api-guide/testing/#credentialskwargs"&gt;official documentation&lt;/a&gt;)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rest_framework.test&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;APIClient&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.contrib.auth.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;User&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rest_framework.authtoken.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Token&lt;/span&gt;
+
+&lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;APIClient&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;user&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;User&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;create_user&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;john&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;token&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Token&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;user&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Log in&lt;/span&gt;
+&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;credentials&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;HTTP_AUTHORIZATION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Token &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;token&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;key&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Log out&lt;/span&gt;
+&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;credentials&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h1&gt;Beware of log out&lt;/h1&gt;
+&lt;p&gt;As you may have noticed, the log out method is different depending on how you logged in in the first place. If you use different logs in method, be careful which log out method you are using :)&lt;/p&gt;</content><category term="python"></category><category term="django"></category><category term="drf"></category><category term="djangorestframework"></category><category term="test"></category><category term="login"></category><category term="force_login"></category><category term="force_authenticate"></category><category term="credentials"></category></entry><entry><title>Tech lead: delegate</title><link href="https://b0uh.github.io/tech-lead-delegate.html" rel="alternate"></link><published>2022-06-01T22:00:00+02:00</published><updated>2022-06-01T22:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2022-06-01:/tech-lead-delegate.html</id><summary type="html">&lt;p&gt;Don't be on the critical path unless it is for a very short period of time.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; As a tech lead, don't be on the critical path unless it is for a very short period of time.&lt;/p&gt;
 &lt;h1&gt;Once upon a time...&lt;/h1&gt;
 &lt;p&gt;Imagine, your team sprint is ongoing and so far everything is smooth. Expectations are met, developers ship and everyone is happy. Everyone? Well, not exactly. One of the developers starts to be a bit worried, something is off. After some investigations they found that one task will be way more difficult than expected. It can jeopardize the whole sprint. As a tech lead, you start to analyze the issue and determine that you can probably tackle it. After all, you cannot abandon your team in an uncomfortable position. Sure it will take some time, but there is still one week left before the end of the sprint and you can probably move some stuff around to free some time.&lt;/p&gt;
 &lt;p&gt;Now, jump to the last day of the sprint. You are probably on a rush trying to finish that task, if not overwhelmed by it.&lt;/p&gt;
@@ -31,7 +122,6 @@
 &lt;span class="n"&gt;print_stack&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; this will print it to &lt;code&gt;stderr&lt;/code&gt;. If you want to print to &lt;code&gt;stdout&lt;/code&gt; use &lt;code&gt;print_stack(file=sys.stdout)&lt;/code&gt;.&lt;/p&gt;
 &lt;h1&gt;While using &lt;code&gt;pdb&lt;/code&gt;&lt;/h1&gt;
 &lt;p&gt;You can easily get the stack trace while using the &lt;a href="https://docs.python.org/3/library/pdb.html"&gt;Python Debugger&lt;/a&gt; (&lt;code&gt;pdb&lt;/code&gt;). To do so, simply type &lt;code&gt;w&lt;/code&gt; (or &lt;code&gt;where&lt;/code&gt;). It will print the stack trace.&lt;/p&gt;
@@ -49,14 +139,12 @@
 &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;The output will be:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;  &lt;span class="n"&gt;File&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;script.py&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;module&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
     &lt;span class="n"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
   &lt;span class="n"&gt;File&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;script.py&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;foo&lt;/span&gt;
     &lt;span class="n"&gt;print_stack&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Each entry is composed of 2 lines:&lt;/p&gt;
 &lt;ul&gt;
@@ -87,7 +175,6 @@ oo&lt;/li&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;PermissionPolicyMixin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;check_permissions&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
         &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
@@ -106,7 +193,6 @@ oo&lt;/li&gt;
 
         &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;check_permissions&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;Explanation&lt;/h2&gt;
 &lt;p&gt;With the &lt;code&gt;PermissionPolicyMixin&lt;/code&gt; mixin we alter the permission process of Django Rest Framework. Before checking the permission for an endpoint we check if the method associated exists in the &lt;code&gt;permission_classes_per_method&lt;/code&gt; attribute. If so, we set &lt;code&gt;self.permission_classes&lt;/code&gt;.&lt;/p&gt;
@@ -128,12 +214,10 @@ oo&lt;/li&gt;
 &lt;span class="n"&gt;reverse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;admin:login&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Returns &lt;code&gt;/admin/login/&lt;/code&gt;&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rest_framework.reverse&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;reverse&lt;/span&gt;
 &lt;span class="n"&gt;reverse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;admin:login&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Returns &lt;code&gt;http://127.0.0.1:8000/admin/login/&lt;/code&gt;, assuming you are running your project locally with &lt;code&gt;./manage.py runserver&lt;/code&gt;.
 The &lt;code&gt;request&lt;/code&gt; parameter is optional, if you don't pass it you will get a relative URI.&lt;/p&gt;
@@ -142,7 +226,6 @@ The &lt;code&gt;request&lt;/code&gt; parameter is optional, if you don't pass it
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rest_framework.reverse&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;reverse&lt;/span&gt;
 &lt;span class="n"&gt;reverse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;bookings-list&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Would look up for the &lt;code&gt;v1:bookings-list&lt;/code&gt; if &lt;code&gt;NamespaceVersioning&lt;/code&gt; was being used, and the API version was &lt;code&gt;v1&lt;/code&gt;. That would resolve to something like &lt;code&gt;http://127.0.0.1:8000/v1/bookings/&lt;/code&gt;.&lt;/p&gt;
 &lt;h2&gt;reverse_lazy&lt;/h2&gt;
@@ -157,12 +240,10 @@ The &lt;code&gt;request&lt;/code&gt; parameter is optional, if you don't pass it
     &lt;span class="n"&gt;title&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;and we want to change the field from &lt;code&gt;title&lt;/code&gt; to &lt;code&gt;name&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Recipe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Model&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Django will generate a migration to handle everything nicely. It works, but we might have some issues between the code deployment and the migration execution. During this time, the Django application will generate an error everytime this model is used because of the inconsistent state between the code and the database.&lt;/p&gt;
 &lt;p&gt;In this article, we will try to avoid any downtime when doing the change.&lt;/p&gt;
@@ -171,33 +252,30 @@ The &lt;code&gt;request&lt;/code&gt; parameter is optional, if you don't pass it
     &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;db_colum&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;title&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;The attribute &lt;a href="https://docs.djangoproject.com/en/dev/ref/models/fields/#db-column"&gt;&lt;code&gt;db_column&lt;/code&gt;&lt;/a&gt; indicates the name of the column in database (obviously). So, by doing this we won't affect it.&lt;/p&gt;
 &lt;p&gt;Django recognizes the renaming and generates the migration.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;./manage.py makemigrations
 Did you rename recipe.title to recipe.name (a CharField)? [y/N]
 Migrations for &amp;#39;recipes&amp;#39;:
   recipes/migrations/0004_auto_20210305_2021.py
-    &lt;span class="k"&gt;-&lt;/span&gt; Change Meta options on recipe
-    &lt;span class="k"&gt;-&lt;/span&gt; Rename field title on recipe to name
-    &lt;span class="k"&gt;-&lt;/span&gt; Alter field name on title
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;Change Meta options on recipe
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;Rename field title on recipe to name
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;-&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;Alter field name on title
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;But if we look at the SQL generated by this migration, it may seem a little odd:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;./manage.py sqlmigrate recipes 0004_auto_20210305_2021
-BEGIN;
---
--- Rename field title on recipe to name
---
-ALTER TABLE &amp;quot;recipes_recipe&amp;quot; RENAME COLUMN &amp;quot;title&amp;quot; TO &amp;quot;name&amp;quot;;
---
--- Alter field name on recipe
---
+&lt;span class="gu"&gt;BEGIN;&lt;/span&gt;
+&lt;span class="gu"&gt;--&lt;/span&gt;
+&lt;span class="gu"&gt;-- Rename field title on recipe to name&lt;/span&gt;
+&lt;span class="gu"&gt;--&lt;/span&gt;
+&lt;span class="gu"&gt;ALTER TABLE &amp;quot;recipes_recipe&amp;quot; RENAME COLUMN &amp;quot;title&amp;quot; TO &amp;quot;name&amp;quot;;&lt;/span&gt;
+&lt;span class="gu"&gt;--&lt;/span&gt;
+&lt;span class="gu"&gt;-- Alter field name on recipe&lt;/span&gt;
+&lt;span class="gu"&gt;--&lt;/span&gt;
 ALTER TABLE &amp;quot;recipes_recipe&amp;quot; RENAME COLUMN &amp;quot;name&amp;quot; TO &amp;quot;title&amp;quot;;
 COMMIT;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;The column is renamed twice to keep its original name. Why not doing nothing instead? After a bit of searching, it seems like this issue has already been raised in this Django &lt;a href="https://code.djangoproject.com/ticket/24260"&gt;ticket&lt;/a&gt; but no solution was found.&lt;/p&gt;
 &lt;p&gt;Anyway, even if this migration is a bit surprising, it does resolve our issue. There will be no downtime!&lt;/p&gt;
@@ -226,7 +304,6 @@ COMMIT;
     &lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;We now understand why there is a "double renaming" in the SQL generated. Django considers that 2 operations happened. The renaming first and then the addition of the &lt;a href="https://docs.djangoproject.com/en/dev/ref/models/fields/#db-column"&gt;&lt;code&gt;db_column&lt;/code&gt;&lt;/a&gt; attribute.&lt;/p&gt;
 &lt;p&gt;We know that these 2 operations should have no effect on the database and we can inform Django by using &lt;a href="https://docs.djangoproject.com/en/dev/ref/migration-operations/#django.db.migrations.operations.SeparateDatabaseAndState"&gt;&lt;code&gt;SeparateDatabaseAndState&lt;/code&gt;&lt;/a&gt;. We keep &lt;code&gt;database_operations&lt;/code&gt; empty to indicate that nothing should be done in database and we put the operations generated by Django in &lt;code&gt;state_operations&lt;/code&gt;. That way everyone is happy!&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Migration&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;migrations&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Migration&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -254,16 +331,14 @@ COMMIT;
     &lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;And we can check that nothing is done:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;./manage.py sqlmigrate recipes 0004_auto_20210305_2021
-BEGIN;
---
--- Custom state/database change combination
---
+&lt;span class="gu"&gt;BEGIN;&lt;/span&gt;
+&lt;span class="gu"&gt;--&lt;/span&gt;
+&lt;span class="gu"&gt;-- Custom state/database change combination&lt;/span&gt;
+&lt;span class="gu"&gt;--&lt;/span&gt;
 COMMIT;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;That's all :)&lt;/p&gt;</content><category term="python"></category><category term="django"></category><category term="model"></category><category term="field"></category><category term="change"></category><category term="name"></category><category term="without"></category><category term="losing"></category><category term="data"></category><category term="db_column"></category><category term="downtime"></category><category term="SeparateDatabaseAndState"></category></entry><entry><title>Python geofencing</title><link href="https://b0uh.github.io/python-geofencing.html" rel="alternate"></link><published>2020-08-01T10:00:00+02:00</published><updated>2020-08-01T10:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2020-08-01:/python-geofencing.html</id><summary type="html">&lt;p&gt;How to determine if GPS coordinates are within a specific geographical zone.&lt;/p&gt;</summary><content type="html">&lt;p&gt;This article explains how to determine if GPS coordinates are inside or outside a specific geographical zone. To do that we will use &lt;a href="https://github.com/Toblerity/Shapely"&gt;Shapely&lt;/a&gt;. This library makes it easy to define a zone and then check if the coordinates are inside or not.&lt;/p&gt;
 &lt;h2&gt;When the zone is a location&lt;/h2&gt;
@@ -275,7 +350,6 @@ COMMIT;
 
 &lt;span class="n"&gt;big_ben&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;contains&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;user_position&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# returns True&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;When the zone is more complex&lt;/h2&gt;
 &lt;p&gt;Sometimes the zone might be more complex than a circle. It can be the contour of a city for example. In that case, you can define the zone as a polygon.&lt;/p&gt;
@@ -300,10 +374,9 @@ COMMIT;
 &lt;p&gt;I choose to keep the script quite basic so it can be easily readable. Giving access to your Calendar is not something you should do lightly. Don't hesitate to check how it works before using it ;)&lt;/p&gt;
 &lt;h2&gt;Deletion in 4 steps&lt;/h2&gt;
 &lt;h3&gt;1/ Installation&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;git clone git@github.com:b0uh/google-calendar-events-deletion.git
-python -m pip install -r requirements.txt
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;git&lt;span class="w"&gt; &lt;/span&gt;clone&lt;span class="w"&gt; &lt;/span&gt;git@github.com:b0uh/google-calendar-events-deletion.git
+python&lt;span class="w"&gt; &lt;/span&gt;-m&lt;span class="w"&gt; &lt;/span&gt;pip&lt;span class="w"&gt; &lt;/span&gt;install&lt;span class="w"&gt; &lt;/span&gt;-r&lt;span class="w"&gt; &lt;/span&gt;requirements.txt
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h3&gt;2/ Get your Google Calendar API credentials&lt;/h3&gt;
 &lt;ul&gt;
@@ -314,19 +387,16 @@ python -m pip install -r requirements.txt
 &lt;h3&gt;3/ Test it&lt;/h3&gt;
 &lt;p&gt;You can run the script without arguments first. By default it will simulate its behaviour and you will see what events should be delete.&lt;/p&gt;
 &lt;p&gt;You will be asked to authenticate yourself, that's normal.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;python events_deletion.py
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;python&lt;span class="w"&gt; &lt;/span&gt;events_deletion.py
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h3&gt;4/ Just do it (Danger zone!)&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;python events_deletion.py --confirm-delete
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;python&lt;span class="w"&gt; &lt;/span&gt;events_deletion.py&lt;span class="w"&gt; &lt;/span&gt;--confirm-delete
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Once the script is done, the events are now in the trash. They will be definitively deleted after 30 days, but if you don't want to wait you can empty the trash at &lt;a href="https://calendar.google.com/calendar/r/trash"&gt;https://calendar.google.com/calendar/r/trash&lt;/a&gt;&lt;/p&gt;</content><category term="python"></category><category term="python"></category><category term="google"></category><category term="privacy"></category></entry><entry><title>Django JSON logging</title><link href="https://b0uh.github.io/django-json-logging.html" rel="alternate"></link><published>2020-04-04T12:00:00+02:00</published><updated>2020-04-04T12:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2020-04-04:/django-json-logging.html</id><summary type="html">&lt;p&gt;Use python-json-logger package to output JSON log with Django&lt;/p&gt;</summary><content type="html">&lt;p&gt;First install the dependency. No need to add it in Django's &lt;code&gt;INSTALLED_APPS&lt;/code&gt;.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;python&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;python&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;json&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;logger&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Then, add the logging configuration. In my case, I configured the logger for the &lt;code&gt;polls&lt;/code&gt; app. You will need to change that value according to your setup.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;LOGGING&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -343,7 +413,6 @@ python -m pip install -r requirements.txt
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;That's all! You can now log with JSON output. One of the most useful thing is to pass &lt;code&gt;extra&lt;/code&gt; parameter to have more meaningful logs. Here is a simple example:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;logging&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.http&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;
@@ -356,11 +425,9 @@ python -m pip install -r requirements.txt
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Hello, world.&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;With our example, the output will look like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;message&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Something is happening&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nt"&gt;&amp;quot;user&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;message&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Something is happening&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;user&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;Bonus: set a log level&lt;/h2&gt;
 &lt;p&gt;With the previous settings, you can now log in JSON, but you lost the level information. According to your log tool, you will need to provide level according to their documentation. You will find bellow the configuration to add the log level/severity for Google App Engine (GAE).&lt;/p&gt;
@@ -379,7 +446,6 @@ python -m pip install -r requirements.txt
     &lt;span class="s2"&gt;&amp;quot;loggers&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;polls&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;handlers&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;console&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;level&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;INFO&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;}},&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;And in &lt;code&gt;polls/logging.py&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;logging&lt;/span&gt;
@@ -400,9 +466,8 @@ python -m pip install -r requirements.txt
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Our example for before will now have the following outout:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;message&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Something is happening&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nt"&gt;&amp;quot;user&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nt"&gt;&amp;quot;severity&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;200&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;message&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Something is happening&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;user&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;severity&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;200&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="django"></category><category term="django"></category><category term="python"></category><category term="json"></category><category term="logging"></category><category term="logs"></category><category term="python-json-logger"></category></entry><entry><title>ReDos + Node.js</title><link href="https://b0uh.github.io/redos-nodejs.html" rel="alternate"></link><published>2019-11-27T12:00:00+01:00</published><updated>2019-11-27T12:00:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2019-11-27:/redos-nodejs.html</id><summary type="html">&lt;p&gt;When developing with NodeJS, you should be aware of regular expression denial of service (ReDoS).&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; When developing with NodeJS, you should be aware of regular expression denial of service (ReDoS).&lt;/p&gt;
 &lt;h2&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;A ReDoS (Regular expression Denial of Service) is a type of attack used to put down a web server. This is possible when the code run by the server contains a regular expression that triggers too many backtracking.&lt;/p&gt;
@@ -410,17 +475,14 @@ python -m pip install -r requirements.txt
 &lt;p&gt;When the event loop is blocked Node.js cannot process anything else and the server is paralyzed. When the code contains unsafe regular expressions it can become an attack vector. Instead of having to send a lot of requests to put down a server with a classic DoS, you can send only a few requests that will trigger the unsafe regular expression and put down the server.&lt;/p&gt;
 &lt;h2&gt;Examples&lt;/h2&gt;
 &lt;p&gt;Try to execute the following regular expression with the suggested input. You will notice that Node.js take a long time (several seconds) to respond.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="sr"&gt;/^(A+)*B/&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;A&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;repeat&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;E&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="sr"&gt;/^(A+)*B/&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;A&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;repeat&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;30&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;E&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="sr"&gt;/(\w+\d+)+C/&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;a1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;repeat&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;25&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;,&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="sr"&gt;/(\w+\d+)+C/&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;a1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;repeat&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;25&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;,&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="sr"&gt;/\s*\n/&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39; &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;repeat&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;50000&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="sr"&gt;/\s*\n/&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39; &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;repeat&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;50000&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;What can I do about it?&lt;/h2&gt;
 &lt;p&gt;There are some tools out there like &lt;a href="https://github.com/substack/safe-regex"&gt;&lt;code&gt;safe-regex&lt;/code&gt;&lt;/a&gt; and &lt;a href="https://www.cs.bham.ac.uk/~hxt/research/rxxr2/"&gt;&lt;code&gt;rxxr2&lt;/code&gt;&lt;/a&gt; to try to detect unsafe regular expressions. Unfortunately none of them work 100% of the time.&lt;/p&gt;
@@ -473,50 +535,49 @@ The bottleneck is probably something not intuitive/obvious. You need to keep a t
 Basically you have to be methodological about what you are doing.&lt;/p&gt;
 &lt;p&gt;Here is a template of a document that can help to be methodological when looking for a bottleneck.&lt;/p&gt;
 &lt;h3&gt;Template&lt;/h3&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Initial&lt;/span&gt; &lt;span class="n"&gt;conditions&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;# Initial conditions
 
-&lt;span class="o"&gt;##&lt;/span&gt; &lt;span class="k"&gt;System&lt;/span&gt; &lt;span class="n"&gt;condition&lt;/span&gt;
-&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
+## System condition
+- ...
 
-&lt;span class="o"&gt;##&lt;/span&gt; &lt;span class="n"&gt;Stress&lt;/span&gt; &lt;span class="k"&gt;operation&lt;/span&gt; &lt;span class="n"&gt;condition&lt;/span&gt;
-&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
-
-
-&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Initial&lt;/span&gt; &lt;span class="n"&gt;stress&lt;/span&gt; &lt;span class="k"&gt;operation&lt;/span&gt;
-
-&lt;span class="o"&gt;##&lt;/span&gt; &lt;span class="n"&gt;Stress&lt;/span&gt; &lt;span class="k"&gt;operation&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
-
-&lt;span class="o"&gt;###&lt;/span&gt; &lt;span class="n"&gt;Conditions&lt;/span&gt;
-&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
-
-&lt;span class="o"&gt;###&lt;/span&gt; &lt;span class="n"&gt;Observations&lt;/span&gt;
-&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
-
-&lt;span class="o"&gt;##&lt;/span&gt; &lt;span class="n"&gt;Stress&lt;/span&gt; &lt;span class="k"&gt;operation&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
-
-&lt;span class="o"&gt;###&lt;/span&gt; &lt;span class="n"&gt;Conditions&lt;/span&gt;
-&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
-
-&lt;span class="o"&gt;###&lt;/span&gt; &lt;span class="n"&gt;Observations&lt;/span&gt;
-&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
+## Stress operation condition
+- ...
 
 
-&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Problem&lt;/span&gt;
-&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="k"&gt;Describe&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;problem&lt;/span&gt; &lt;span class="k"&gt;found&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;initial&lt;/span&gt; &lt;span class="n"&gt;stress&lt;/span&gt; &lt;span class="k"&gt;operation&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt; &lt;span class="k"&gt;Explain&lt;/span&gt; &lt;span class="n"&gt;what&lt;/span&gt; &lt;span class="k"&gt;are&lt;/span&gt; &lt;span class="n"&gt;you&lt;/span&gt; &lt;span class="n"&gt;expecting&lt;/span&gt;
+# Initial stress operation
+
+## Stress operation 1
+
+### Conditions
+- ...
+
+### Observations
+- ...
+
+## Stress operation 2
+
+### Conditions
+- ...
+
+### Observations
+- ...
 
 
-&lt;span class="o"&gt;#&lt;/span&gt; &lt;span class="n"&gt;Hypothesis&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;....&lt;/span&gt;
+# Problem
+- Describe the problem found in the initial stress operation. Explain what are you expecting
 
-&lt;span class="o"&gt;##&lt;/span&gt; &lt;span class="n"&gt;Stress&lt;/span&gt; &lt;span class="k"&gt;operation&lt;/span&gt; &lt;span class="n"&gt;conditions&lt;/span&gt;
-&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
 
-&lt;span class="o"&gt;##&lt;/span&gt; &lt;span class="n"&gt;Observations&lt;/span&gt;
-&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
+# Hypothesis: ....
 
-&lt;span class="o"&gt;##&lt;/span&gt; &lt;span class="n"&gt;Conclusions&lt;/span&gt;
-&lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="p"&gt;...&lt;/span&gt;
+## Stress operation conditions
+- ...
+
+## Observations
+- ...
+
+## Conclusions
+- ...
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Repeat the "Hypothesis" section until the conclusion reaches the expectation described in the "Problem" section.&lt;/p&gt;
 &lt;p&gt;Good luck for your search!&lt;/p&gt;</content><category term="performances"></category><category term="bottleneck"></category><category term="load test"></category><category term="loadtest"></category><category term="monitoring"></category><category term="find"></category><category term="bottlenecks"></category><category term="trust"></category></entry><entry><title>Do you know that your email address is shared by default with your network on LinkedIn?</title><link href="https://b0uh.github.io/do-you-know-that-your-email-address-is-shared-by-default-with-your-network-on-linkedin.html" rel="alternate"></link><published>2018-09-11T19:00:00+02:00</published><updated>2018-09-11T19:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2018-09-11:/do-you-know-that-your-email-address-is-shared-by-default-with-your-network-on-linkedin.html</id><summary type="html">&lt;p&gt;Your email address is visible by default to your network, you may not want that.&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; You should hide your email to your network on LinkedIn.&lt;/p&gt;
@@ -546,14 +607,13 @@ Basically you have to be methodological about what you are doing.&lt;/p&gt;
 &lt;br&gt;&lt;/p&gt;
 &lt;p&gt;In this blog post, we will see how to host a new Django project on Clever Cloud (&lt;a href="https://www.clever-cloud.com/"&gt;www.clever-cloud.com&lt;/a&gt;). If you don't have a Clever Cloud account, you can signup and you will get a 20€ credit to test the platform ;)&lt;/p&gt;
 &lt;h2&gt;1/ Create a Django project&lt;/h2&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ django-admin startproject fooproject
-$ &lt;span class="nb"&gt;cd&lt;/span&gt; fooproject
-$ &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Django&amp;quot;&lt;/span&gt; &amp;gt; requirements.txt
-$ git init
-$ git add .
-$ git commit -m &lt;span class="s2"&gt;&amp;quot;initial commit&amp;quot;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;django-admin&lt;span class="w"&gt; &lt;/span&gt;startproject&lt;span class="w"&gt; &lt;/span&gt;fooproject
+$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;fooproject
+$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Django&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&amp;gt;&lt;span class="w"&gt; &lt;/span&gt;requirements.txt
+$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;init
+$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;add&lt;span class="w"&gt; &lt;/span&gt;.
+$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;commit&lt;span class="w"&gt; &lt;/span&gt;-m&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;initial commit&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;For more information, please take a look at the wonderful &lt;a href="https://docs.djangoproject.com/"&gt;Django's documentation&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: currently Clever Cloud does not support &lt;code&gt;pipenv&lt;/code&gt; wonderful &lt;code&gt;Pipfile&lt;/code&gt; &amp;amp; &lt;code&gt;Pipfle.lock&lt;/code&gt; files. The traditional &lt;code&gt;requirements.txt&lt;/code&gt; is required.&lt;/p&gt;
@@ -571,33 +631,29 @@ $ git commit -m &lt;span class="s2"&gt;&amp;quot;initial commit&amp;quot;&lt;/sp
 &lt;p&gt;Go to the &lt;em&gt;Information&lt;/em&gt; section for your application and at the top you should see a line starting by
 &lt;code&gt;git remote add ...&lt;/code&gt;, copy it. It may be one two lines actually if you have a small screen, eg. 13".&lt;/p&gt;
 &lt;p&gt;On your project you should do something like this (it's an example):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ git remote add clever git+ssh://git@push-par-clevercloud-customers.services.clever-cloud.com/app_b8faacf4-7a4a-4b95-8221-7cb85e46cd82.git
-$ git push clever master
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;remote&lt;span class="w"&gt; &lt;/span&gt;add&lt;span class="w"&gt; &lt;/span&gt;clever&lt;span class="w"&gt; &lt;/span&gt;git+ssh://git@push-par-clevercloud-customers.services.clever-cloud.com/app_b8faacf4-7a4a-4b95-8221-7cb85e46cd82.git
+$&lt;span class="w"&gt; &lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;push&lt;span class="w"&gt; &lt;/span&gt;clever&lt;span class="w"&gt; &lt;/span&gt;master
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Come back to your Clever cloud dashboard and go to the &lt;em&gt;Logs&lt;/em&gt; section and see your application deploying :) (You may want to scroll down to see the latest logs)&lt;/p&gt;
 &lt;p&gt;And you have done your first deploy !&lt;/p&gt;
 &lt;h2&gt;4/ But the deployment failed :(&lt;/h2&gt;
 &lt;p&gt;We missed some steps to ensure that the deploy run smoothly, mainly configuration steps. We need to specify the module to load, by adding the following file &lt;code&gt;clevercloud/python.json&lt;/code&gt; in our project (replace &lt;code&gt;fooproject&lt;/code&gt; by your project):&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="nt"&gt;&amp;quot;deploy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="nt"&gt;&amp;quot;module&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;fooproject.wsgi:application&amp;quot;&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;deploy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;module&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;fooproject.wsgi:application&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Also, because you should not use &lt;a href="https://www.python.org/doc/sunset-python-2/"&gt;python 2&lt;/a&gt;, go to the &lt;em&gt;Environment variables&lt;/em&gt; section of your application and add the following variable:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;PYTHON_VERSION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;3&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Then redeploy your application. At this point you should have a running application! Go see your application by using the link at the top corner right of the dashboard or go to http://&amp;lt;your_application_id&gt;.cleverapps.io/&lt;/p&gt;
 &lt;p&gt;You will have a &lt;code&gt;DisallowedHost&lt;/code&gt; error but at least your application is running! We need to configure a bit Django by adding the following to the &lt;code&gt;fooproject/settings.py&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;ALLOWED_HOSTS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;lt;APP_ID&amp;gt;.cleverapps.io&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Commit and push your new settings file, a new deploy should be triggered. You should now have a deployed and running application!&lt;/p&gt;
 &lt;p&gt;&lt;img class="wp-post-image" alt="Django deploy screen" src="https://b0uh.github.io/medias/clever-cloud-django-deploy.gif"&gt;&lt;/p&gt;
@@ -622,7 +678,6 @@ $ git push clever master
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Don't forget to add the &lt;code&gt;psycopg2&lt;/code&gt; package to your &lt;code&gt;requirements.txt&lt;/code&gt; file.&lt;/p&gt;
 &lt;p&gt;Commit those changes and push them in order to deploy again your application.&lt;/p&gt;
 &lt;h2&gt;6/ Manage your static and medias files&lt;/h2&gt;
@@ -636,7 +691,6 @@ $ git push clever master
 &lt;span class="n"&gt;MEDIA_ROOT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;BASE_DIR&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;public/media&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;STATIC_ROOT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;BASE_DIR&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;public/static&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Locally create the directory &lt;code&gt;public&lt;/code&gt; at the root of the project. Add a dummy hidden file (&lt;code&gt;.keep_this_dir&lt;/code&gt; for example) in order the create this directory during the build on clever cloud.&lt;/p&gt;
 &lt;p&gt;For media files create a new add-on "FS Bucket" on which your media files will be saved:&lt;/p&gt;
@@ -653,30 +707,27 @@ $ git push clever master
 &lt;span class="nv"&gt;CC_FS_BUCKET&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/public/media:&amp;lt;BUCKET_ID&amp;gt;-fsbucket.services.clever-cloud.com&amp;quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Redeploy and you now have a Django project with your media files handled.&lt;/p&gt;
 &lt;h2&gt;7/ Continuous integration&lt;/h2&gt;
 &lt;p&gt;We are still missing something to fully use our two addons. We need to do migrations to create the DB schema and we need to collect the static. To automatize those tasks after each new deployments we will use the &lt;code&gt;clevercloud/python.json&lt;/code&gt; file and add a &lt;code&gt;managetasks&lt;/code&gt; entry.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="nt"&gt;&amp;quot;deploy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="nt"&gt;&amp;quot;module&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;fooproject.wsgi:application&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-        &lt;span class="nt"&gt;&amp;quot;managetasks&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
-            &lt;span class="s2"&gt;&amp;quot;migrate --no-input&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-            &lt;span class="s2"&gt;&amp;quot;collectstatic --noinput&amp;quot;&lt;/span&gt;
-        &lt;span class="p"&gt;]&lt;/span&gt;
-    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;deploy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;module&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;fooproject.wsgi:application&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;quot;managetasks&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;migrate --no-input&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="w"&gt;            &lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;collectstatic --noinput&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;Note: Another way to handle that is to use &lt;a href="https://www.clever-cloud.com/doc/clever-cloud-overview/hooks/"&gt;hooks&lt;/a&gt; that are more documented and seems more flexible.&lt;/p&gt;
 &lt;h2&gt;8/ Create a super user&lt;/h2&gt;
 &lt;p&gt;Go to &lt;em&gt;Profile&lt;/em&gt; then &lt;em&gt;SSH Key&lt;/em&gt; and add your SSH key. After that you can ssh the server and create the super user.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$ ssh -t ssh@sshgateway-clevercloud-customers.services.clever-cloud.com &amp;lt;APP_ID&amp;gt;
-$ &lt;span class="nb"&gt;cd&lt;/span&gt; &amp;lt;APP_ID&amp;gt;/
-$ ./manage.py createsuperuser
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;$&lt;span class="w"&gt; &lt;/span&gt;ssh&lt;span class="w"&gt; &lt;/span&gt;-t&lt;span class="w"&gt; &lt;/span&gt;ssh@sshgateway-clevercloud-customers.services.clever-cloud.com&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;APP_ID&amp;gt;
+$&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&amp;lt;APP_ID&amp;gt;/
+$&lt;span class="w"&gt; &lt;/span&gt;./manage.py&lt;span class="w"&gt; &lt;/span&gt;createsuperuser
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;This should be the only time you need to connect through SSH to Clever Cloud. Please keep in mind that you should avoid SSH access as much as possible for security reasons.&lt;/p&gt;
 &lt;h2&gt;Conclusion&lt;/h2&gt;
@@ -772,8 +823,8 @@ Most of the merchants are using marketplace solution or custom solution in order
                 &lt;span class="s1"&gt;&amp;#39;DEP&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;DEP&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
             &lt;span class="p"&gt;}&lt;/span&gt;
 
-&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Reading of INSEE file&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s2"&gt;{} cities found.&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INSEE_DATA&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Reading of INSEE file&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="si"&gt;{}&lt;/span&gt;&lt;span class="s2"&gt; cities found.&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INSEE_DATA&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
 
 
 &lt;span class="c1"&gt;#&lt;/span&gt;
@@ -793,7 +844,7 @@ Most of the merchants are using marketplace solution or custom solution in order
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;coordonnees_gps&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
         &lt;span class="n"&gt;gps_coordinates&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;coordonnees_gps&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;gps_coordinates&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;
+        &lt;span class="n"&gt;gps_coordinates&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;None&lt;/span&gt;
     &lt;span class="n"&gt;zip_code&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Code_postal&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 
     &lt;span class="c1"&gt;# Exceptions because LAPOSTE &amp;#39;Code_commune_INSEE&amp;#39; is not up to date...&lt;/span&gt;
@@ -839,9 +890,9 @@ Most of the merchants are using marketplace solution or custom solution in order
             &lt;span class="n"&gt;LAPOSTE_DATA&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;code_insee&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;zipcodes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="n"&gt;zip_code&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;gps_coordinates&lt;/span&gt;
 &lt;span class="n"&gt;laposte_file&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 
-&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Reading of LAPOSTE file&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s2"&gt;{} cities found.&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INSEE_DATA&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
-&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s2"&gt;{} cities discarded because of missing GPS coordinates.&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;count_city_without_gps&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Reading of LAPOSTE file&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="si"&gt;{}&lt;/span&gt;&lt;span class="s2"&gt; cities found.&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;INSEE_DATA&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="si"&gt;{}&lt;/span&gt;&lt;span class="s2"&gt; cities discarded because of missing GPS coordinates.&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;count_city_without_gps&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 
 &lt;span class="n"&gt;cities_insee_not_laposte&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
 &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;code_insee&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;INSEE_DATA&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;items&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
@@ -850,7 +901,7 @@ Most of the merchants are using marketplace solution or custom solution in order
     &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
         &lt;span class="n"&gt;cities_insee_not_laposte&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;code_insee&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s2"&gt;{} cities are missing in LAPOSTE file (because only present on the INSEE file, probably new cities)&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cities_insee_not_laposte&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="si"&gt;{}&lt;/span&gt;&lt;span class="s2"&gt; cities are missing in LAPOSTE file (because only present on the INSEE file, probably new cities)&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cities_insee_not_laposte&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
 
 
 &lt;span class="c1"&gt;#&lt;/span&gt;
@@ -866,9 +917,9 @@ Most of the merchants are using marketplace solution or custom solution in order
     &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
         &lt;span class="n"&gt;deleted_cities&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;deleted_cities&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
 
-&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Merging of INSEE and LAPOSTE files&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s2"&gt;{} cities merged.&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;MERGED_DATA&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
-&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s2"&gt;{} cities discarded because not in the INSEE file (probably former cities)&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;deleted_cities&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Merging of INSEE and LAPOSTE files&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="si"&gt;{}&lt;/span&gt;&lt;span class="s2"&gt; cities merged.&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;MERGED_DATA&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="si"&gt;{}&lt;/span&gt;&lt;span class="s2"&gt; cities discarded because not in the INSEE file (probably former cities)&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;deleted_cities&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 
 
 &lt;span class="c1"&gt;#&lt;/span&gt;
@@ -891,21 +942,19 @@ Most of the merchants are using marketplace solution or custom solution in order
             &lt;span class="n"&gt;writer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;writerow&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Output of the script:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="n"&gt;Reading&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="n"&gt;INSEE&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;
-    &lt;span class="mi"&gt;35416&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="k"&gt;found&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;Reading of INSEE file
+    35416 cities found.
 
-&lt;span class="n"&gt;Reading&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="n"&gt;LAPOSTE&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;
-    &lt;span class="mi"&gt;35416&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="k"&gt;found&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
-    &lt;span class="mi"&gt;267&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="n"&gt;discarded&lt;/span&gt; &lt;span class="n"&gt;because&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="n"&gt;missing&lt;/span&gt; &lt;span class="n"&gt;GPS&lt;/span&gt; &lt;span class="n"&gt;coordinates&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
-    &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="k"&gt;are&lt;/span&gt; &lt;span class="n"&gt;missing&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;LAPOSTE&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;because&lt;/span&gt; &lt;span class="k"&gt;only&lt;/span&gt; &lt;span class="n"&gt;present&lt;/span&gt; &lt;span class="k"&gt;on&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;INSEE&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;probably&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+Reading of LAPOSTE file
+    35416 cities found.
+    267 cities discarded because of missing GPS coordinates.
+    2 cities are missing in LAPOSTE file (because only present on the INSEE file, probably new cities)
 
-&lt;span class="n"&gt;Merging&lt;/span&gt; &lt;span class="k"&gt;of&lt;/span&gt; &lt;span class="n"&gt;INSEE&lt;/span&gt; &lt;span class="k"&gt;and&lt;/span&gt; &lt;span class="n"&gt;LAPOSTE&lt;/span&gt; &lt;span class="n"&gt;files&lt;/span&gt;
-    &lt;span class="mi"&gt;35414&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="n"&gt;merged&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
-    &lt;span class="mi"&gt;478&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="n"&gt;discarded&lt;/span&gt; &lt;span class="n"&gt;because&lt;/span&gt; &lt;span class="k"&gt;not&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;INSEE&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;probably&lt;/span&gt; &lt;span class="n"&gt;former&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+Merging of INSEE and LAPOSTE files
+    35414 cities merged.
+    478 cities discarded because not in the INSEE file (probably former cities)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;Result&lt;/h2&gt;
 &lt;p&gt;You can download the &lt;a href="https://b0uh.github.io/medias/french_cities_2017.csv"&gt;result&lt;/a&gt;. It contains INSEE code, name, department, zip code and GPS coordinates for all french cities.&lt;/p&gt;
@@ -1112,7 +1161,6 @@ Most of the merchants are using marketplace solution or custom solution in order
     &lt;span class="n"&gt;content&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;forms&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h2&gt;urls.py&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.conf.urls&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt;
 
@@ -1122,7 +1170,6 @@ Most of the merchants are using marketplace solution or custom solution in order
     &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;^detail/(?P&amp;lt;pk&amp;gt;\w+)/$&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;QuestionDetail&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;as_view&lt;/span&gt;&lt;span class="p"&gt;()),&lt;/span&gt;
 &lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;views.py&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.contrib.auth.mixins&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;LoginRequiredMixin&lt;/span&gt;
@@ -1178,27 +1225,25 @@ Most of the merchants are using marketplace solution or custom solution in order
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;template_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_context_data&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;ctxt&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Here the view inherit from &lt;a href="https://docs.djangoproject.com/en/1.11/ref/class-based-views/base/#django.views.generic.base.View"&gt;&lt;code&gt;View&lt;/code&gt;&lt;/a&gt; in order to keep a class based view style. All methods here has been inspired by other CBV like &lt;a href="https://docs.djangoproject.com/en/1.11/ref/class-based-views/generic-editing/#django.views.generic.edit.UpdateView"&gt;&lt;code&gt;UpdateView&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;h2&gt;question_detail.html&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nt"&gt;&amp;lt;fieldset&amp;gt;&lt;/span&gt;
-    &lt;span class="nt"&gt;&amp;lt;legend&amp;gt;&lt;/span&gt;Answer the question&lt;span class="nt"&gt;&amp;lt;/legend&amp;gt;&lt;/span&gt;
-    &lt;span class="nt"&gt;&amp;lt;form&lt;/span&gt; &lt;span class="na"&gt;method=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;post&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
-        &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;csrf_token&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-        &lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;response_form&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;
-        &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;response&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;submit&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;value=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Submit&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
-    &lt;span class="nt"&gt;&amp;lt;/form&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;legend&amp;gt;&lt;/span&gt;Answer&lt;span class="w"&gt; &lt;/span&gt;the&lt;span class="w"&gt; &lt;/span&gt;question&lt;span class="nt"&gt;&amp;lt;/legend&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;form&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;method=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;post&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;csrf_token&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;response_form&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;response&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;submit&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;value=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Submit&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;/form&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/fieldset&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;fieldset&amp;gt;&lt;/span&gt;
-    &lt;span class="nt"&gt;&amp;lt;legend&amp;gt;&lt;/span&gt;Add a comment&lt;span class="nt"&gt;&amp;lt;/legend&amp;gt;&lt;/span&gt;
-    &lt;span class="nt"&gt;&amp;lt;form&lt;/span&gt; &lt;span class="na"&gt;method=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;post&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
-        &lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;csrf_token&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
-        &lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;comment_form&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;
-        &lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;comment&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;submit&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;value=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Submit&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
-    &lt;span class="nt"&gt;&amp;lt;/form&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;legend&amp;gt;&lt;/span&gt;Add&lt;span class="w"&gt; &lt;/span&gt;a&lt;span class="w"&gt; &lt;/span&gt;comment&lt;span class="nt"&gt;&amp;lt;/legend&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;form&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;method=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;post&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="cp"&gt;{%&lt;/span&gt; &lt;span class="k"&gt;csrf_token&lt;/span&gt; &lt;span class="cp"&gt;%}&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="cp"&gt;{{&lt;/span&gt; &lt;span class="nv"&gt;comment_form&lt;/span&gt; &lt;span class="cp"&gt;}}&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;input&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;comment&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;submit&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="na"&gt;value=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Submit&amp;quot;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;/form&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;/fieldset&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;For each form, in the template the should name the submit button in order to know in the view which form has been submitted.&lt;/p&gt;
 &lt;h2&gt;Inspirations&lt;/h2&gt;
@@ -1250,23 +1295,23 @@ Most of the merchants are using marketplace solution or custom solution in order
 
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;User&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;AbstractBaseUser&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;PermissionsMixin&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
 
-    &lt;span class="n"&gt;email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;EmailField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;unique&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;EmailField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;unique&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;is_staff&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BooleanField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
         &lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;staff status&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
-        &lt;span class="n"&gt;default&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;default&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;False&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
         &lt;span class="n"&gt;help_text&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Designates whether the user can log into this site.&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
     &lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;is_active&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;BooleanField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
         &lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;active&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
-        &lt;span class="n"&gt;default&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;default&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
         &lt;span class="n"&gt;help_text&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
             &lt;span class="s1"&gt;&amp;#39;Designates whether this user should be treated as active. &amp;#39;&lt;/span&gt;
             &lt;span class="s1"&gt;&amp;#39;Unselect this instead of deleting accounts.&amp;#39;&lt;/span&gt;
         &lt;span class="p"&gt;),&lt;/span&gt;
     &lt;span class="p"&gt;)&lt;/span&gt;
 
-    &lt;span class="n"&gt;first_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;first name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;blank&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;last_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;last name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;150&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;blank&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;first_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;first name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;blank&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;last_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;last name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;max_length&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;150&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;blank&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
     &lt;span class="n"&gt;date_joined&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DateTimeField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;date joined&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;default&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;timezone&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;now&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
@@ -1283,29 +1328,27 @@ Most of the merchants are using marketplace solution or custom solution in order
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__class__&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;normalize_email&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_short_name&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Return the short name for the user.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Return the short name for the user.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;first_name&lt;/span&gt;
 
-    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;email_user&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;subject&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;from_email&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Send an email to this user.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;email_user&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;subject&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;from_email&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Send an email to this user.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
         &lt;span class="n"&gt;send_mail&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;subject&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;from_email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Once it is done, add to your setting &lt;code&gt;AUTH_USER_MODEL&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;AUTH_USER_MODEL = &amp;#39;my_app_user.User&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;AUTH_USER_MODEL = &amp;#39;my_app_user.User&amp;#39;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;Step 2: User manager&lt;/h2&gt;
 &lt;p&gt;With just the model things won't work, you also need to redefine the Manager so it doesn't take into account the username anymore. Again this looks a lot like the default &lt;a href="https://docs.djangoproject.com/en/1.11/ref/contrib/auth/#manager-methods"&gt;&lt;code&gt;UserManager&lt;/code&gt;&lt;/a&gt;'s code.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.contrib.auth.models&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;BaseUserManager&lt;/span&gt;
 
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;UserManager&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;BaseUserManager&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Redefine user manager with email as identifier.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Redefine user manager with email as identifier.&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_create_user&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;extra_fields&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;        Creates and saves a User with the given email and password.&lt;/span&gt;
 &lt;span class="sd"&gt;        &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
         &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
@@ -1317,21 +1360,19 @@ Most of the merchants are using marketplace solution or custom solution in order
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;user&lt;/span&gt;
 
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;create_user&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;extra_fields&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="n"&gt;extra_fields&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setdefault&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;is_staff&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;extra_fields&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setdefault&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;is_superuser&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;extra_fields&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setdefault&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;is_staff&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kc"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;extra_fields&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setdefault&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;is_superuser&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kc"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_create_user&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;extra_fields&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;create_superuser&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;extra_fields&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-        &lt;span class="n"&gt;extra_fields&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setdefault&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;is_staff&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;extra_fields&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setdefault&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;is_superuser&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;extra_fields&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setdefault&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;is_staff&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;extra_fields&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setdefault&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;is_superuser&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_create_user&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;password&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;extra_fields&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;So now we can create superuser with :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="err"&gt;python manage.py createsuperuser&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;python manage.py createsuperuser
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;Step 3: Admininistration&lt;/h2&gt;
 &lt;p&gt;Like for the previous step, here I was inspired by default &lt;a href="https://github.com/django/django/blob/master/django/contrib/auth/admin.py"&gt;&lt;code&gt;UserAdmin&lt;/code&gt;&lt;/a&gt;. I just removed all trace of &lt;code&gt;username&lt;/code&gt;.&lt;/p&gt;
@@ -1343,14 +1384,14 @@ Most of the merchants are using marketplace solution or custom solution in order
 
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;UserAdmin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;DjangoUserAdmin&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;fieldsets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
-        &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fields&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;email&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;password&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)}),&lt;/span&gt;
+        &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fields&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;email&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;password&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)}),&lt;/span&gt;
         &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Personal info&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fields&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;first_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;last_name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,)}),&lt;/span&gt;
         &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Permissions&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fields&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;is_active&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;is_staff&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;is_superuser&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                        &lt;span class="s1"&gt;&amp;#39;groups&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;user_permissions&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)}),&lt;/span&gt;
         &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Important dates&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fields&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;last_login&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;date_joined&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)}),&lt;/span&gt;
     &lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;add_fieldsets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
-        &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
             &lt;span class="s1"&gt;&amp;#39;classes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;wide&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,),&lt;/span&gt;
             &lt;span class="s1"&gt;&amp;#39;fields&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;email&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;password1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;password2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
         &lt;span class="p"&gt;}),&lt;/span&gt;
@@ -1363,7 +1404,6 @@ Most of the merchants are using marketplace solution or custom solution in order
 
 &lt;span class="n"&gt;admin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;site&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;register&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;User&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;UserAdmin&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;We got an authentification closed to Django's defaults but with email and no longer with username.&lt;/p&gt;
@@ -1389,7 +1429,6 @@ Most of the merchants are using marketplace solution or custom solution in order
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;The &lt;code&gt;{%csrf_token %}&lt;/code&gt; in my template didn't render anything, ok, that's a fail.&lt;/p&gt;
 &lt;h2&gt;Try number 2: RequestContext to the rescue&lt;/h2&gt;
 &lt;p&gt;I started looking at the documentation and I found this: &lt;a href="https://docs.djangoproject.com/en/1.11/ref/csrf/#how-to-use-it"&gt;https://docs.djangoproject.com/en/1.11/ref/csrf/#how-to-use-it&lt;/a&gt;&lt;/p&gt;
@@ -1410,7 +1449,6 @@ Most of the merchants are using marketplace solution or custom solution in order
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request_context&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;This time a got a error 500, damned... The error says:  "context must be a dict rather than RequestContext." Ok, you want a dict but the documentation said I need to have a RequestContext, dafuq ?&lt;/p&gt;
 &lt;h2&gt;Try number 3: Template and Template, the subtile difference&lt;/h2&gt;
 &lt;p&gt;After looking to a lot of documentation, stackoverflow questions and Django's code itself. I found a solution, I don't know if it is the better, but it works:&lt;/p&gt;
@@ -1426,29 +1464,25 @@ Most of the merchants are using marketplace solution or custom solution in order
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;template&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;render&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request_context&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;The important thing here is &lt;code&gt;t.template&lt;/code&gt;! The object &lt;code&gt;t&lt;/code&gt; is an instance of &lt;code&gt;django.template.backends.django.Template&lt;/code&gt; and the object &lt;code&gt;t.template&lt;/code&gt; is an instance of &lt;code&gt;django.template.base.Template&lt;/code&gt; which accepts &lt;code&gt;RequestContext&lt;/code&gt;!&lt;/p&gt;
 &lt;p&gt;I hope this will help you save some time!&lt;/p&gt;</content><category term="Python"></category><category term="django"></category><category term="csrf"></category><category term="token"></category><category term="template"></category><category term="function"></category><category term="view"></category><category term="requestcontext"></category></entry><entry><title>Virtualenvwraper with shared hosting on alwaysdata.com</title><link href="https://b0uh.github.io/virtualenvwraper-with-shared-hosting-on-alwaysdatacom.html" rel="alternate"></link><published>2017-06-03T21:00:00+02:00</published><updated>2017-06-03T21:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-06-03:/virtualenvwraper-with-shared-hosting-on-alwaysdatacom.html</id><summary type="html">&lt;p&gt;How to install virtualenvwrapper on shared hosting on alwaywasdata ?&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Installation of virtualenvwrapper&lt;/h2&gt;
 &lt;p&gt;In your console type :&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="go"&gt;pip install virtualenvwrapper&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h2&gt;Enable virtualenvwrapper with ZSH + Oh My Zsh&lt;/h2&gt;
 &lt;p&gt;In order to use ZSH you should go to the &lt;a href="https://admin.alwaysdata.com/ssh/"&gt;adminstration panel&lt;/a&gt; (Remote access &amp;gt; SSH). Then with &lt;a href="https://github.com/robbyrussell/oh-my-zsh"&gt;Oh My Zsh&lt;/a&gt;, you can use the virtualenvwrapper plugin by adding this into your .zshrc file :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;PATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$PATH&lt;/span&gt;:&lt;span class="nv"&gt;$HOME&lt;/span&gt;/.local/bin
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nb"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;PATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$PATH&lt;/span&gt;:&lt;span class="nv"&gt;$HOME&lt;/span&gt;/.local/bin
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;And activate your plugin :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;plugins&lt;/span&gt;&lt;span class="o"&gt;=(&lt;/span&gt;git virtualenvwrapper&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nv"&gt;plugins&lt;/span&gt;&lt;span class="o"&gt;=(&lt;/span&gt;git&lt;span class="w"&gt; &lt;/span&gt;virtualenvwrapper&lt;span class="o"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;h2&gt;Enable virtualenvwrapper with other shells&lt;/h2&gt;
 &lt;p&gt;Edit ~/.bashrc (or your startup shell script) and add:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;WORKON_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$HOME&lt;/span&gt;/.virtualenvs
-&lt;span class="nb"&gt;source&lt;/span&gt; &lt;span class="nv"&gt;$HOME&lt;/span&gt;/.local/bin/virtualenvwrapper.sh
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="nb"&gt;export&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;WORKON_HOME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$HOME&lt;/span&gt;/.virtualenvs
+&lt;span class="nb"&gt;source&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;$HOME&lt;/span&gt;/.local/bin/virtualenvwrapper.sh
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="Python"></category><category term="python"></category><category term="virtualenvwrapper"></category><category term="alwaysdata"></category></entry><entry><title>Protect Django media files per user basis with nginx</title><link href="https://b0uh.github.io/protect-django-media-files-per-user-basis-with-nginx.html" rel="alternate"></link><published>2017-05-30T15:00:00+02:00</published><updated>2017-05-30T15:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2017-05-30:/protect-django-media-files-per-user-basis-with-nginx.html</id><summary type="html">&lt;p&gt;How can you control access to django media files ?&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Use case&lt;/h2&gt;
 &lt;p&gt;A service with Django where user can upload files and you want to be sure that they can only access to their own files and not the files from other users. &lt;/p&gt;
 &lt;p&gt;In this example, I am using &lt;a href="http://nginx.org/"&gt;nginx&lt;/a&gt; but this solution can be adapted to other http servers.&lt;/p&gt;
@@ -1462,14 +1496,13 @@ Most of the merchants are using marketplace solution or custom solution in order
 &lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;h2&gt;Step 2: Add the view and check access&lt;/h2&gt;
 &lt;p&gt;Add the following view in &lt;code&gt;myproject/views.py&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.http&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.http&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;HttpResponseForbidden&lt;/span&gt;
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;media_access&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    When trying to access :&lt;/span&gt;
 &lt;span class="sd"&gt;    myproject.com/media/uploads/passport.png&lt;/span&gt;
 
@@ -1507,7 +1540,6 @@ Most of the merchants are using marketplace solution or custom solution in order
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;HttpResponseForbidden&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Not authorized to access this media.&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-
 &lt;p&gt;Here the important part is about the variable &lt;code&gt;user_documents&lt;/code&gt;. It should contain reference to all files the user has access. In my case I extended the &lt;code&gt;User&lt;/code&gt; model to add a field &lt;code&gt;identity_document&lt;/code&gt; that why I can access it here.&lt;/p&gt;
 &lt;p&gt;In this &lt;code&gt;media_acces&lt;/code&gt; view, you can implement any authorization logic.&lt;/p&gt;
 &lt;h2&gt;Step 3: Configure nginx&lt;/h2&gt;
@@ -1544,7 +1576,6 @@ Most of the merchants are using marketplace solution or custom solution in order
 
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
 
 &lt;p&gt;You can notice there is no &lt;code&gt;location ^~ /media/&lt;/code&gt; that's because this URL is handle by django.&lt;/p&gt;
 &lt;h2&gt;Conclusion&lt;/h2&gt;

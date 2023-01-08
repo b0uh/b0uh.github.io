@@ -177,23 +177,23 @@
 
 <span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">AbstractBaseUser</span><span class="p">,</span> <span class="n">PermissionsMixin</span><span class="p">):</span>
 
-    <span class="n">email</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">EmailField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">EmailField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">is_staff</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span>
         <span class="n">_</span><span class="p">(</span><span class="s1">&#39;staff status&#39;</span><span class="p">),</span>
-        <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">help_text</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s1">&#39;Designates whether the user can log into this site.&#39;</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="n">is_active</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span>
         <span class="n">_</span><span class="p">(</span><span class="s1">&#39;active&#39;</span><span class="p">),</span>
-        <span class="n">default</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">help_text</span><span class="o">=</span><span class="n">_</span><span class="p">(</span>
             <span class="s1">&#39;Designates whether this user should be treated as active. &#39;</span>
             <span class="s1">&#39;Unselect this instead of deleting accounts.&#39;</span>
         <span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="n">first_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s1">&#39;first name&#39;</span><span class="p">),</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-    <span class="n">last_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s1">&#39;last name&#39;</span><span class="p">),</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s1">&#39;first name&#39;</span><span class="p">),</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s1">&#39;last name&#39;</span><span class="p">),</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">date_joined</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s1">&#39;date joined&#39;</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">)</span>
 
@@ -210,29 +210,27 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">normalize_email</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_short_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the short name for the user.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the short name for the user.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span>
 
-    <span class="k">def</span> <span class="nf">email_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">from_email</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Send an email to this user.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">email_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">from_email</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send an email to this user.&quot;&quot;&quot;</span>
         <span class="n">send_mail</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">from_email</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">email</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div>
 
-
 <p>Once it is done, add to your setting <code>AUTH_USER_MODEL</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="err">AUTH_USER_MODEL = &#39;my_app_user.User&#39;</span>
+<div class="highlight"><pre><span></span><code>AUTH_USER_MODEL = &#39;my_app_user.User&#39;
 </code></pre></div>
-
 
 <h2>Step 2: User manager</h2>
 <p>With just the model things won't work, you also need to redefine the Manager so it doesn't take into account the username anymore. Again this looks a lot like the default <a href="https://docs.djangoproject.com/en/1.11/ref/contrib/auth/#manager-methods"><code>UserManager</code></a>'s code.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">BaseUserManager</span>
 
 <span class="k">class</span> <span class="nc">UserManager</span><span class="p">(</span><span class="n">BaseUserManager</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Redefine user manager with email as identifier.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Redefine user manager with email as identifier.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">_create_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_fields</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates and saves a User with the given email and password.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">email</span><span class="p">:</span>
@@ -244,21 +242,19 @@
         <span class="k">return</span> <span class="n">user</span>
 
     <span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_fields</span><span class="p">):</span>
-        <span class="n">extra_fields</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;is_staff&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-        <span class="n">extra_fields</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;is_superuser&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="n">extra_fields</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;is_staff&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">extra_fields</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;is_superuser&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_user</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_fields</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">create_superuser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_fields</span><span class="p">):</span>
-        <span class="n">extra_fields</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;is_staff&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
-        <span class="n">extra_fields</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;is_superuser&#39;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="n">extra_fields</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;is_staff&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">extra_fields</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;is_superuser&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_user</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_fields</span><span class="p">)</span>
 </code></pre></div>
 
-
 <p>So now we can create superuser with :</p>
-<div class="highlight"><pre><span></span><code><span class="err">python manage.py createsuperuser</span>
+<div class="highlight"><pre><span></span><code>python manage.py createsuperuser
 </code></pre></div>
-
 
 <h2>Step 3: Admininistration</h2>
 <p>Like for the previous step, here I was inspired by default <a href="https://github.com/django/django/blob/master/django/contrib/auth/admin.py"><code>UserAdmin</code></a>. I just removed all trace of <code>username</code>.</p>
@@ -270,14 +266,14 @@
 
 <span class="k">class</span> <span class="nc">UserAdmin</span><span class="p">(</span><span class="n">DjangoUserAdmin</span><span class="p">):</span>
     <span class="n">fieldsets</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;fields&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">)}),</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;fields&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">)}),</span>
         <span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s1">&#39;Personal info&#39;</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;fields&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">,)}),</span>
         <span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s1">&#39;Permissions&#39;</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;fields&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;is_active&#39;</span><span class="p">,</span> <span class="s1">&#39;is_staff&#39;</span><span class="p">,</span> <span class="s1">&#39;is_superuser&#39;</span><span class="p">,</span>
                                        <span class="s1">&#39;groups&#39;</span><span class="p">,</span> <span class="s1">&#39;user_permissions&#39;</span><span class="p">)}),</span>
         <span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s1">&#39;Important dates&#39;</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;fields&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;last_login&#39;</span><span class="p">,</span> <span class="s1">&#39;date_joined&#39;</span><span class="p">)}),</span>
     <span class="p">)</span>
     <span class="n">add_fieldsets</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="p">{</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">{</span>
             <span class="s1">&#39;classes&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;wide&#39;</span><span class="p">,),</span>
             <span class="s1">&#39;fields&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="s1">&#39;password1&#39;</span><span class="p">,</span> <span class="s1">&#39;password2&#39;</span><span class="p">),</span>
         <span class="p">}),</span>
@@ -290,7 +286,6 @@
 
 <span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="n">UserAdmin</span><span class="p">)</span>
 </code></pre></div>
-
 
 <h2>Conclusion</h2>
 <p>We got an authentification closed to Django's defaults but with email and no longer with username.</p>

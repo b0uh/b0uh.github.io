@@ -180,7 +180,6 @@ oo</li>
     <span class="p">}</span>
 </code></pre></div>
 
-
 <div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">PermissionPolicyMixin</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">check_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -199,7 +198,6 @@ oo</li>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">check_permissions</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 </code></pre></div>
-
 
 <h2>Explanation</h2>
 <p>With the <code>PermissionPolicyMixin</code> mixin we alter the permission process of Django Rest Framework. Before checking the permission for an endpoint we check if the method associated exists in the <code>permission_classes_per_method</code> attribute. If so, we set <code>self.permission_classes</code>.</p>
