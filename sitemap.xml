@@ -5,7 +5,7 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://b0uh.github.io/</loc>
-<lastmod>2023-01-18T10:38:08-00:00</lastmod>
+<lastmod>2023-01-18T11:40:44-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -13,6 +13,13 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>https://b0uh.github.io/pages/about.html</loc>
 <lastmod>2018-10-08T12:30:00+02:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://b0uh.github.io/pages/bookmarks.html</loc>
+<lastmod>2023-01-18T11:40:44-00:00</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
