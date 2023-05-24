@@ -1,5 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2023-01-08T18:40:00+01:00</updated><entry><title>Django/DRF: how to authenticate a user in tests?</title><link href="https://b0uh.github.io/djangodrf-how-to-authenticate-a-user-in-tests.html" rel="alternate"></link><published>2023-01-08T18:40:00+01:00</published><updated>2023-01-08T18:40:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2023-01-08:/djangodrf-how-to-authenticate-a-user-in-tests.html</id><summary type="html">&lt;p&gt;What are the different options to log a user in tests?&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; Use &lt;code&gt;client.force_login()&lt;/code&gt; and &lt;code&gt;client.force_authenticate()&lt;/code&gt; if you don't care how the user is authenticated. Otherwise, use &lt;code&gt;client.login()&lt;/code&gt; and &lt;code&gt;client.credentials()&lt;/code&gt; according to your needs.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thomas Loiret - Random thoughts</title><link href="https://b0uh.github.io/" rel="alternate"></link><link href="https://b0uh.github.io/feeds/all.atom.xml" rel="self"></link><id>https://b0uh.github.io/</id><updated>2023-05-24T22:00:00+02:00</updated><entry><title>DRF: How to handle arrays and nested objects in a multipart/form-data request?</title><link href="https://b0uh.github.io/drf-how-to-handle-arrays-and-nested-objects-in-a-multipartform-data-request.html" rel="alternate"></link><published>2023-05-24T22:00:00+02:00</published><updated>2023-05-24T22:00:00+02:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2023-05-24:/drf-how-to-handle-arrays-and-nested-objects-in-a-multipartform-data-request.html</id><summary type="html">&lt;p&gt;There are some conventions to know.&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Tl;DR&lt;/h1&gt;
+&lt;p&gt;For array, use the following convention in your name &lt;code&gt;myfield[0]&lt;/code&gt;, and for nested objects separate objects using a dot: &lt;code&gt;myfield.child&lt;/code&gt;.&lt;/p&gt;
+&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;This article is about Django Rest Framework handling multipart/form-data request. You might encounter such case if you design an endpoint that handles both files and data. Do to so, you will need to use the &lt;a href="https://www.django-rest-framework.org/api-guide/parsers/"&gt;parser&lt;/a&gt; &lt;code&gt;MultiPartParser&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Things starts to be more complicated when you need to send complex fields: array and nested objects.&lt;/p&gt;
+&lt;h1&gt;The set up&lt;/h1&gt;
+&lt;p&gt;The view:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.http&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;JsonResponse&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;books.serializers&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;BookSerializer&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.views.decorators.csrf&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;csrf_exempt&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rest_framework.decorators&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;api_view&lt;/span&gt;
+
+
+&lt;span class="nd"&gt;@api_view&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;POST&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;span class="nd"&gt;@csrf_exempt&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;create_new_entry&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;format&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;serializer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BookSerializer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;serializer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;is_valid&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="n"&gt;serializer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;save&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;JsonResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;serializer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;status&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;201&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;JsonResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;serializer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;errors&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;status&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;400&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The serializers:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rest_framework&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;serializers&lt;/span&gt;
+
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;AuthorSerializer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;serializers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Serializer&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;firstname&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;serializers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;lastname&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;serializers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;IntListField&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;serializers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ListField&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;child&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;serializers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;IntegerField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;BookSerializer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;serializers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Serializer&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;title&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;serializers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CharField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;author&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;AuthorSerializer&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;ratings&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;IntListField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;book&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;serializers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;FileField&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;create&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;validated_data&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="c1"&gt;# Here you got everything as expected, validated_data looks like:&lt;/span&gt;
+        &lt;span class="c1"&gt;# {&lt;/span&gt;
+        &lt;span class="c1"&gt;#     &amp;#39;title&amp;#39;: &amp;#39;Les Fourmis&amp;#39;, &lt;/span&gt;
+        &lt;span class="c1"&gt;#     &amp;#39;author&amp;#39;: OrderedDict([&lt;/span&gt;
+        &lt;span class="c1"&gt;#         (&amp;#39;firstname&amp;#39;,  &amp;#39;Boris&amp;#39;), &lt;/span&gt;
+        &lt;span class="c1"&gt;#         (&amp;#39;lastname&amp;#39;,  &amp;#39;Vian&amp;#39;)]&lt;/span&gt;
+        &lt;span class="c1"&gt;#     ), &lt;/span&gt;
+        &lt;span class="c1"&gt;#     &amp;#39;ratings&amp;#39;: [8, 9], &lt;/span&gt;
+        &lt;span class="c1"&gt;#     &amp;#39;book&amp;#39;: &amp;lt;InMemoryUploadedFile: Les Fourmis.pdf (application/pdf)&amp;gt;&lt;/span&gt;
+        &lt;span class="c1"&gt;# }&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h1&gt;The request&lt;/h1&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;curl -X POST \
+  http://127.0.0.1:8000/books/ \
+  -F &amp;#39;title=Les Fourmis&amp;#39; \
+  -F &amp;#39;author.firstname=Boris&amp;#39; \
+  -F &amp;#39;author.lastname=Vian&amp;#39; \
+  -F &amp;#39;ratings[0]=8&amp;#39; \
+  -F &amp;#39;ratings[1]=9&amp;#39; \
+  -F &amp;#39;book=@/Users/b0uh/Les Fourmis.pdf&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The two importants notations are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;myfield[0]&lt;/code&gt; for arrays&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;myfield.chdild&lt;/code&gt; for nested objects&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I did not find any documentation about it while working on a similar use case so I hope this will help you!&lt;/p&gt;</content><category term="django"></category><category term="drf"></category><category term="django"></category><category term="multipart"></category><category term="multipartparser"></category><category term="form-data"></category><category term="array"></category><category term="list"></category><category term="object"></category><category term="nested"></category><category term="django rest framework"></category><category term="request"></category><category term="file"></category></entry><entry><title>Django/DRF: how to authenticate a user in tests?</title><link href="https://b0uh.github.io/djangodrf-how-to-authenticate-a-user-in-tests.html" rel="alternate"></link><published>2023-01-08T18:40:00+01:00</published><updated>2023-01-08T18:40:00+01:00</updated><author><name>Thomas Loiret</name></author><id>tag:b0uh.github.io,2023-01-08:/djangodrf-how-to-authenticate-a-user-in-tests.html</id><summary type="html">&lt;p&gt;What are the different options to log a user in tests?&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; Use &lt;code&gt;client.force_login()&lt;/code&gt; and &lt;code&gt;client.force_authenticate()&lt;/code&gt; if you don't care how the user is authenticated. Otherwise, use &lt;code&gt;client.login()&lt;/code&gt; and &lt;code&gt;client.credentials()&lt;/code&gt; according to your needs.&lt;/p&gt;
 &lt;h1&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;When we write tests, we might need to simulate a connected user doing a request.
 To do so, Django provides a convenient &lt;a href="https://docs.djangoproject.com/en/dev/topics/testing/tools/#the-test-client"&gt;test client&lt;/a&gt; and DRF provides something similar with its &lt;a href="https://www.django-rest-framework.org/api-guide/testing/#apiclient"&gt;api test client&lt;/a&gt;.&lt;/p&gt;
