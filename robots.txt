@@ -4,5 +4,22 @@ Disallow: /tags.html
 Disallow: /categories.html
 Disallow: /authors.html
 
+User-agent: CCBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Omgilibot
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
 
 Sitemap: https://b0uh.github.io/sitemap.xml
