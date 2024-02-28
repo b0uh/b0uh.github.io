@@ -56,7 +56,6 @@
 &lt;li&gt;Install it following the instructions &lt;a href="https://django-debug-toolbar.readthedocs.io/en/latest/installation.html"&gt;here&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;Open the page you want to inspect in your browser and check out the "SQL" section.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;TODO add pic&lt;/p&gt;
 &lt;h1&gt;Using django-extensions and shell_plus&lt;a id="anchor-django-extensions-shell-plus"&gt;&lt;/a&gt;&lt;/h1&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;code&gt;python -m pip install django-extensions&lt;/code&gt;&lt;/li&gt;
