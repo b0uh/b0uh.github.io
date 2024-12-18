@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Thomas Loiret">
+  <meta name="description" content="A quick reminder about SQL ordering and performances">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@b0uh">
+    <meta name="twitter:creator" content="@b0uh">
+    <meta name="twitter:title" content="Django: avoid using .first() when retrieving a unique object - Thomas Loiret - Random thoughts">
+    <meta name="twitter:description" content="A quick reminder about SQL ordering and performances">
+    <meta name="twitter:image" content="https://b0uh.github.io/medias/027-bell-curve.jpeg">
+
+  <meta name="google-site-verification" content="jZBc2U9MHiBnSlgpoFEed-V3PZ16pMNv0GSX4hOh4mg" />
+
+  <title>Django: avoid using .first() when retrieving a unique object - Thomas Loiret - Random thoughts</title>
+
+  <!-- Custom styles for this template -->
+  <!-- build:css stylesheets/main.css -->
+  <link rel="stylesheet" href="https://b0uh.github.io/theme/css/main.min.css">
+  <link rel="stylesheet" href="https://b0uh.github.io/theme/css/custom.min.css">
+  <link rel="stylesheet" href="https://b0uh.github.io/theme/css/pygments/autumn.min.css">
+
+  <!-- endbuild -->
+
+  <link href="https://b0uh.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Thomas Loiret - Random thoughts Atom Feed" />
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+  <![endif]-->
+
+  <!-- Google Fonts -->
+  <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Open+Sans:300,400,700:latin', 'Lato:700,900:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+  </script>
+</head>
+
+<body>
+<!-- header -->
+<header class="header  push-down-45">
+  <div class="container">
+
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#readable-navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <nav class="navbar  navbar-default" role="navigation">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse  navbar-collapse" id="readable-navbar-collapse">
+        <ul class="navigation">
+
+          <li>
+            <a href="https://b0uh.github.io">Home</a>
+          </li>
+
+            <li>
+              <a href="https://b0uh.github.io/pages/about.html">About</a>
+            </li>
+            <li>
+              <a href="https://b0uh.github.io/pages/bookmarks.html">Bookmarks</a>
+            </li>
+
+          <li>
+            <a href="https://b0uh.github.io/archives.html">Archives</a>
+          </li>
+
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </nav>
+
+    <div class="hidden-xs  hidden-sm">
+      <div class="social">
+        <a href="#" class="search__container">
+          <span class="glyphicon  glyphicon-flash"></span>
+        </a>
+        <ul class="social__dropdown">
+            <li>
+              <a href="https://b0uh.github.io/feeds/all.atom.xml" target="_blank" class="social__container">
+                <span class="zocial-rss"></span>
+              </a>
+            </li>
+          <li>
+            <a href="https://mamot.fr/@b0uh" rel="me" target="_blank" class="social__container">
+              <img src="https://b0uh.github.io/theme/images/icons/mastodon-25px.png" />
+            </a>
+          </li>
+          <li>
+            <a href="https://twitter.com/b0uh" target="_blank" class="social__container">
+              <span class="zocial-twitter"></span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.linkedin.com/in/thomasloiret/" target="_blank" class="social__container">
+              <span class="zocial-linkedin"></span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.last.fm/user/b0uh" target="_blank" class="social__container">
+              <span class="zocial-lastfm"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+      <div itemscope itemtype="http://schema.org/Article" class="boxed push-down-60">
+
+          <div class="meta">
+            <img itemprop="image" class="wp-post-image" src="https://b0uh.github.io/medias/027-bell-curve.jpeg" alt="Django: avoid using .first() when retrieving a unique object" width="1138" height="493">
+            <div class="meta__container"></div>
+          </div>
+
+        <!-- Start of the blogpost -->
+        <div class="row">
+          <div class="col-xs-10  col-xs-offset-1  col-md-8  col-md-offset-2  push-down-60">
+
+            <!-- Start of the content -->
+            <div class="post-content">
+
+              <h1 itemprop="name">Django: avoid using .first() when retrieving a unique object</h1>
+
+              <div class="meta__container--without-image">
+                <div class="row">
+                  <div class="col-xs-12  col-sm-8">
+                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                      <div class="meta__info" itemprop="name">
+                        Thomas Loiret
+                      </div>
+                    </span>
+                  </div>
+                  <div class="col-xs-12  col-sm-4">
+                    <div class="meta__comments">
+                      <span class="meta__date" itemprop="datePublished" content="2024-12-18">
+                        <span class="glyphicon glyphicon-calendar"></span>  &nbsp; Wed 18 December 2024
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <span itemprop="articleBody">
+                <p>When we want to retrieve an object from DB we do:</p>
+<div class="highlight"><pre><span></span><code><span class="n">obj</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">unique_identifier</span><span class="o">=</span><span class="mi">999</span><span class="p">)</span>
+</code></pre></div>
+
+<p>But if the object may or may not exist, then we might do:</p>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">unique_identifier</span><span class="o">=</span><span class="mi">999</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div>
+
+<p>At this point, repeating this pattern of try/except in a lot of places might seems a bit of a burden. Then, we have this nice way of doing it:</p>
+<div class="highlight"><pre><span></span><code><span class="n">obj</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">unique_identifier</span><span class="o">=</span><span class="mi">999</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+</code></pre></div>
+
+<p>It is quite handy and pythonic because here <code>obj</code> will either contain the object we want or be <code>None</code> if we did not find it. Only one line and no more <code>try</code>/<code>except</code>!</p>
+<p>The downside here are the performances. When we use <code>.first()</code> (or <code>.last()</code>) Django automatically adds an ordering to get the first matching object given that ordering. That seems logical, but on large table, ordering is expensive and for this specific case where we know that we will retrieve at most 1 object it is useless.</p>
+<h2>Show me the SQL</h2>
+<p>For example, using <code>.first()</code> gives us:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Adding .only(&#39;id&#39;) to keep the SQL short</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">only</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;foo&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="ss">&quot;auth_user&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span>
+<span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;auth_user&quot;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="ss">&quot;auth_user&quot;</span><span class="p">.</span><span class="ss">&quot;username&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;foo&#39;</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="ss">&quot;auth_user&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span><span class="w"> </span><span class="k">ASC</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">1</span>
+</code></pre></div>
+
+<p>When the SQL generated by <code>.get()</code> gives us:</p>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Adding .only(&#39;id&#39;) to keep the SQL short</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">only</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;foo&#39;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="ss">&quot;auth_user&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span>
+<span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;auth_user&quot;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="ss">&quot;auth_user&quot;</span><span class="p">.</span><span class="ss">&quot;username&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;foo&#39;</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">21</span>
+</code></pre></div>
+
+<p>No more ordering, it is faster!</p>
+<h2>Extra</h2>
+<p>Noticed in the last example that the limit was 21 when it could be 1? The following code will generate a more accurate SQL:</p>
+<div class="highlight"><pre><span></span><code><span class="n">user_qs</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">only</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s1">&#39;foo&#39;</span><span class="p">)[:</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">user_qs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">user_qs</span> <span class="k">else</span> <span class="kc">None</span>
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="ss">&quot;auth_user&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span>
+<span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;auth_user&quot;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="ss">&quot;auth_user&quot;</span><span class="p">.</span><span class="ss">&quot;username&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;foo11&#39;</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">1</span>
+</code></pre></div>
+
+<p>But the python code is hardly readable, I would not recommend it unless you know what you are doing.</p>
+              </span>
+
+              <div class="meta__container--without-image">
+                <div class="row">
+                </div>
+              </div>
+
+              <br>
+            </div>
+          </div>
+        </div>
+      </div>
+
+</div>
+
+<footer class="copyrights">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12  col-sm-6">
+        Powered by <a href="https://github.com/getpelican/pelican">Pelican</a>.
+      </div>
+      <div class="col-xs-12  col-sm-6">
+        <div class="copyrights--right">
+          Made with <span class="glyphicon  glyphicon-heart"></span> in Nantes.
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  <script src="https://b0uh.github.io/theme/scripts/jquery.min.js"></script>
+  <script src="https://b0uh.github.io/theme/scripts/underscore.min.js"></script>
+  <script src="https://b0uh.github.io/theme/scripts/bootstrap.min.js"></script>
+  <script src="https://b0uh.github.io/theme/scripts/main.min.js"></script>
+
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-98369697-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+  <!-- Chiffre.io - Privacy-first analytics -->
+  <script id="chiffre:analytics-config" type="application/json">
+    {
+      "publicKey": "pk.VvetZOQ0g5XwOL2W6hVvG7gFQTk3xdUMczDkqSCZUxE",
+      "pushURL":   "https://push.chiffre.io/event/ceJKfYgcLN6XkYn8"
+    }
+  </script>
+  <script
+    src="https://embed.chiffre.io/analytics.js"
+    crossorigin="anonymous"
+    async=""
+  >
+  </script>
+  <noscript>
+    <img
+      src="https://push.chiffre.io/noscript/ceJKfYgcLN6XkYn8"
+      alt="Chiffre.io anonymous visit counting for clients without JavaScript"
+      crossorigin="anonymous"
+      width="1px"
+      height="1px"
+      style="display:none"
+    />
+  </noscript>
+
+
+</body>
+</html>
