@@ -162,7 +162,7 @@
     <span class="n">bar</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Bar</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">SET_NULL</span><span class="p">)</span>
 </code></pre></div>
 
-<p>When doing <code>Bar.objects.delete()</code> I would have thought that the SQL sent to the database would be <code>DELETE FROM myapp_bar</code>. But in reality the SQL generated is:</p>
+<p>When doing <code>Bar.objects.filter().delete()</code> I would have thought that the SQL sent to the database would be <code>DELETE FROM myapp_bar</code>. But in reality the SQL generated is:</p>
 <div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="ss">&quot;myapp_bar&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span><span class="p">,</span>
 <span class="w">       </span><span class="ss">&quot;myapp_bar&quot;</span><span class="p">.</span><span class="ss">&quot;name&quot;</span>
 <span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;myapp_bar&quot;</span>
@@ -180,9 +180,9 @@
 <p>The first statement is telling us that Django is loading all objects matching the queryset in memory. If you are deleting a lot of objects, the memory usage will increase drastically and might even lead to an OOM issue (Out Of Memory). I have been bitten by this issue recently while trying to delete tens of millions of objects.</p>
 <h3>Why</h3>
 <p>So why are we loading everything in memory? The <a href="https://docs.djangoproject.com/en/5.1/ref/models/fields/#django.db.models.ForeignKey.on_delete">official documentation</a> states that: "<em><code>on_delete</code> doesn’t create an SQL constraint in the database. Support for database-level cascade options may be implemented later.</em>"</p>
-<p>Indeed, there is <a href="https://code.djangoproject.com/ticket/21961">ticket</a> opened for that since 11 years. So until this is corrected, be careful about the size of queryset you want to delete.</p>
+<p>Indeed, there is a <a href="https://code.djangoproject.com/ticket/21961">ticket</a> opened for that since 11 years. So until this is corrected, be careful about the size of queryset you want to delete.</p>
 <h3>When should I worry ?</h3>
-<p>This issue does not apply everytime we are calling <code>.delete()</code>on a queryset. It happens only when those conditions are met:</p>
+<p>This issue does not apply every time we are calling <code>.delete()</code>on a queryset. It happens only when those conditions are met:</p>
 <ul>
 <li>another model is referencing the one where we want to delete objects using <code>ForeignKey</code> or <code>OneToOneField</code></li>
 <li>the attribute <code>on_delete</code> should be set on the foreign key</li>

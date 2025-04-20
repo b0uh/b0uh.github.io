@@ -10,7 +10,7 @@
     &lt;span class="n"&gt;bar&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ForeignKey&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Bar&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;on_delete&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;models&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SET_NULL&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;When doing &lt;code&gt;Bar.objects.delete()&lt;/code&gt; I would have thought that the SQL sent to the database would be &lt;code&gt;DELETE FROM myapp_bar&lt;/code&gt;. But in reality the SQL generated is:&lt;/p&gt;
+&lt;p&gt;When doing &lt;code&gt;Bar.objects.filter().delete()&lt;/code&gt; I would have thought that the SQL sent to the database would be &lt;code&gt;DELETE FROM myapp_bar&lt;/code&gt;. But in reality the SQL generated is:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;SELECT&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;myapp_bar&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
 &lt;span class="w"&gt;       &lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;myapp_bar&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;name&amp;quot;&lt;/span&gt;
 &lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;FROM&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="ss"&gt;&amp;quot;myapp_bar&amp;quot;&lt;/span&gt;
@@ -28,9 +28,9 @@
 &lt;p&gt;The first statement is telling us that Django is loading all objects matching the queryset in memory. If you are deleting a lot of objects, the memory usage will increase drastically and might even lead to an OOM issue (Out Of Memory). I have been bitten by this issue recently while trying to delete tens of millions of objects.&lt;/p&gt;
 &lt;h3&gt;Why&lt;/h3&gt;
 &lt;p&gt;So why are we loading everything in memory? The &lt;a href="https://docs.djangoproject.com/en/5.1/ref/models/fields/#django.db.models.ForeignKey.on_delete"&gt;official documentation&lt;/a&gt; states that: "&lt;em&gt;&lt;code&gt;on_delete&lt;/code&gt; doesn’t create an SQL constraint in the database. Support for database-level cascade options may be implemented later.&lt;/em&gt;"&lt;/p&gt;
-&lt;p&gt;Indeed, there is &lt;a href="https://code.djangoproject.com/ticket/21961"&gt;ticket&lt;/a&gt; opened for that since 11 years. So until this is corrected, be careful about the size of queryset you want to delete.&lt;/p&gt;
+&lt;p&gt;Indeed, there is a &lt;a href="https://code.djangoproject.com/ticket/21961"&gt;ticket&lt;/a&gt; opened for that since 11 years. So until this is corrected, be careful about the size of queryset you want to delete.&lt;/p&gt;
 &lt;h3&gt;When should I worry ?&lt;/h3&gt;
-&lt;p&gt;This issue does not apply everytime we are calling &lt;code&gt;.delete()&lt;/code&gt;on a queryset. It happens only when those conditions are met:&lt;/p&gt;
+&lt;p&gt;This issue does not apply every time we are calling &lt;code&gt;.delete()&lt;/code&gt;on a queryset. It happens only when those conditions are met:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;another model is referencing the one where we want to delete objects using &lt;code&gt;ForeignKey&lt;/code&gt; or &lt;code&gt;OneToOneField&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;the attribute &lt;code&gt;on_delete&lt;/code&gt; should be set on the foreign key&lt;/li&gt;
