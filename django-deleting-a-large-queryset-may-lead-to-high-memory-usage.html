@@ -181,7 +181,7 @@
 <h3>Why</h3>
 <p>So why are we loading everything in memory? The <a href="https://docs.djangoproject.com/en/5.1/ref/models/fields/#django.db.models.ForeignKey.on_delete">official documentation</a> states that: "<em><code>on_delete</code> doesn’t create an SQL constraint in the database. Support for database-level cascade options may be implemented later.</em>"</p>
 <p>Indeed, there is a <a href="https://code.djangoproject.com/ticket/21961">ticket</a> opened for that since 11 years. So until this is corrected, be careful about the size of queryset you want to delete.</p>
-<h3>When should I worry ?</h3>
+<h3>When should I worry?</h3>
 <p>This issue does not apply every time we are calling <code>.delete()</code>on a queryset. It happens only when those conditions are met:</p>
 <ul>
 <li>another model is referencing the one where we want to delete objects using <code>ForeignKey</code> or <code>OneToOneField</code></li>
